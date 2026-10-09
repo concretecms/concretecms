@@ -18,7 +18,7 @@
       <notnull/>
     </field>
     <field name="setMode" type="string" size="32"/>
-    <field name="onlyCurrentUser" type="integer">
+    <field name="onlyCurrentUser" type="boolean">
       <default value="0"/>
     </field>
     <field name="tags" type="string" size="128"/>
@@ -46,7 +46,7 @@
     <field name="maxThumbHeight" type="integer">
       <default value="150"/>
     </field>
-    <field name="enableSearch" type="integer">
+    <field name="enableSearch" type="boolean">
       <default value="0"/>
     </field>
     <field name="heightMode" type="string" size="32">
@@ -67,10 +67,10 @@
     <field name="headerTextColor" type="string" size="32">
       <default value=""/>
     </field>
-    <field name="allowFileUploading" type="integer">
+    <field name="allowFileUploading" type="boolean">
       <default value="0"/>
     </field>
-    <field name="allowInPageFileManagement" type="integer">
+    <field name="allowInPageFileManagement" type="boolean">
       <default value="0"/>
     </field>
     <field name="tableName" type="string" size="255">
@@ -85,7 +85,7 @@
     <field name="rowBackgroundColorAlternate" type="string" size="32">
       <default value=""/>
     </field>
-    <field name="hideFolders" type="integer">
+    <field name="hideFolders" type="boolean">
       <default value="0"/>
     </field>
   </table>

@@ -11,7 +11,7 @@
     <field name="nextLabel" type="string" size="128"/>
     <field name="previousLabel" type="string" size="128"/>
     <field name="parentLabel" type="string" size="128"/>
-    <field name="loopSequence" type="integer">
+    <field name="loopSequence" type="boolean">
       <default value="1"/>
     </field>
     <field name="orderBy" type="string" size="20">
