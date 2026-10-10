@@ -20,6 +20,7 @@ class PageTypeAssignment extends Assignment
     {
         $db = Loader::db();
         $db->Execute('update PageTypePermissionAssignments set paID = 0 where pkID = ? and ptID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getPageTypeID()));
+        $this->dispatchClearEvent();
     }
 
     public function assignPermissionAccess(Access $pa)
