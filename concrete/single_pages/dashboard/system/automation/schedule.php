@@ -29,7 +29,11 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     <div class="row">
                         <div class="col-md-3">
                             <div>
-                                {{scheduledTask.task.name}}
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#scheduled-task-details"
+                                   title="<?=h(t('View Task Options'))?>"
+                                   @click.prevent="selectedScheduledTask = scheduledTask">
+                                    {{scheduledTask.task.name}}
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -51,6 +55,29 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                     </div>
                 </div>
             </transition-group>
+            <div class="modal fade" tabindex="-1" role="dialog" id="scheduled-task-details" aria-labelledby="scheduled-task-details-title">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="scheduled-task-details-title"><?=t('Task Options')?></h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?=h(t('Close'))?>"></button>
+                        </div>
+                        <div class="modal-body" v-if="selectedScheduledTask">
+                            <h6>{{selectedScheduledTask.task.name}}</h6>
+                            <dl v-if="selectedTaskOptions.length" class="mb-0">
+                                <template v-for="option in selectedTaskOptions">
+                                    <dt :key="option.key + '-label'" class="text-break">{{option.label}}</dt>
+                                    <dd :key="option.key + '-value'" class="text-break">{{option.value}}</dd>
+                                </template>
+                            </dl>
+                            <p v-else class="mb-0"><?=t('This task has no options.')?></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=t('Close')?></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div v-for="scheduledTask in scheduledTasks" class="modal fade" tabindex="-1" role="dialog" :id="'delete-scheduled-task-' + scheduledTask.id">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -84,7 +111,38 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
                 el: '#schedule',
                 components: config.components,
                 data: {
-                    'scheduledTasks': <?=json_encode($scheduledTasks)?>
+                    'scheduledTasks': <?=json_encode($scheduledTasks)?>,
+                    selectedScheduledTask: null
+                },
+                computed: {
+                    selectedTaskOptions() {
+                        if (!this.selectedScheduledTask) {
+                            return []
+                        }
+                        const scheduledTask = this.selectedScheduledTask
+                        const inputFields = scheduledTask.input && scheduledTask.input.fields || []
+                        const definition = scheduledTask.task.inputDefinition
+                        const fields = definition ? definition.fields.slice() : []
+                        inputFields.forEach(inputField => {
+                            if (!fields.some(field => field.key === inputField.key)) {
+                                fields.push({key: inputField.key, label: inputField.key})
+                            }
+                        })
+                        return fields.map(field => {
+                            const inputField = inputFields.find(inputField => inputField.key === field.key)
+                            let value = inputField ? inputField.value : ''
+                            if (field.type === 'boolean') {
+                                value = value === '1' || value === 1 || value === true ? <?=json_encode(t('Yes'))?> : <?=json_encode(t('No'))?>
+
+                            } else if (field.type === 'select' && field.options && Object.prototype.hasOwnProperty.call(field.options, value)) {
+                                value = field.options[value]
+                            } else if (value === '' || value === null || typeof value === 'undefined') {
+                                value = <?=json_encode(t('Not set'))?>
+
+                            }
+                            return {key: field.key, label: field.label, value: value}
+                        })
+                    }
                 },
                 methods: {
                     deleteScheduledTask(scheduledTask) {
