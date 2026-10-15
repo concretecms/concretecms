@@ -5,6 +5,7 @@ use Loader;
 use BlockType as ConcreteBlockType;
 use BlockTypeList;
 use Environment;
+use Concrete\Core\Block\BlockType\TemplateCatalog;
 use Concrete\Core\Page\Type\Composer\Control\BlockControl;
 
 class BlockType extends Type
@@ -17,11 +18,12 @@ class BlockType extends Type
         $ci = Loader::helper('concrete/urls');
 
         $env = Environment::get();
+        $catalog = app(TemplateCatalog::class);
 
         foreach ($blockTypes as $bt) {
             $cmf = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . FILENAME_BLOCK_COMPOSER,
                 $bt->getPackageHandle());
-            if ($cmf->exists() || count($bt->getBlockTypeComposerTemplates()) > 0) {
+            if ($cmf->exists() || count($catalog->getComposerTemplates($bt)) > 0) {
                 $bx = new BlockControl();
                 $bx->setBlockTypeID($bt->getBlockTypeID());
                 $bx->setPageTypeComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
