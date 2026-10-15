@@ -204,6 +204,24 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
     }
 
     /**
+     * A shadow of no size at all is no shadow, whatever the units its sizes are written with: the dialog
+     * always sends them in pixels, a request made by hand does as it pleases.
+     */
+    public function testAShadowOfNoSizeAtAllIsNoStyleSet()
+    {
+        $arguments = [
+            'boxShadowColor' => 'rgb(0,0,0)',
+            'boxShadowHorizontal' => '0rem',
+            'boxShadowVertical' => '0px',
+            'boxShadowBlur' => '0%',
+            'boxShadowSpread' => '0em',
+        ];
+        $r = Request::create('http://www.foo.com', 'POST', $arguments);
+
+        $this->assertNull(StyleSet::populateFromRequest($r));
+    }
+
+    /**
      * A CIF is written by hand or by another site, and what it says is held to the same rules as a form.
      */
     public function testImportKeepsOnlyTheValuesThatHold()

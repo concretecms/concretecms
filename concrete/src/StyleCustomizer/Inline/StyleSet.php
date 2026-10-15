@@ -249,17 +249,18 @@ class StyleSet
         }
 
         if ($post->has('boxShadowColor')) {
-            $boxShadowHorizontal = $values->sanitizeLength($post->get('boxShadowHorizontal', '')) ?: '0px';
-            $boxShadowVertical = $values->sanitizeLength($post->get('boxShadowVertical', '')) ?: '0px';
-            $boxShadowBlur = $values->sanitizeLength($post->get('boxShadowBlur', ''), false) ?: '0px';
-            $boxShadowSpread = $values->sanitizeLength($post->get('boxShadowSpread', '')) ?: '0px';
+            $boxShadowHorizontal = $values->sanitizeLength($post->get('boxShadowHorizontal', ''), true, false);
+            $boxShadowVertical = $values->sanitizeLength($post->get('boxShadowVertical', ''), true, false);
+            $boxShadowBlur = $values->sanitizeLength($post->get('boxShadowBlur', ''), false, false);
+            $boxShadowSpread = $values->sanitizeLength($post->get('boxShadowSpread', ''), true, false);
             $boxShadowInset = (bool) $post->get('boxShadowInset');
-            if ($boxShadowHorizontal !== '0px' || $boxShadowVertical !== '0px' || $boxShadowBlur !== '0px' || $boxShadowSpread !== '0px') {
+            if ($boxShadowHorizontal !== '' || $boxShadowVertical !== '' || $boxShadowBlur !== '' || $boxShadowSpread !== '') {
+                // the sizes the shadow says nothing about are the zeroes the dialog stores
                 $set->setBoxShadowColor($values->sanitizeColor($post->get('boxShadowColor')));
-                $set->setBoxShadowBlur($boxShadowBlur);
-                $set->setBoxShadowHorizontal($boxShadowHorizontal);
-                $set->setBoxShadowVertical($boxShadowVertical);
-                $set->setBoxShadowSpread($boxShadowSpread);
+                $set->setBoxShadowBlur($boxShadowBlur ?: '0px');
+                $set->setBoxShadowHorizontal($boxShadowHorizontal ?: '0px');
+                $set->setBoxShadowVertical($boxShadowVertical ?: '0px');
+                $set->setBoxShadowSpread($boxShadowSpread ?: '0px');
                 $set->setBoxShadowInset($boxShadowInset);
                 $return = true;
             }
