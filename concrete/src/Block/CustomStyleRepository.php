@@ -26,13 +26,18 @@ class CustomStyleRepository
 
     /**
      * @param \Concrete\Core\Page\Collection\Collection $collection
-     * @return array|BlockCustomStyle[]
+     * @return \Concrete\Core\Block\CustomStyle[]
      */
     public function getCollectionVersionBlockStyles(Collection $collection): array
     {
-        $this->loadCollectionVersionBlockStyleRecords($collection->getCollectionID(), $collection->getVersionID());
+        $versionID = $collection->getVersionID();
+        if ($versionID === null) {
+            return [];
+        }
+        $collectionID = $collection->getCollectionID();
+        $this->loadCollectionVersionBlockStyleRecords($collectionID, $versionID);
         $styles = [];
-        foreach ($this->styles[$collection->getCollectionID()] as $arHandle => $blocks) {
+        foreach ($this->styles[$collectionID][$versionID] as $arHandle => $blocks) {
             foreach ($blocks as $bID => $issID) {
                 $arHandle = $this->text->filterNonAlphaNum($arHandle);
                 $obj = StyleSet::getByID($issID);
@@ -41,8 +46,7 @@ class CustomStyleRepository
                     $b->bID = $bID;
                     $a = new Area($arHandle);
                     $b->setBlockAreaObject($a);
-                    $obj = new BlockCustomStyle($obj, $b, $collection->getCollectionThemeObject());
-                    $styles[] = $obj;
+                    $styles[] = new BlockCustomStyle($obj, $b, $collection->getCollectionThemeObject());
                 }
             }
         }
@@ -53,13 +57,18 @@ class CustomStyleRepository
     /**
      * @param \Concrete\Core\Page\Stack\Stack $stack
      * @param \Concrete\Core\Page\Theme\Theme $theme
-     * @return array|BlockCustomStyle[]
+     * @return \Concrete\Core\Block\CustomStyle[]
      */
     public function getStackBlockStyles(Stack $stack, Theme $theme): array
     {
-        $this->loadCollectionVersionBlockStyleRecords($stack->getCollectionID(), $stack->getVersionID());
+        $versionID = $stack->getVersionID();
+        if ($versionID === null) {
+            return [];
+        }
+        $collectionID = $stack->getCollectionID();
+        $this->loadCollectionVersionBlockStyleRecords($collectionID, $versionID);
         $styles = [];
-        foreach ($this->styles[$stack->getCollectionID()] as $blocks) {
+        foreach ($this->styles[$collectionID][$versionID] as $blocks) {
             foreach ($blocks as $bID => $issID) {
                 $obj = StyleSet::getByID($issID);
                 if (is_object($obj)) {
@@ -67,8 +76,7 @@ class CustomStyleRepository
                     $b->bID = $bID;
                     $a = new GlobalArea($stack->getStackName());
                     $b->setBlockAreaObject($a);
-                    $obj = new BlockCustomStyle($obj, $b, $theme);
-                    $styles[] = $obj;
+                    $styles[] = new BlockCustomStyle($obj, $b, $theme);
                 }
             }
         }
@@ -83,20 +91,29 @@ class CustomStyleRepository
     public function getBlockStyleID(Block $block): ?int
     {
         $collection = $block->getBlockCollectionObject();
-        $blockAreaHandle = $block->getAreaHandle();
-        if ($blockAreaHandle && is_object($collection)) {
-            $this->loadCollectionVersionBlockStyleRecords($collection->getCollectionID(), $collection->getVersionID());
-            $a = $block->getBlockAreaObject();
-            if ($a->isGlobalArea()) {
-                // then we need to check against the global area name. We currently have the wrong area handle passed in
-                $blockAreaHandle = STACKS_AREA_NAME;
-            }
-            foreach ($this->styles[$collection->getCollectionID()] as $arHandle => $blocks) {
-                if ($arHandle == $blockAreaHandle) {
-                    foreach ($blocks as $bID => $issID) {
-                        if ($bID == $block->getBlockID()) {
-                            return (int) $issID;
-                        }
+        if (!is_object($collection)) {
+            return null;
+        }
+        $versionID = $collection->getVersionID();
+        if ($versionID === null) {
+            return null;
+        }
+        $blockAreaHandle = (string) $block->getAreaHandle();
+        if ($blockAreaHandle === '') {
+            return null;
+        }
+        $collectionID = $collection->getCollectionID();
+        $this->loadCollectionVersionBlockStyleRecords($collectionID, $versionID);
+        $a = $block->getBlockAreaObject();
+        if ($a->isGlobalArea()) {
+            // then we need to check against the global area name. We currently have the wrong area handle passed in
+            $blockAreaHandle = STACKS_AREA_NAME;
+        }
+        foreach ($this->styles[$collectionID][$versionID] as $arHandle => $blocks) {
+            if ($arHandle == $blockAreaHandle) {
+                foreach ($blocks as $bID => $issID) {
+                    if ($bID == $block->getBlockID()) {
+                        return (int) $issID;
                     }
                 }
             }
@@ -108,12 +125,10 @@ class CustomStyleRepository
     protected function loadCollectionVersionBlockStyleRecords(int $collectionID, ?int $versionID)
     {
         if ($versionID === null) {
-            $this->styles[$collectionID] = [];
-
             return;
         }
 
-        if (!isset($this->styles[$collectionID])) {
+        if (!isset($this->styles[$collectionID][$versionID])) {
             $qb = $this->connection->createQueryBuilder();
             $qb->select('bID', 'arHandle', 'issID')
                 ->from('CollectionVersionBlockStyles')
@@ -123,12 +138,9 @@ class CustomStyleRepository
                 ->setParameter(':cID', $collectionID)
                 ->setParameter(':cvID', $versionID);
             $r = $qb->execute()->fetchAllAssociative();
-            if (count($r) > 0) {
-                foreach ($r as $row) {
-                    $this->styles[$collectionID][$row['arHandle']][$row['bID']] = $row['issID'];
-                }
-            } else {
-                $this->styles[$collectionID] = [];
+            $this->styles[$collectionID][$versionID] = [];
+            foreach ($r as $row) {
+                $this->styles[$collectionID][$versionID][$row['arHandle']][$row['bID']] = $row['issID'];
             }
         }
     }
