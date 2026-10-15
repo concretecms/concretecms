@@ -43,7 +43,8 @@ jobs:
         name: Install Composer dependencies
         run: |
           cd /app
-          sudo -Hu www-data composer install --optimize-autoloader --no-cache --ansi --no-interaction
+          # Security advisories are checked by the composer-audit workflow
+          sudo -Hu www-data env COMPOSER_NO_BLOCKING=1 composer install --optimize-autoloader --no-cache --ansi --no-interaction
       -
         name: Configure Concrete
         run: |
