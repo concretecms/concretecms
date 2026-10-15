@@ -65,10 +65,17 @@ class StyleValuesTest extends TestCase
             ['#AABBCCDD', '#AABBCCDD'],
             ['  rgb(1,2,3)  ', 'rgb(1,2,3)'],
             ['rgba(255,  0,0,   .5)', 'rgba(255, 0,0, .5)'],
+            ['rgb(1 2 3)', 'rgb(1 2 3)'],
+            ['rgb(1 2 3 / 50%)', 'rgb(1 2 3 / 50%)'],
+            ['hsl(120, 75%, 25%)', 'hsl(120, 75%, 25%)'],
             ['transparent', 'transparent'],
             ['currentColor', 'currentColor'],
             // a name is not one of them, however much of a color it is
             ['red', ''],
+            // the parentheses hold channels, not whatever looks like one
+            ['rgb(,,,,)', ''],
+            ['rgb(1,2)', ''],
+            ['rgb(-,-)', ''],
             ['#ff00', '#ff00'],
             ['#fffff', ''],
             ['rgb(1,2,3', ''],
@@ -149,6 +156,9 @@ class StyleValuesTest extends TestCase
         static::assertSame('data-x="1"', $styleValues->sanitizeElementAttribute("id='sneaky' data-x=\"1\""));
         static::assertSame('', $styleValues->sanitizeElementAttribute('class="sneaky"'));
         static::assertSame('', $styleValues->sanitizeElementAttribute('   '));
+        // an attribute whose name ends in them keeps what it carries
+        static::assertSame('data-class="hero"', $styleValues->sanitizeElementAttribute('data-class="hero"'));
+        static::assertSame('data-id="7"', $styleValues->sanitizeElementAttribute('data-id="7"'));
     }
 
     public function testAnAttributeWhoseQuotesAreNotClosedIsRefused(): void

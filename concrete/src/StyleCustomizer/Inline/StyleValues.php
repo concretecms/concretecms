@@ -166,7 +166,7 @@ class StyleValues
         if (preg_match('/^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/iD', $value)) {
             return $value;
         }
-        if (preg_match('/^(?:rgb|hsl)a?\(\s*[-\d.%\s,\/]+\)$/iD', $value)) {
+        if (preg_match('/^(?:rgb|hsl)a?\(\s*-?(?:\d+|\d*\.\d+)%?(?:(?:\s*[,\/]\s*|\s+)-?(?:\d+|\d*\.\d+)%?){2,3}\s*\)$/iD', $value)) {
             return (string) preg_replace('/\s+/', ' ', $value);
         }
 
@@ -207,8 +207,9 @@ class StyleValues
         if ($value === '') {
             return '';
         }
-        $value = (string) preg_replace('/(class\s*=\s*["\'][^\'"]*["\'])/i', '', $value);
-        $value = (string) preg_replace('/(id\s*=\s*["\'][^\'"]*["\'])/i', '', $value);
+        // the name has to end there, or an attribute of another name loses a piece of itself
+        $value = (string) preg_replace('/(?<![-\w])class\s*=\s*["\'][^\'"]*["\']/i', '', $value);
+        $value = (string) preg_replace('/(?<![-\w])id\s*=\s*["\'][^\'"]*["\']/i', '', $value);
         if (preg_match_all('/([\'])/i', $value) % 2 !== 0 || preg_match_all('/(["])/i', $value) % 2 !== 0) {
             throw new UserMessageException(t('Custom Element Attribute input: unclosed quote(s)'));
         }
