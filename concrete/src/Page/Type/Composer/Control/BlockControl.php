@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control;
 
+use Concrete\Core\Block\BlockType\TemplateCatalog;
 use Concrete\Core\Package\PackageList;
 use Controller;
 use Package;
@@ -182,7 +183,7 @@ class BlockControl extends Control
         $txt = $app->make('helper/text');
         $templates = [];
         if (is_object($bt)) {
-            $blocktemplates = $bt->getBlockTypeComposerTemplates();
+            $blocktemplates = $app->make(TemplateCatalog::class)->getComposerTemplates($bt);
             if (is_array($blocktemplates)) {
                 foreach ($blocktemplates as $tpl) {
                     if (strpos($tpl, '.') !== false) {
