@@ -268,6 +268,7 @@ class Install extends Controller
             $val = $this->app->make('helper/validation/form');
             $val->setData($this->post());
             $val->addRequired('SITE', t("Please specify your site's name"));
+            $val->addRequired('uName', t('Please specify an administrator username'));
             $val->addRequiredEmail('uEmail', t('Please specify a valid email address'));
             $val->addRequired('DB_DATABASE', t('You must specify a valid database name'));
             $val->addRequired('DB_SERVER', t('You must specify a valid database server'));
@@ -277,6 +278,7 @@ class Install extends Controller
             $password = $post->get('uPassword');
             $passwordConfirm = $post->get('uPasswordConfirm');
 
+            $this->app->make('validator/user/name')->isValid((string) $post->get('uName'), $error);
             $this->app->make('validator/password')->isValid($password, $error);
 
             if ($password) {
@@ -320,6 +322,7 @@ class Install extends Controller
                 $options
                     ->setPrivacyPolicyAccepted($post->get('privacy') == '1' ? true : false)
                     ->setUserEmail($post->get('uEmail'))
+                    ->setUserName($post->get('uName'))
                     ->setUserPasswordHash($hasher->hashPassword($post->get('uPassword')))
                     ->setStartingPointHandle($post->get('SAMPLE_CONTENT'))
                     ->setSiteName($post->get('SITE'))
@@ -497,7 +500,7 @@ class Install extends Controller
                 'successMessage',
                 t(
                     'Concrete has been installed. You have been logged in as <b>%s</b> with the password you chose. If you wish to change this password, you may do so from the users area of the dashboard.',
-                    USER_SUPER
+                    h($this->getInstallerOptions()->getUserName())
                 )
             );
         }
