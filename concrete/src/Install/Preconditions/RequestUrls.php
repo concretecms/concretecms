@@ -86,6 +86,7 @@ class RequestUrls implements WebPreconditionInterface
         $errorMessage = json_encode(t('Concrete cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.'));
         $ajaxFailErrorMessage = json_encode(t('Request failed: unable to verify support for request URLs'));
         $myIdentifier = json_encode($this->getUniqueIdentifier());
+        $isOptional = json_encode($this->isOptional());
 
         return <<<EOT
 <script>
@@ -100,11 +101,11 @@ $(document).ready(function() {
         if (data.response === 400) {
             setWebPreconditionResult({$myIdentifier}, true);
         } else {
-            setWebPreconditionResult({$myIdentifier}, false, {$errorMessage});
+            setWebPreconditionResult({$myIdentifier}, false, {$errorMessage}, {$isOptional});
         }
     })
     .fail(function(xhr, textStatus, errorThrown) {
-        setWebPreconditionResult({$myIdentifier}, false, {$ajaxFailErrorMessage});
+        setWebPreconditionResult({$myIdentifier}, false, {$ajaxFailErrorMessage}, {$isOptional});
     });
 });
 </script>

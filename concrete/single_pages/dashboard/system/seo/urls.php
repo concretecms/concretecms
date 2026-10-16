@@ -32,7 +32,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         <div class="form-check">
             <?= $form->checkbox('url_rewriting', '1', $urlRewriting) ?>
             <label class="form-check-label" for="url_rewriting">
-                <?= t('Remove index.php from URLs') ?>
+                <?= t(/* i18n: %s is index.php */ 'Remove %s from URLs', '<code>' . DISPATCHER_FILENAME . '</code>') ?>
                 <span id="url_rewriting_works" class="ms-1">
                     <i class="fas fa-spinner fa-spin"></i>
                 </span>
