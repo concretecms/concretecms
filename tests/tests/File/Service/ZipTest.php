@@ -29,7 +29,7 @@ class ZipTest extends TestCase
         $this->zipHelper = Core::make('helper/zip');
         $this->workDir = null;
         try {
-            $tempDir = @sys_get_temp_dir();
+            $tempDir = CCM_TESTS_TEMPDIR;
             if (!is_dir($tempDir) || !is_writable($tempDir)) {
                 throw new Exception('Temporary directory not found or not writable');
             }

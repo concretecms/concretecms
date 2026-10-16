@@ -310,7 +310,7 @@ final class FakeHttpsServer
             throw new \RuntimeException('The openssl PHP extension is not available');
         }
         $assetsDirectory = self::getAssetsDirectory();
-        $keepaliveFile = @tempnam(sys_get_temp_dir(), 'ccm-fake-https-server');
+        $keepaliveFile = @tempnam(CCM_TESTS_TEMPDIR, 'ccm-fake-https-server');
         if ($keepaliveFile === false) {
             throw new \RuntimeException('Failed to create the keepalive file of the fake HTTPS server');
         }
