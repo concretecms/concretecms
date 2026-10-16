@@ -6,7 +6,7 @@ on:
 
 jobs:
   install:
-    name: Update from ${{ matrix.from-version }} with PHP ${{ matrix.php-version }}
+    name: Update from ${{ matrix.from-version }} with PHP ${{ matrix.php-version }} and ${{ matrix.sql-mode.name }} SQL mode
     runs-on: ubuntu-latest
     container: ghcr.io/concrete5-community/docker5:${{ matrix.from-version }}-full
     strategy:
@@ -18,13 +18,29 @@ jobs:
         php-version:
           - "7.4"
           - "8.2"
+        sql-mode:
+          -
+            name: strict
+            value: ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+          -
+            name: empty
+            value: ""
     steps:
       -
         name: Configure environment
         run: |
           switch-composer 2
           switch-php ${{ matrix.php-version }}
+          cat <<EOT >/etc/mysql/conf.d/sql-mode.cnf
+          [mysqld]
+          sql_mode = "${{ matrix.sql-mode.value }}"
+          EOT
           ccm-service start db
+          ACTUAL_SQL_MODE="$(mysql -sN -e 'SELECT @@GLOBAL.sql_mode')"
+          if [ "$ACTUAL_SQL_MODE" != '${{ matrix.sql-mode.value }}' ]; then
+            echo "Wrong SQL mode: $ACTUAL_SQL_MODE" >&2
+            exit 1
+          fi
       -
         name: Checkout
         uses: actions/checkout@v7
