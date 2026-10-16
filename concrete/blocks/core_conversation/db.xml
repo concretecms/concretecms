@@ -6,8 +6,8 @@
             <key/>
         </field>
         <field name="cnvID" type="integer" />
-        <field name="enablePosting" type="integer">
-            <default value="1" />
+        <field name="enablePosting" type="boolean">
+            <default value="1"/>
         </field>
         <field name="paginate" type="boolean">
             <default value="1" />

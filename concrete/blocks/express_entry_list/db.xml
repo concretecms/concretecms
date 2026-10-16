@@ -26,16 +26,16 @@
     <field name="displayLimit" type="integer">
       <default value="20"/>
     </field>
-    <field name="enableItemsPerPageSelection" type="integer">
+    <field name="enableItemsPerPageSelection" type="boolean">
       <default value="0"/>
     </field>
-    <field name="enablePagination" type="integer">
+    <field name="enablePagination" type="boolean">
       <default value="0"/>
     </field>
-    <field name="enableSearch" type="integer">
+    <field name="enableSearch" type="boolean">
       <default value="0"/>
     </field>
-    <field name="enableKeywordSearch" type="integer">
+    <field name="enableKeywordSearch" type="boolean">
       <default value="0"/>
     </field>
     <field name="headerBackgroundColor" type="string" size="32">
