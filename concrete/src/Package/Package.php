@@ -15,13 +15,16 @@ use Concrete\Core\Database\EntityManager\Driver\CoreDriver;
 use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Entity\Package as PackageEntity;
+use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Events\EventDispatcher;
+use Concrete\Core\File\Service\File as FileService;
 use Concrete\Core\Package\Dependency\DependencyChecker;
 use Concrete\Core\Package\Event\PackageEvent;
 use Concrete\Core\Package\Event\UninstallEvent;
 use Concrete\Core\Package\Event\UpgradeEvent;
 use Concrete\Core\Package\ItemCategory\Manager;
 use Concrete\Core\Page\Theme\Theme;
+use Concrete\Core\System\SystemUser;
 use Doctrine\Common\Proxy\ProxyGenerator;
 use Doctrine\DBAL\Schema\Comparator as SchemaComparator;
 use Doctrine\ORM\EntityManager;
@@ -916,29 +919,148 @@ abstract class Package implements LocalizablePackageInterface
      */
     public function backup()
     {
+        $errors = $this->getBackupErrors();
+        if ($errors->has()) {
+            return $errors;
+        }
+
+        $trash = $this->app->make('config')->get('concrete.misc.package_backup_directory');
+        $packageHandle = $this->getPackageHandle();
+        $packagePath = DIR_PACKAGES . '/' . $packageHandle;
+        $trashName = $trash . '/' . $packageHandle . '_' . date('YmdHis');
+        if (!$this->movePackageDirectoryToTrash($packagePath, $trashName)) {
+            $this->addPackageFilesystemError(
+                $errors,
+                t(
+                    'Unable to move the package directory from "%1$s" to "%2$s". Check write permissions on the package directory and trash directory.',
+                    $packagePath,
+                    $trashName
+                )
+            );
+        }
+
+        return $errors->has() ? $errors : $this;
+    }
+
+    private function movePackageDirectoryToTrash(
+        string $packagePath,
+        string $trashName
+    ): bool {
+        if (@rename($packagePath, $trashName)) {
+            $this->backedUpFname = $trashName;
+
+            return true;
+        }
+
+        $fileService = $this->app->make(FileService::class);
+        @$fileService->copyAll($packagePath, $trashName);
+        if (!$this->packageDirectoryWasCopied($packagePath, $trashName)) {
+            if (is_dir($trashName)) {
+                @$fileService->removeAll($trashName, true);
+            }
+
+            return false;
+        }
+        if (!$fileService->removeAll($packagePath, true)) {
+            return false;
+        }
+
+        $this->backedUpFname = $trashName;
+
+        return true;
+    }
+
+    private function packageDirectoryWasCopied(
+        string $packagePath,
+        string $trashName
+    ): bool {
+        if (!is_dir($packagePath) || !is_dir($trashName)) {
+            return false;
+        }
+
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($packagePath, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+        foreach ($files as $file) {
+            $relativePath = substr($file->getPathname(), strlen($packagePath) + 1);
+            $copiedPath = $trashName . '/' . $relativePath;
+            if ($file->isDir()) {
+                if (!is_dir($copiedPath)) {
+                    return false;
+                }
+            } elseif (!is_file($copiedPath) || filesize($file->getPathname()) !== filesize($copiedPath)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Create the trash directory if needed and check whether the current package directory can be moved there.
+     */
+    public function getBackupErrors(): ErrorList
+    {
         $packageHandle = $this->getPackageHandle();
         $errors = $this->app->make('error');
-        if ($packageHandle === '' || !is_dir(DIR_PACKAGES . '/' . $packageHandle)) {
+        $packagePath = DIR_PACKAGES . '/' . $packageHandle;
+        if ($packageHandle === '' || !is_dir($packagePath)) {
             $errors->add($this->getErrorText(self::E_PACKAGE_NOT_FOUND));
         } else {
             $config = $this->app->make('config');
             $trash = $config->get('concrete.misc.package_backup_directory');
-            if (!is_dir($trash)) {
-                @mkdir($trash, $config->get('concrete.filesystem.permissions.directory'));
-            }
-            if (!is_dir($trash)) {
-                $errors->add($this->getErrorText(self::E_PACKAGE_MIGRATE_BACKUP));
+            if (!is_string($trash) || trim($trash) === '') {
+                $this->addPackageFilesystemError(
+                    $errors,
+                    t('The package trash directory is not configured.')
+                );
+            } elseif ((file_exists($trash) || is_link($trash)) && !is_dir($trash)) {
+                $this->addPackageFilesystemError(
+                    $errors,
+                    t('The configured package trash path "%s" exists but is not a directory.', $trash)
+                );
             } else {
-                $trashName = $trash . '/' . $packageHandle . '_' . date('YmdHis');
-                if (!@rename(DIR_PACKAGES . '/' . $this->getPackageHandle(), $trashName)) {
-                    $errors->add($this->getErrorText(self::E_PACKAGE_MIGRATE_BACKUP));
-                } else {
-                    $this->backedUpFname = $trashName;
+                if (!is_dir($trash)) {
+                    @mkdir($trash, $config->get('concrete.filesystem.permissions.directory'), true);
                 }
+                if (!is_dir($trash)) {
+                    $this->addPackageFilesystemError(
+                        $errors,
+                        t('Unable to create the package trash directory "%s". Check write permissions for the parent directory.', $trash)
+                    );
+                } elseif (!is_writable($trash)) {
+                    $this->addPackageFilesystemError(
+                        $errors,
+                        t('Unable to write to the package trash directory "%s".', $trash)
+                    );
+                }
+            }
+            if (!is_writable(DIR_PACKAGES)) {
+                $this->addPackageFilesystemError(
+                    $errors,
+                    t('Unable to move the package directory because the package installation directory "%s" is not writable.', DIR_PACKAGES)
+                );
             }
         }
 
-        return $errors->has() ? $errors : $this;
+        return $errors;
+    }
+
+    private function addPackageFilesystemError(
+        ErrorList $errors,
+        string $message
+    ): void {
+        $username = $this->app->make(SystemUser::class)->getCurrentUserName();
+        if ($username === '') {
+            $username = t('unknown');
+        }
+
+        $errors->add(t(
+            '%1$s PHP process user: %2$s.',
+            $message,
+            $username
+        ));
     }
 
     /**
