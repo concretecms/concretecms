@@ -45,7 +45,7 @@ class Blocks extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/Block"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to access this resource."
      *     ),
      *     @OA\Response(
@@ -60,7 +60,7 @@ class Blocks extends ApiController
         if ($b) {
             $checker = new Checker($b);
             if (!$checker->canViewBlock()) {
-                return $this->error(t("You do not have access to view this block."), 401);
+                return $this->error(t("You do not have access to view this block."), 403);
             }
         } else {
             return $this->error(t("Block not found"), 404);
@@ -94,7 +94,7 @@ class Blocks extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/DeletedResponse"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to delete this resource."
      *     ),
      *     @OA\Response(
@@ -109,7 +109,7 @@ class Blocks extends ApiController
         if ($b) {
             $checker = new Checker($b);
             if (!$checker->canDeleteBlock()) {
-                return $this->error(t("You do not have access to delete this block."), 401);
+                return $this->error(t("You do not have access to delete this block."), 403);
             }
         } else {
             return $this->error(t("Block not found"), 404);

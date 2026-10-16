@@ -73,16 +73,16 @@ class Areas extends ApiController implements ApplicationAwareInterface
 
         $page = Page::getByID($pageID);
         if ($page && $page->isError() && $page->getError() == COLLECTION_NOT_FOUND) {
-            return $this->error(t('Page not found.', 404));
+            return $this->error(t('Page not found.'), 404);
         }
         $area = Area::getOrCreate($page, $areaHandle);
         $blockType = BlockType::getByHandle($content['type']);
         if (!$blockType) {
-            return $this->error(t('Invalid block type handle.', 401));
+            return $this->error(t('Invalid block type handle.'), 400);
         }
         $checker = new Checker($area);
         if (!$checker->canAddBlock($blockType)) {
-            return $this->error(t('You do not have permission to add this block type to this area on this page.', 403));
+            return $this->error(t('You do not have permission to add this block type to this area on this page.'), 403);
         }
 
         $controller = $blockType->getController();
@@ -154,20 +154,20 @@ class Areas extends ApiController implements ApplicationAwareInterface
     {
         $page = Page::getByID($pageID, 'RECENT');
         if ($page && $page->isError() && $page->getError() == COLLECTION_NOT_FOUND) {
-            return $this->error(t('Page not found.', 404));
+            return $this->error(t('Page not found.'), 404);
         }
 
         try {
             list($area, $b) = $this->getBlockToWorkWith($page, $areaHandle, $blockID);
         } catch (AreaNotFoundException $e) {
-            return $this->error(t('Area not found.', 404));
+            return $this->error(t('Area not found.'), 404);
         } catch (BlockNotFoundException $e) {
-            return $this->error(t('Block not found.', 404));
+            return $this->error(t('Block not found.'), 404);
         }
 
         $checker = new Checker($b);
         if (!$checker->canDeleteBlock()) {
-            return $this->error(t('You do not have permission to delete this block on this page.', 403));
+            return $this->error(t('You do not have permission to delete this block on this page.'), 403);
         }
 
         $blockToEdit = $this->getBlockToEdit($page, $area, $areaHandle, $blockID);
@@ -244,20 +244,20 @@ class Areas extends ApiController implements ApplicationAwareInterface
 
         $page = Page::getByID($pageID, 'RECENT');
         if ($page && $page->isError() && $page->getError() == COLLECTION_NOT_FOUND) {
-            return $this->error(t('Page not found.', 404));
+            return $this->error(t('Page not found.'), 404);
         }
 
         try {
             list($area, $b) = $this->getBlockToWorkWith($page, $areaHandle, $blockID);
         } catch (AreaNotFoundException $e) {
-            return $this->error(t('Area not found.', 404));
+            return $this->error(t('Area not found.'), 404);
         } catch (BlockNotFoundException $e) {
-            return $this->error(t('Block not found.', 404));
+            return $this->error(t('Block not found.'), 404);
         }
 
         $checker = new Checker($b);
         if (!$checker->canEditBlock()) {
-            return $this->error(t('You do not have permission to edit this block on this page.', 403));
+            return $this->error(t('You do not have permission to edit this block on this page.'), 403);
         }
 
         $body = (array) $content['value'];
