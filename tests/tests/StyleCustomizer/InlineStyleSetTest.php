@@ -5,10 +5,20 @@ namespace Concrete\Tests\StyleCustomizer;
 use Concrete\Core\Block\CustomStyle;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Concrete\TestHelpers\Database\ConcreteDatabaseTestCase;
+use SimpleXMLElement;
 use Symfony\Component\HttpFoundation\Request;
 
 class InlineStyleSetTest extends ConcreteDatabaseTestCase
 {
+    /**
+     * Importing a style set saves it.
+     *
+     * @var string[]
+     */
+    protected $entityClassNames = [
+        'Concrete\Core\Entity\StyleCustomizer\Inline\StyleSet',
+    ];
+
     public function testPopulateFromRequestEmpty()
     {
         $r = Request::create('http://www.foo.com', 'POST', []);
@@ -193,4 +203,59 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
         $this->assertEquals('allowed-one md:two ok-one md-5 nothing', $set->getCustomClass());
     }
 
+    /**
+     * A CIF is written by hand or by another site, and what it says is held to the same rules as a form.
+     */
+    public function testImportKeepsOnlyTheValuesThatHold()
+    {
+        $set = StyleSet::import(new SimpleXMLElement(<<<'EOT'
+<style>
+    <customClass>hero "evil" ok</customClass>
+    <customID>   hero-1   </customID>
+    <customElementAttribute>class="sneaky" data-x="1"</customElementAttribute>
+    <backgroundColor>rgba(1,2,3,1)</backgroundColor>
+    <backgroundRepeat>sometimes</backgroundRepeat>
+    <backgroundSize>cover</backgroundSize>
+    <borderStyle>painted</borderStyle>
+    <borderWidth>-2px</borderWidth>
+    <marginTop>10 miles</marginTop>
+    <paddingTop>-5px</paddingTop>
+    <alignment>sideways</alignment>
+    <rotate>45deg</rotate>
+</style>
+EOT
+        ));
+
+        $this->assertGreaterThan(0, $set->getID());
+        $this->assertSame('hero ok', $set->getCustomClass());
+        $this->assertSame('hero-1', $set->getCustomID());
+        $this->assertSame('data-x="1"', $set->getCustomElementAttribute());
+        $this->assertSame('rgba(1,2,3,1)', $set->getBackgroundColor());
+        $this->assertSame('cover', $set->getBackgroundSize());
+        $this->assertSame('', $set->getBackgroundRepeat());
+        $this->assertSame('', $set->getBorderStyle());
+        $this->assertSame('', $set->getBorderWidth());
+        $this->assertSame('', $set->getMarginTop());
+        $this->assertSame('', $set->getPaddingTop());
+        $this->assertSame('', $set->getAlignment());
+        $this->assertSame('', $set->getRotate());
+    }
+
+    /**
+     * The dialog refuses an attribute whose quotes are not closed, while a CIF is read for what holds in it:
+     * the import goes on without it.
+     */
+    public function testImportDropsAnAttributeWhoseQuotesAreNotClosed()
+    {
+        $set = StyleSet::import(new SimpleXMLElement(<<<'EOT'
+<style>
+    <customElementAttribute>data-x="1</customElementAttribute>
+    <textColor>#ff0000</textColor>
+</style>
+EOT
+        ));
+
+        $this->assertSame('', $set->getCustomElementAttribute());
+        $this->assertSame('#ff0000', $set->getTextColor());
+    }
 }

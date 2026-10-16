@@ -41,11 +41,18 @@ class StyleSet
     public static function import(SimpleXMLElement $node)
     {
         $xmlService = app(Xml::class);
+        $values = app(StyleValues::class);
         $o = new StyleSetEntity();
-        $o->setCustomClass((string) $node->customClass);
-        $o->setCustomID((string) $node->customID);
-        $o->setCustomElementAttribute((string) $node->customElementAttribute);
-        $o->setBackgroundColor((string) $node->backgroundColor);
+        $o->setCustomClass($values->sanitizeClasses(preg_split('/\s+/', trim((string) $node->customClass), -1, PREG_SPLIT_NO_EMPTY) ?: []));
+        $o->setCustomID(trim((string) $node->customID));
+        try {
+            $customElementAttribute = $values->sanitizeElementAttribute((string) $node->customElementAttribute);
+        } catch (UserMessageException $x) {
+            // a CIF is read for what holds in it, and an attribute whose quotes are not closed does not
+            $customElementAttribute = '';
+        }
+        $o->setCustomElementAttribute($customElementAttribute);
+        $o->setBackgroundColor($values->sanitizeColor($node->backgroundColor));
         $filename = (string) $node->backgroundImage;
         if ($filename) {
             $inspector = app('import/value_inspector');
@@ -55,31 +62,31 @@ class StyleSet
                 $o->setBackgroundImageFileID($fID);
             }
         }
-        $o->setBackgroundRepeat((string) $node->backgroundRepeat);
-        $o->setBackgroundSize((string) $node->backgroundSize);
-        $o->setBackgroundPosition((string) $node->backgroundPosition);
-        $o->setBorderColor((string) $node->borderColor);
-        $o->setBorderStyle((string) $node->borderStyle);
-        $o->setBorderWidth((string) $node->borderWidth);
-        $o->setBorderRadius((string) $node->borderRadius);
-        $o->setBaseFontSize((string) $node->baseFontSize);
-        $o->setAlignment((string) $node->alignment);
-        $o->setTextColor((string) $node->textColor);
-        $o->setLinkColor((string) $node->linkColor);
-        $o->setMarginTop((string) $node->marginTop);
-        $o->setMarginBottom((string) $node->marginBottom);
-        $o->setMarginLeft((string) $node->marginLeft);
-        $o->setMarginRight((string) $node->marginRight);
-        $o->setPaddingTop((string) $node->paddingTop);
-        $o->setPaddingBottom((string) $node->paddingBottom);
-        $o->setPaddingLeft((string) $node->paddingLeft);
-        $o->setPaddingRight((string) $node->paddingRight);
-        $o->setRotate((string) $node->rotate);
-        $o->setBoxShadowHorizontal((string) $node->boxShadowHorizontal);
-        $o->setBoxShadowVertical((string) $node->boxShadowVertical);
-        $o->setBoxShadowBlur((string) $node->boxShadowBlur);
-        $o->setBoxShadowSpread((string) $node->boxShadowSpread);
-        $o->setBoxShadowColor((string) $node->boxShadowColor);
+        $o->setBackgroundRepeat($values->sanitizeBackgroundRepeat($node->backgroundRepeat));
+        $o->setBackgroundSize($values->sanitizeBackgroundSize($node->backgroundSize));
+        $o->setBackgroundPosition($values->sanitizeBackgroundPosition($node->backgroundPosition));
+        $o->setBorderColor($values->sanitizeColor($node->borderColor));
+        $o->setBorderStyle($values->sanitizeBorderStyle($node->borderStyle));
+        $o->setBorderWidth($values->sanitizeLength($node->borderWidth, false));
+        $o->setBorderRadius($values->sanitizeLength($node->borderRadius, false));
+        $o->setBaseFontSize($values->sanitizeLength($node->baseFontSize, false));
+        $o->setAlignment($values->sanitizeAlignment($node->alignment));
+        $o->setTextColor($values->sanitizeColor($node->textColor));
+        $o->setLinkColor($values->sanitizeColor($node->linkColor));
+        $o->setMarginTop($values->sanitizeLength($node->marginTop));
+        $o->setMarginBottom($values->sanitizeLength($node->marginBottom));
+        $o->setMarginLeft($values->sanitizeLength($node->marginLeft));
+        $o->setMarginRight($values->sanitizeLength($node->marginRight));
+        $o->setPaddingTop($values->sanitizeLength($node->paddingTop, false));
+        $o->setPaddingBottom($values->sanitizeLength($node->paddingBottom, false));
+        $o->setPaddingLeft($values->sanitizeLength($node->paddingLeft, false));
+        $o->setPaddingRight($values->sanitizeLength($node->paddingRight, false));
+        $o->setRotate($values->sanitizeRotation($node->rotate));
+        $o->setBoxShadowHorizontal($values->sanitizeLength($node->boxShadowHorizontal));
+        $o->setBoxShadowVertical($values->sanitizeLength($node->boxShadowVertical));
+        $o->setBoxShadowBlur($values->sanitizeLength($node->boxShadowBlur, false));
+        $o->setBoxShadowSpread($values->sanitizeLength($node->boxShadowSpread));
+        $o->setBoxShadowColor($values->sanitizeColor($node->boxShadowColor));
         $o->setBoxShadowInset($xmlService->getBool($node->boxShadowInset));
         $o->setHideOnExtraSmallDevice($xmlService->getBool($node->hideOnExtraSmallDevice));
         $o->setHideOnSmallDevice($xmlService->getBool($node->hideOnSmallDevice));
@@ -89,68 +96,6 @@ class StyleSet
         $o->save();
 
         return $o;
-    }
-
-    /**
-     * @param string[] $cssClasses
-     */
-    protected static function sanitizeCssClasses(array $cssClasses): ?string
-    {
-        $cssClasses = array_filter($cssClasses, function ($class) {
-            return preg_match('/^[^<>\'"]+$/', $class);
-        });
-        if (count($cssClasses) > 0) {
-            return implode(' ', $cssClasses);
-        }
-        return null;
-    }
-
-    protected static function sanitizeCssColor($value): ?string
-    {
-        $value = trim((string) $value);
-        if ($value === '') {
-            return null;
-        }
-
-        if (preg_match('/^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i', $value)) {
-            return $value;
-        }
-        if (preg_match('/^(?:rgb|hsl)a?\(\s*[-\d.%\s,\/]+\)$/i', $value)) {
-            return preg_replace('/\s+/', ' ', $value);
-        }
-
-        return in_array(strtolower($value), ['transparent', 'currentcolor'], true) ? $value : null;
-    }
-
-    protected static function sanitizeCssLength($value, bool $allowNegative = true): ?string
-    {
-        $value = trim((string) $value);
-        if ($value === '') {
-            return null;
-        }
-
-        $pattern = $allowNegative
-            ? '/^-?(?:\d+|\d*\.\d+)(?:px|%|em|rem|vh|vw|vmin|vmax)?$/i'
-            : '/^(?:\d+|\d*\.\d+)(?:px|%|em|rem|vh|vw|vmin|vmax)?$/i';
-
-        return preg_match($pattern, $value) ? $value : null;
-    }
-
-    protected static function sanitizeCssRotation($value): ?string
-    {
-        $value = trim((string) $value);
-        if ($value === '') {
-            return null;
-        }
-
-        return preg_match('/^-?(?:\d+|\d*\.\d+)$/', $value) ? $value : null;
-    }
-
-    protected static function sanitizeCssEnum($value, array $allowed): ?string
-    {
-        $value = trim((string) $value);
-
-        return in_array($value, $allowed, true) ? $value : null;
     }
 
     /**
@@ -165,25 +110,16 @@ class StyleSet
     public static function populateFromRequest(Request $request)
     {
         $post = $request->request;
+        $values = app(StyleValues::class);
         $set = new StyleSetEntity();
         $return = false;
 
-        $backgroundRepeat = self::sanitizeCssEnum($post->get('backgroundRepeat'), ['no-repeat', 'repeat-x', 'repeat-y', 'repeat']) ?? 'no-repeat';
-        $backgroundSize = self::sanitizeCssEnum($post->get('backgroundSize'), ['auto', 'contain', 'cover', '10%', '25%', '50%', '75%', '100%']) ?? 'auto';
-        $backgroundPosition = self::sanitizeCssEnum($post->get('backgroundPosition'), [
-            'left top',
-            'left center',
-            'left bottom',
-            'center top',
-            'center center',
-            'center bottom',
-            'right top',
-            'right center',
-            'right bottom',
-        ]) ?? 'left top';
+        $backgroundRepeat = $values->sanitizeBackgroundRepeat($post->get('backgroundRepeat')) ?: 'no-repeat';
+        $backgroundSize = $values->sanitizeBackgroundSize($post->get('backgroundSize')) ?: 'auto';
+        $backgroundPosition = $values->sanitizeBackgroundPosition($post->get('backgroundPosition')) ?: 'left top';
 
-        $v = self::sanitizeCssColor($post->get('backgroundColor'));
-        if ($v !== null) {
+        $v = $values->sanitizeColor($post->get('backgroundColor'));
+        if ($v !== '') {
             $set->setBackgroundColor($v);
             $set->setBackgroundRepeat($backgroundRepeat);
             $set->setBackgroundSize($backgroundSize);
@@ -220,106 +156,106 @@ class StyleSet
             }
         }
 
-        $v = self::sanitizeCssColor($post->get('linkColor', ''));
-        if ($v !== null) {
+        $v = $values->sanitizeColor($post->get('linkColor', ''));
+        if ($v !== '') {
             $set->setLinkColor($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssColor($post->get('textColor', ''));
-        if ($v !== null) {
+        $v = $values->sanitizeColor($post->get('textColor', ''));
+        if ($v !== '') {
             $set->setTextColor($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('baseFontSize', ''), false);
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('baseFontSize', ''), false, false);
+        if ($v !== '') {
             $set->setBaseFontSize($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('marginTop', ''));
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('marginTop', ''), true, false);
+        if ($v !== '') {
             $set->setMarginTop($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('marginRight', ''));
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('marginRight', ''), true, false);
+        if ($v !== '') {
             $set->setMarginRight($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('marginBottom', ''));
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('marginBottom', ''), true, false);
+        if ($v !== '') {
             $set->setMarginBottom($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('marginLeft', ''));
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('marginLeft', ''), true, false);
+        if ($v !== '') {
             $set->setMarginLeft($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('paddingTop', ''), false);
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('paddingTop', ''), false, false);
+        if ($v !== '') {
             $set->setPaddingTop($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('paddingRight', ''), false);
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('paddingRight', ''), false, false);
+        if ($v !== '') {
             $set->setPaddingRight($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('paddingBottom', ''), false);
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('paddingBottom', ''), false, false);
+        if ($v !== '') {
             $set->setPaddingBottom($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('paddingLeft', ''), false);
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('paddingLeft', ''), false, false);
+        if ($v !== '') {
             $set->setPaddingLeft($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('borderWidth', ''), false);
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('borderWidth', ''), false, false);
+        if ($v !== '') {
             $set->setBorderWidth($v);
-            $set->setBorderStyle(self::sanitizeCssEnum($post->get('borderStyle'), ['', 'solid', 'dotted', 'dashed', 'double', 'groove', 'ridge', 'inset', 'outset']));
-            $set->setBorderColor(self::sanitizeCssColor($post->get('borderColor')));
+            $set->setBorderStyle($values->sanitizeBorderStyle($post->get('borderStyle')));
+            $set->setBorderColor($values->sanitizeColor($post->get('borderColor')));
             $return = true;
         }
 
-        $v = self::sanitizeCssLength($post->get('borderRadius', ''), false);
-        if ($v !== null && $v !== '0px') {
+        $v = $values->sanitizeLength($post->get('borderRadius', ''), false, false);
+        if ($v !== '') {
             $set->setBorderRadius($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssEnum($post->get('alignment', ''), ['', 'left', 'center', 'right']);
-        if ($v !== null && $v !== '') {
+        $v = $values->sanitizeAlignment($post->get('alignment', ''));
+        if ($v !== '') {
             $set->setAlignment($v);
             $return = true;
         }
 
-        $v = self::sanitizeCssRotation($post->get('rotate'));
-        if ($v !== null && $v !== '0') {
+        $v = $values->sanitizeRotation($post->get('rotate'), false);
+        if ($v !== '') {
             $set->setRotate($v);
             $return = true;
         }
 
         if ($post->has('boxShadowColor')) {
-            $boxShadowHorizontal = self::sanitizeCssLength($post->get('boxShadowHorizontal', '')) ?: '0px';
-            $boxShadowVertical = self::sanitizeCssLength($post->get('boxShadowVertical', '')) ?: '0px';
-            $boxShadowBlur = self::sanitizeCssLength($post->get('boxShadowBlur', ''), false) ?: '0px';
-            $boxShadowSpread = self::sanitizeCssLength($post->get('boxShadowSpread', '')) ?: '0px';
+            $boxShadowHorizontal = $values->sanitizeLength($post->get('boxShadowHorizontal', '')) ?: '0px';
+            $boxShadowVertical = $values->sanitizeLength($post->get('boxShadowVertical', '')) ?: '0px';
+            $boxShadowBlur = $values->sanitizeLength($post->get('boxShadowBlur', ''), false) ?: '0px';
+            $boxShadowSpread = $values->sanitizeLength($post->get('boxShadowSpread', '')) ?: '0px';
             $boxShadowInset = (bool) $post->get('boxShadowInset');
             if ($boxShadowHorizontal !== '0px' || $boxShadowVertical !== '0px' || $boxShadowBlur !== '0px' || $boxShadowSpread !== '0px') {
-                $set->setBoxShadowColor(self::sanitizeCssColor($post->get('boxShadowColor')));
+                $set->setBoxShadowColor($values->sanitizeColor($post->get('boxShadowColor')));
                 $set->setBoxShadowBlur($boxShadowBlur);
                 $set->setBoxShadowHorizontal($boxShadowHorizontal);
                 $set->setBoxShadowVertical($boxShadowVertical);
@@ -331,8 +267,8 @@ class StyleSet
 
         $v = $post->get('customClass');
         if (is_array($v)) {
-            $customClasses = self::sanitizeCssClasses($v);
-            if ($customClasses !== null) {
+            $customClasses = $values->sanitizeClasses($v);
+            if ($customClasses !== '') {
                 $set->setCustomClass($customClasses);
                 $return = true;
             }
@@ -344,25 +280,61 @@ class StyleSet
             $return = true;
         }
 
-        $v = trim($post->get('customElementAttribute', ''));
+        $v = $values->sanitizeElementAttribute($post->get('customElementAttribute', ''));
         if ($v !== '') {
-            // strip class attributes
-            $pattern = '/(class\s*=\s*["\'][^\'"]*["\'])/i';
-            $customElementAttribute = preg_replace($pattern, '', $v);
-            // strip ID attributes
-            $pattern = '/(id\s*=\s*["\'][^\'"]*["\'])/i';
-            $customElementAttribute = preg_replace($pattern, '', $customElementAttribute);
-            // don't save if there are odd numbers of single/double quotes
-            $singleQuoteCount = preg_match_all('/([\'])/i', $customElementAttribute);
-            $doubleQuoteCount = preg_match_all('/(["])/i', $customElementAttribute);
-
-            if ($singleQuoteCount % 2 !== 0 || $doubleQuoteCount % 2 !== 0) {
-                throw new UserMessageException(t('Custom Element Attribute input: unclosed quote(s)'));
-            }
-            $set->setCustomElementAttribute(trim($customElementAttribute));
+            $set->setCustomElementAttribute($v);
             $return = true;
         }
 
         return $return ? $set : null;
+    }
+
+    /**
+     * @deprecated use \Concrete\Core\StyleCustomizer\Inline\StyleValues::sanitizeClasses()
+     *
+     * @param string[] $cssClasses
+     */
+    protected static function sanitizeCssClasses(array $cssClasses): ?string
+    {
+        return self::orNull(app(StyleValues::class)->sanitizeClasses($cssClasses));
+    }
+
+    /**
+     * @deprecated use \Concrete\Core\StyleCustomizer\Inline\StyleValues::sanitizeColor()
+     */
+    protected static function sanitizeCssColor($value): ?string
+    {
+        return self::orNull(app(StyleValues::class)->sanitizeColor($value));
+    }
+
+    /**
+     * @deprecated use \Concrete\Core\StyleCustomizer\Inline\StyleValues::sanitizeLength()
+     */
+    protected static function sanitizeCssLength($value, bool $allowNegative = true): ?string
+    {
+        return self::orNull(app(StyleValues::class)->sanitizeLength($value, $allowNegative));
+    }
+
+    /**
+     * @deprecated use \Concrete\Core\StyleCustomizer\Inline\StyleValues::sanitizeRotation()
+     */
+    protected static function sanitizeCssRotation($value): ?string
+    {
+        return self::orNull(app(StyleValues::class)->sanitizeRotation($value));
+    }
+
+    /**
+     * @deprecated use \Concrete\Core\StyleCustomizer\Inline\StyleValues::sanitizeEnum()
+     *
+     * @param string[] $allowed
+     */
+    protected static function sanitizeCssEnum($value, array $allowed): ?string
+    {
+        return self::orNull(app(StyleValues::class)->sanitizeEnum($value, $allowed));
+    }
+
+    private static function orNull(string $value): ?string
+    {
+        return $value === '' ? null : $value;
     }
 }
