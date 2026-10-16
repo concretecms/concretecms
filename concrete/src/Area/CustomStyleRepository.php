@@ -64,11 +64,10 @@ class CustomStyleRepository
     {
         $this->loadCollectionVersionAreaStyleRecords($stack->getCollectionID(), $stack->getVersionID());
         $styles = [];
-        foreach ($this->styles[$stack->getCollectionID()] as $arHandle => $issID) {
-            $arHandle = $this->text->filterNonAlphaNum($arHandle);
+        foreach ($this->styles[$stack->getCollectionID()] as $issID) {
             $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $a = new GlobalArea($arHandle);
+                $a = new GlobalArea($stack->getStackName());
                 $obj = new AreaCustomStyle($obj, $a, $theme);
                 $styles[] = $obj;
             }
