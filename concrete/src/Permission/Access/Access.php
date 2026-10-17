@@ -7,11 +7,14 @@ use Concrete\Core\Foundation\ConcreteObject;
 use Concrete\Core\Logging\Entry\Permission\Assignment\Assignment as PermissionAssignmentLogEntry;
 use Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Concrete\Core\Permission\Duration as PermissionDuration;
+use Concrete\Core\Permission\Event\PermissionAccessEntityEvent;
+use Concrete\Core\Permission\Event\PermissionAssignmentEvent;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Logger;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Workflow;
+use Events;
 use PDO;
 
 /**
@@ -54,21 +57,21 @@ class Access extends ConcreteObject
     /**
      * Get the object associated to the permission (for example, a Page instance).
      *
-     * @return object
+     * @return object|null
      */
     public function getPermissionObject()
     {
-        return $this->pk->getPermissionObject();
+        return isset($this->pk) && is_object($this->pk) ? $this->pk->getPermissionObject() : null;
     }
 
     /**
      * Get the object to be used to check the permission (for example, a Page instance).
      *
-     * @return object
+     * @return object|null
      */
     public function getPermissionObjectToCheck()
     {
-        return $this->pk->getPermissionObjectToCheck();
+        return isset($this->pk) && is_object($this->pk) ? $this->pk->getPermissionObjectToCheck() : null;
     }
 
     /**
@@ -289,9 +292,22 @@ class Access extends ConcreteObject
         $db->executeQuery('update PermissionAccess set paIsInUse = 1 where paID = ?', [$this->paID]);
         $this->paIsInUse = true;
 
+        $u = null;
+        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
+            $u = $app->make(User::class);
+        }
+
+        $event = new PermissionAssignmentEvent(
+            isset($this->pk) ? $this->pk : null,
+            $this,
+            $this->getPermissionObject(),
+            $u
+        );
+        Events::dispatch('on_permission_assignment_assign', $event);
+
         $logger = $app->make(Logger::class);
         $entry = $app->make(PermissionAssignmentLogEntry::class, [
-           'applier' => $app->make(User::class),
+           'applier' => $u ?: $app->make(User::class),
            'key' => $this->pk,
            'access' => $this,
         ]);
@@ -324,6 +340,22 @@ class Access extends ConcreteObject
             ['paID', 'peID'],
             false
         );
+
+        $u = null;
+        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
+            $u = $app->make(User::class);
+        }
+
+        $event = new PermissionAccessEntityEvent(
+            $this,
+            $pae,
+            $durationObject instanceof PermissionDuration ? $durationObject : null,
+            (int) $accessType,
+            $u,
+            isset($this->pk) ? $this->pk : null,
+            $this->getPermissionObject()
+        );
+        Events::dispatch('on_permission_access_entity_add', $event);
     }
 
     /**
@@ -337,6 +369,22 @@ class Access extends ConcreteObject
             'delete from PermissionAccessList where peID = ? and paID = ?',
             [$pe->getAccessEntityID(), $this->getPermissionAccessID()]
         );
+
+        $u = null;
+        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
+            $u = $app->make(User::class);
+        }
+
+        $event = new PermissionAccessEntityEvent(
+            $this,
+            $pe,
+            null,
+            PermissionKey::ACCESS_TYPE_INCLUDE,
+            $u,
+            isset($this->pk) ? $this->pk : null,
+            $this->getPermissionObject()
+        );
+        Events::dispatch('on_permission_access_entity_remove', $event);
     }
 
     /**
