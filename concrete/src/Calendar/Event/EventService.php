@@ -22,6 +22,7 @@ use Concrete\Core\Entity\Calendar\CalendarEvent;
 use Concrete\Core\Entity\Calendar\CalendarEventVersion;
 use Concrete\Core\Entity\Calendar\CalendarRelatedEvent;
 use Concrete\Core\Events\EventDispatcher;
+use Concrete\Core\Calendar\Event\Event\CalendarEventEvent;
 
 class EventService implements ApplicationAwareInterface, LoggerAwareInterface
 {
@@ -210,6 +211,7 @@ class EventService implements ApplicationAwareInterface, LoggerAwareInterface
         $this->app->executeCommand(new RegenerateRelevantBoardInstancesCommand('calendar_event', $event));
 
         $this->logger->info(t('Approved version %s of event %s', $version->getID(), $version->getName()));
+        $this->dispatcher->dispatch('on_calendar_event_version_approve', new CalendarEventEvent($version, ['entityManager' => $this->entityManager]));
     }
 
     public function unapprove(CalendarEvent $event)
@@ -288,6 +290,7 @@ class EventService implements ApplicationAwareInterface, LoggerAwareInterface
         $this->entityManager->flush();
 
         $this->logger->info(t('Calendar event %s (%s) deleted successfully.', $event->getName(), $eventID));
+        $this->dispatcher->dispatch('on_calendar_event_delete', new CalendarEventEvent($event, ['entityManager' => $this->entityManager]));
     }
 
     public function deleteVersion(CalendarEventVersion $version)
@@ -296,6 +299,7 @@ class EventService implements ApplicationAwareInterface, LoggerAwareInterface
         $this->entityManager->flush();
 
         $this->logger->info(t('Calendar event version %s deleted successfully.', $version->getID()));
+        $this->dispatcher->dispatch('on_calendar_event_version_delete', new CalendarEventEvent($version, ['entityManager' => $this->entityManager]));
     }
 
     public function isRelatedTo(CalendarEvent $event1, CalendarEvent $event2)
