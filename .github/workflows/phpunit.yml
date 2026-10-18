@@ -14,6 +14,8 @@ jobs:
     env:
       LC_ALL: en_US.UTF-8
       CODE_COVERAGE: none
+      # Security advisories are checked by the composer-audit workflow
+      COMPOSER_NO_BLOCKING: "1"
 
     runs-on: ${{ matrix.operating-system }}
     services:
