@@ -7,24 +7,19 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="useCustomTitle" type="integer">
-            <unsigned/>
+        <field name="useCustomTitle" type="boolean">
             <default value="0"/>
         </field>
-        <field name="useFilterTitle" type="integer">
-            <unsigned/>
+        <field name="useFilterTitle" type="boolean">
             <default value="0"/>
         </field>
-        <field name="useFilterTopic" type="integer">
-            <unsigned/>
+        <field name="useFilterTopic" type="boolean">
             <default value="0"/>
         </field>
-        <field name="useFilterTag" type="integer">
-            <unsigned/>
+        <field name="useFilterTag" type="boolean">
             <default value="0"/>
         </field>
-        <field name="useFilterDate" type="integer">
-            <unsigned/>
+        <field name="useFilterDate" type="boolean">
             <default value="0"/>
         </field>
         <field name="topicTextFormat" type="string" size="255"/>

@@ -13,8 +13,12 @@
           <default value="h2" />
           <notnull/>
         </field>
-        <field name="alwaysOpen" type="integer" />
-        <field name="flush" type="integer" />
+        <field name="alwaysOpen" type="boolean">
+          <default value="0"/>
+        </field>
+        <field name="flush" type="boolean">
+          <default value="0"/>
+        </field>
     </table>
     <table name="btAccordionEntries">
         <field name="id" type="integer">
