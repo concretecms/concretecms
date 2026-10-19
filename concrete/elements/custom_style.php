@@ -10,6 +10,7 @@ use Concrete\Core\Form\Service\Form;
 use Concrete\Core\Form\Service\Widget\Color;
 use Concrete\Core\Http\Request;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
+use Concrete\Core\StyleCustomizer\Inline\StyleValues;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Utility\Service\Identifier;
 use Concrete\Core\View\View;
@@ -124,6 +125,8 @@ $form = $app->make(Form::class);
 $color = $app->make(Color::class);
 /** @var Identifier $identifier */
 $identifier = $app->make(Identifier::class);
+/** @var StyleValues $styleValues */
+$styleValues = $app->make(StyleValues::class);
 $blockID =0;
 if ($style instanceof CustomStyle) {
     $areaID = $style->block->getBlockAreaObject()->getAreaID();
@@ -176,12 +179,7 @@ if ($style instanceof CustomStyle) {
 
                             <div class="form-group">
                                 <?php echo $form->label("alignment", t('Alignment')) ?>
-                                <?php echo $form->select('alignment', [
-                                    '' => t('None'),
-                                    'left' => t('Left'),
-                                    'center' => t('Center'),
-                                    'right' => t('Right'),
-                                ], $alignment, ['v-model'=>'alignment', '@change'=>'calculatePreview']); ?>
+                                <?php echo $form->select('alignment', $styleValues->getAlignments(), $alignment, ['v-model'=>'alignment', '@change'=>'calculatePreview']); ?>
                             </div>
                         </fieldset>
                     </div>
@@ -236,45 +234,21 @@ if ($style instanceof CustomStyle) {
 
                             <div class="form-group">
                                 <?php echo $form->label("backgroundRepeat", t('Repeats')) ?>
-                                <?php echo $form->select('backgroundRepeat', [
-                                    'no-repeat' => t('No Repeat'),
-                                    'repeat-x' => t('Horizontally'),
-                                    'repeat-y' => t('Vertically'),
-                                    'repeat' => t('Horizontally & Vertically'),
-                                ], $backgroundRepeat, ['v-model'=>'background.repeat', '@change'=>'calculatePreview']); ?>
+                                <?php echo $form->select('backgroundRepeat', $styleValues->getBackgroundRepeats(), $backgroundRepeat, ['v-model'=>'background.repeat', '@change'=>'calculatePreview']); ?>
                             </div>
 
                             <hr/>
 
                             <div class="form-group">
                                 <?php echo $form->label("backgroundSize", t('Size')) ?>
-                                <?php echo $form->select('backgroundSize', [
-                                    'auto' => t('Auto'),
-                                    'contain' => t('Contain'),
-                                    'cover' => t('Cover'),
-                                    '10%' => t('10%'),
-                                    '25%' => t('25%'),
-                                    '50%' => t('50%'),
-                                    '75%' => t('75%'),
-                                    '100%' => t('100%'),
-                                ], $backgroundSize, ['v-model'=>'background.size', '@change'=>'calculatePreview']); ?>
+                                <?php echo $form->select('backgroundSize', $styleValues->getBackgroundSizes(), $backgroundSize, ['v-model'=>'background.size', '@change'=>'calculatePreview']); ?>
                             </div>
 
                             <hr/>
 
                             <div class="form-group">
                                 <?php echo $form->label("backgroundPosition", t('Position')) ?>
-                                <?php echo $form->select('backgroundPosition', [
-                                    'left top' => t('Left Top'),
-                                    'left center' => t('Left Center'),
-                                    'left bottom' => t('Left Bottom'),
-                                    'center top' => t('Center Top'),
-                                    'center center' => t('Center Center'),
-                                    'center bottom' => t('Center Bottom'),
-                                    'right top' => t('Right Top'),
-                                    'right center' => t('Right Center'),
-                                    'right bottom' => t('Right Bottom'),
-                                ], $backgroundPosition, ['v-model'=>'background.position', '@change'=>'calculatePreview']); ?>
+                                <?php echo $form->select('backgroundPosition', $styleValues->getBackgroundPositions(), $backgroundPosition, ['v-model'=>'background.position', '@change'=>'calculatePreview']); ?>
                             </div>
                         </fieldset>
                     </div>
@@ -298,17 +272,7 @@ if ($style instanceof CustomStyle) {
 
                             <div class="form-group">
                                 <?php echo $form->label("borderStyle", t('Style')) ?>
-                                <?php echo $form->select('borderStyle', [
-                                    '' => t('None'),
-                                    'solid' => t('Solid'),
-                                    'dotted' => t('Dotted'),
-                                    'dashed' => t('Dashed'),
-                                    'double' => t('Double'),
-                                    'groove' => t('Groove'),
-                                    'ridge' => t('Ridge'),
-                                    'inset' => t('Inset'),
-                                    'outset' => t('Outset'),
-                                ], $borderStyle, ['v-model'=>'border.style','@change'=>'calculatePreview']); ?>
+                                <?php echo $form->select('borderStyle', $styleValues->getBorderStyles(), $borderStyle, ['v-model'=>'border.style','@change'=>'calculatePreview']); ?>
                             </div>
 
                             <hr/>
