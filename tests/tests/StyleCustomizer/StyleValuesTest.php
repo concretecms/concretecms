@@ -159,12 +159,34 @@ class StyleValuesTest extends TestCase
         // an attribute whose name ends in them keeps what it carries
         static::assertSame('data-class="hero"', $styleValues->sanitizeElementAttribute('data-class="hero"'));
         static::assertSame('data-id="7"', $styleValues->sanitizeElementAttribute('data-id="7"'));
+        static::assertSame('data-x="1"', $styleValues->sanitizeElementAttribute('class="John\'s" data-x="1"'));
     }
 
-    public function testAnAttributeWhoseQuotesAreNotClosedIsRefused(): void
+    public function testAQuoteInsideAValueIsJustACharacter(): void
+    {
+        $styleValues = new StyleValues();
+
+        static::assertSame('title="John\'s page"', $styleValues->sanitizeElementAttribute('title="John\'s page"'));
+        static::assertSame("title='say \"hi\"'", $styleValues->sanitizeElementAttribute("title='say \"hi\"'"));
+    }
+
+    /**
+     * @dataProvider provideAttributesWhoseQuotesAreNotClosed
+     */
+    public function testAnAttributeWhoseQuotesAreNotClosedIsRefused(string $attribute): void
     {
         $this->expectException(UserMessageException::class);
 
-        (new StyleValues())->sanitizeElementAttribute('data-x="1');
+        (new StyleValues())->sanitizeElementAttribute($attribute);
+    }
+
+    public static function provideAttributesWhoseQuotesAreNotClosed(): array
+    {
+        return [
+            ['data-x="1'],
+            ['data-x="1\''],
+            ['title="John\'s page" data-x="1'],
+            ['disabled "x"'],
+        ];
     }
 }

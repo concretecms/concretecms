@@ -230,7 +230,7 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
 <style>
     <customClass>hero "evil" ok</customClass>
     <customID>   hero-1   </customID>
-    <customElementAttribute>class="sneaky" data-x="1"</customElementAttribute>
+    <customElementAttribute>class="sneaky" title="John's page" data-x="1"</customElementAttribute>
     <backgroundColor>rgba(1,2,3,1)</backgroundColor>
     <backgroundRepeat>sometimes</backgroundRepeat>
     <backgroundSize>cover</backgroundSize>
@@ -238,8 +238,18 @@ class InlineStyleSetTest extends ConcreteDatabaseTestCase
     <borderWidth>-2px</borderWidth>
     <marginTop>10 miles</marginTop>
     <paddingTop>-5px</paddingTop>
+    <marginBottom>0px</marginBottom>
+    <paddingTop>-5px</paddingTop>
+    <paddingBottom>0</paddingBottom>
+    <baseFontSize>0em</baseFontSize>
     <alignment>sideways</alignment>
     <rotate>45deg</rotate>
+    <boxShadowHorizontal>0px</boxShadowHorizontal>
+    <boxShadowVertical>0</boxShadowVertical>
+    <boxShadowBlur>0em</boxShadowBlur>
+    <boxShadowSpread>0px</boxShadowSpread>
+    <boxShadowColor>#000000</boxShadowColor>
+    <boxShadowInset>1</boxShadowInset>
 </style>
 EOT
         ));
@@ -247,16 +257,45 @@ EOT
         $this->assertGreaterThan(0, $set->getID());
         $this->assertSame('hero ok', $set->getCustomClass());
         $this->assertSame('hero-1', $set->getCustomID());
-        $this->assertSame('data-x="1"', $set->getCustomElementAttribute());
+        $this->assertSame('title="John\'s page" data-x="1"', $set->getCustomElementAttribute());
         $this->assertSame('rgba(1,2,3,1)', $set->getBackgroundColor());
         $this->assertSame('cover', $set->getBackgroundSize());
         $this->assertSame('', $set->getBackgroundRepeat());
         $this->assertSame('', $set->getBorderStyle());
         $this->assertSame('', $set->getBorderWidth());
         $this->assertSame('', $set->getMarginTop());
+        $this->assertSame('', $set->getMarginBottom());
         $this->assertSame('', $set->getPaddingTop());
+        $this->assertSame('', $set->getPaddingBottom());
+        $this->assertSame('', $set->getBaseFontSize());
         $this->assertSame('', $set->getAlignment());
         $this->assertSame('', $set->getRotate());
+        // a shadow of no size at all is no shadow, color and inset included
+        $this->assertSame('', $set->getBoxShadowHorizontal());
+        $this->assertSame('', $set->getBoxShadowVertical());
+        $this->assertSame('', $set->getBoxShadowBlur());
+        $this->assertSame('', $set->getBoxShadowSpread());
+        $this->assertSame('', $set->getBoxShadowColor());
+        $this->assertFalse($set->getBoxShadowInset());
+    }
+
+    public function testImportFillsTheSizesAShadowSaysNothingAbout()
+    {
+        $set = StyleSet::import(new SimpleXMLElement(<<<'EOT'
+<style>
+    <boxShadowBlur>4px</boxShadowBlur>
+    <boxShadowColor>#000000</boxShadowColor>
+    <boxShadowInset>1</boxShadowInset>
+</style>
+EOT
+        ));
+
+        $this->assertSame('0px', $set->getBoxShadowHorizontal());
+        $this->assertSame('0px', $set->getBoxShadowVertical());
+        $this->assertSame('4px', $set->getBoxShadowBlur());
+        $this->assertSame('0px', $set->getBoxShadowSpread());
+        $this->assertSame('#000000', $set->getBoxShadowColor());
+        $this->assertTrue($set->getBoxShadowInset());
     }
 
     /**

@@ -208,9 +208,12 @@ class StyleValues
             return '';
         }
         // the name has to end there, or an attribute of another name loses a piece of itself
-        $value = (string) preg_replace('/(?<![-\w])class\s*=\s*["\'][^\'"]*["\']/i', '', $value);
-        $value = (string) preg_replace('/(?<![-\w])id\s*=\s*["\'][^\'"]*["\']/i', '', $value);
-        if (preg_match_all('/([\'])/i', $value) % 2 !== 0 || preg_match_all('/(["])/i', $value) % 2 !== 0) {
+        $value = (string) preg_replace('/(?<![-\w])class\s*=\s*(?:"[^"]*"|\'[^\']*\')/i', '', $value);
+        $value = (string) preg_replace('/(?<![-\w])id\s*=\s*(?:"[^"]*"|\'[^\']*\')/i', '', $value);
+        // a quote inside a value delimited by the other one is just a character: only the ones left
+        // over after the delimited values are taken away are unclosed
+        $unquoted = (string) preg_replace('/=\s*(?:"[^"]*"|\'[^\']*\')/', '=', $value);
+        if (strpbrk($unquoted, '"\'') !== false) {
             throw new UserMessageException(t('Custom Element Attribute input: unclosed quote(s)'));
         }
 
