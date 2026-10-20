@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class UserValidationStatusTest extends UserTestCase
 {
-    public function provideValidationStatuses(): array
+    public static function provideValidationStatuses(): array
     {
         return [
             [-1, UserEntity::VALIDATION_STATUS_UNKNOWN, true],
