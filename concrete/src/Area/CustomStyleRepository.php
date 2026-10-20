@@ -25,19 +25,23 @@ class CustomStyleRepository
 
     /**
      * @param \Concrete\Core\Page\Collection\Collection $collection
-     * @return array|AreaCustomStyle[]
+     * @return \Concrete\Core\Area\CustomStyle[]
      */
     public function getCollectionVersionAreaStyles(Collection $collection): array
     {
-        $this->loadCollectionVersionAreaStyleRecords($collection->getCollectionID(), $collection->getVersionID());
+        $versionID = $collection->getVersionID();
+        if ($versionID === null) {
+            return [];
+        }
+        $collectionID = $collection->getCollectionID();
+        $this->loadCollectionVersionAreaStyleRecords($collectionID, $versionID);
         $styles = [];
-        foreach ($this->styles[$collection->getCollectionID()] as $arHandle => $issID) {
+        foreach ($this->styles[$collectionID][$versionID] as $arHandle => $issID) {
             $arHandle = $this->text->filterNonAlphaNum($arHandle);
             $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
                 $a = new Area($arHandle);
-                $obj = new AreaCustomStyle($obj, $a, $collection->getCollectionThemeObject());
-                $styles[] = $obj;
+                $styles[] = new AreaCustomStyle($obj, $a, $collection->getCollectionThemeObject());
             }
         }
 
@@ -46,31 +50,40 @@ class CustomStyleRepository
 
     /**
      * @param \Concrete\Core\Page\Collection\Version\Version $version
-     * @return array
+     * @return array<string, int> the ID of the style set of each area, by area handle
      */
     public function getCollectionVersionAreaStyleIDs(Version $version): array
     {
-        $this->loadCollectionVersionAreaStyleRecords($version->getCollectionID(), $version->getVersionID());
+        $versionID = $version->getVersionID();
+        if ($versionID === null) {
+            return [];
+        }
+        $collectionID = $version->getCollectionID();
+        $this->loadCollectionVersionAreaStyleRecords($collectionID, $versionID);
 
-        return $this->styles[$version->getCollectionID()] ?? [];
+        return $this->styles[$collectionID][$versionID];
     }
 
     /**
      * @param \Concrete\Core\Page\Stack\Stack $stack
      * @param \Concrete\Core\Page\Theme\Theme $theme
-     * @return array|AreaCustomStyle[]
+     * @return \Concrete\Core\Area\CustomStyle[]
      */
     public function getStackAreaStyles(Stack $stack, Theme $theme): array
     {
-        $this->loadCollectionVersionAreaStyleRecords($stack->getCollectionID(), $stack->getVersionID());
+        $versionID = $stack->getVersionID();
+        if ($versionID === null) {
+            return [];
+        }
+        $collectionID = $stack->getCollectionID();
+        $this->loadCollectionVersionAreaStyleRecords($collectionID, $versionID);
         $styles = [];
-        foreach ($this->styles[$stack->getCollectionID()] as $arHandle => $issID) {
+        foreach ($this->styles[$collectionID][$versionID] as $arHandle => $issID) {
             $arHandle = $this->text->filterNonAlphaNum($arHandle);
             $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
                 $a = new GlobalArea($arHandle);
-                $obj = new AreaCustomStyle($obj, $a, $theme);
-                $styles[] = $obj;
+                $styles[] = new AreaCustomStyle($obj, $a, $theme);
             }
         }
 
@@ -80,12 +93,10 @@ class CustomStyleRepository
     protected function loadCollectionVersionAreaStyleRecords(int $collectionID, ?int $versionID): void
     {
         if ($versionID === null) {
-            $this->styles[$collectionID] = [];
-
             return;
         }
 
-        if (!isset($this->styles[$collectionID])) {
+        if (!isset($this->styles[$collectionID][$versionID])) {
             $qb = $this->connection->createQueryBuilder();
             $qb->select('arHandle', 'issID')
                 ->from('CollectionVersionAreaStyles')
@@ -95,12 +106,9 @@ class CustomStyleRepository
                 ->setParameter(':cID', $collectionID)
                 ->setParameter(':cvID', $versionID);
             $r = $qb->execute()->fetchAllAssociative();
-            if (count($r) > 0) {
-                foreach ($r as $row) {
-                    $this->styles[$collectionID][$row['arHandle']] = $row['issID'];
-                }
-            } else {
-                $this->styles[$collectionID] = [];
+            $this->styles[$collectionID][$versionID] = [];
+            foreach ($r as $row) {
+                $this->styles[$collectionID][$versionID][$row['arHandle']] = $row['issID'];
             }
         }
     }
