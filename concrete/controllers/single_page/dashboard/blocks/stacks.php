@@ -13,6 +13,7 @@ use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Stack;
 use Concrete\Core\Page\Stack\StackList;
 use Concrete\Core\Permission\Checker;
+use Concrete\Core\Site\Service as SiteService;
 use Concrete\Core\Support\Facade\StackFolder;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
@@ -42,9 +43,9 @@ class Stacks extends DashboardPageController
     {
         $factory = $this->createBreadcrumbFactory();
         if (strpos($cID, '@') !== false) {
-            list($cID, $locale) = explode('@', $cID, 2);
+            list($cID, $sectionOrLocale) = explode('@', $cID, 2);
         } else {
-            $locale = '';
+            $sectionOrLocale = '';
         }
 
         $s = Stack::getByID($cID);
@@ -59,22 +60,19 @@ class Stacks extends DashboardPageController
                 $stackToEdit = $s;
             }
             $sections = $this->getMultilingualSections();
-            $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $s, $sections, $locale));
-            if (!empty($sections)) {
-                if ($stackToEdit !== $neutralStack) {
-                    $section = $stackToEdit->getMultilingualSection();
-                    if ($section !== null) {
-                        $locale = $section->getLocale();
-                    }
-                }
-                if (!isset($sections[$locale])) {
-                    $locale = '';
-                }
-                if ($locale !== '') {
-                    $this->set('localeCode', $locale);
-                    $this->set('localeName', $sections[$locale]->getLanguageText());
-                    $stackToEdit = $neutralStack->getLocalizedStack($sections[$locale]);
-                }
+            $section = $this->getSectionByIDOrLocale($sections, $sectionOrLocale);
+            if ($stackToEdit !== $neutralStack) {
+                $ownSection = $stackToEdit->getMultilingualSection();
+                $section = $ownSection === null ? null : ($sections[$ownSection->getCollectionID()] ?? null);
+            }
+            $factory->setCurrentSection($section);
+            $this->setBreadcrumb($factory->getBreadcrumb($this->getPageObject(), $s, $sections));
+            if ($section !== null && $neutralStack !== null) {
+                $this->set('sectionID', $section->getCollectionID());
+                $this->set('localeCode', $section->getLocale());
+                $this->set('localeName', $section->getLanguageText());
+                $this->set('siteName', $this->getSiteNameOfSection($section, $sections));
+                $stackToEdit = $neutralStack->getLocalizedStack($section);
             }
             if ($stackToEdit !== null) {
                 $blocks = $stackToEdit->getBlocks('Main');
@@ -241,7 +239,7 @@ class Stacks extends DashboardPageController
             } elseif ($neutralStack->getStackType() == Stack::ST_TYPE_GLOBAL_AREA) {
                 $isGlobalArea = true;
             }
-            $section = Section::getByLocale($this->post('locale'));
+            $section = $this->getPostedSection();
             if (!$section) {
                 $this->error->add(t('Unable to find the specified language'));
             } elseif ($neutralStack && $neutralStack->getLocalizedStack($section) !== null) {
@@ -268,7 +266,7 @@ class Stacks extends DashboardPageController
 
                 return $this->buildRedirect($this->action(
                     'view_details',
-                    $neutralStack->getCollectionID() . rawurlencode('@' . $section->getLocale()),
+                    $neutralStack->getCollectionID() . rawurlencode('@' . $section->getCollectionID()),
                     $isGlobalArea ? 'localized_global_area_added' : 'localized_stack_added'
                 ));
             }
@@ -328,7 +326,7 @@ class Stacks extends DashboardPageController
                     $nextID = $neutralStack->getCollectionID();
                     $section = $s->getMultilingualSection();
                     if ($section) {
-                        $nextID .= '@' . $section->getLocale();
+                        $nextID .= '@' . $section->getCollectionID();
                     }
                 }
 
@@ -616,7 +614,7 @@ class Stacks extends DashboardPageController
 
     public function list_page()
     {
-        return Redirect::to('/');
+        return $this->buildRedirect('/');
     }
 
     public function delete_stackfolder()
@@ -689,27 +687,112 @@ class Stacks extends DashboardPageController
     }
 
     /**
-     * @return Section[]
+     * Get all the multilingual sections of all the sites (the ones of the site being edited first).
+     *
+     * @return array<int,Section> keyed by the ID of the section
      */
     protected function getMultilingualSections()
     {
         $result = [];
         if ($this->app->make('multilingual/detector')->isEnabled()) {
-            foreach (Section::getList() as $section) {
-                // @var Section $section
-                $result[$section->getLocale()] = $section;
-            }
-            uasort($result, function (Section $a, Section $b) {
-                $r = strcasecmp($a->getLanguageText(), $b->getLanguageText());
-                if ($r === 0) {
-                    $r = strcasecmp($a->getLocale(), $b->getLocale());
+            foreach ($this->getSites() as $site) {
+                $ofSite = [];
+                foreach (Section::getList($site) as $section) {
+                    $ofSite[$section->getCollectionID()] = $section;
                 }
+                uasort($ofSite, function (Section $a, Section $b): int {
+                    $r = strcasecmp($a->getLanguageText(), $b->getLanguageText());
+                    if ($r === 0) {
+                        $r = strcasecmp($a->getLocale(), $b->getLocale());
+                    }
 
-                return $r;
-            });
+                    return $r;
+                });
+                $result += $ofSite;
+            }
         }
 
         return $result;
+    }
+
+    /**
+     * Get all the sites (the one being edited, then the others).
+     *
+     * @return \Concrete\Core\Entity\Site\Site[]
+     */
+    private function getSites(): array
+    {
+        $service = $this->app->make(SiteService::class);
+        $edited = $service->getActiveSiteForEditing();
+        $sites = $edited === null ? [] : [$edited];
+        foreach ($service->getList() as $site) {
+            if ($edited === null || $site->getSiteID() !== $edited->getSiteID()) {
+                $sites[] = $site;
+            }
+        }
+
+        return $sites;
+    }
+
+    /**
+     * Get one of the sections by its ID, or by its locale as the links made before this page knew about
+     * the languages of the other sites say it.
+     *
+     * @param array<int,Section> $sections
+     *
+     * @return Section|null NULL where the string names none of them
+     */
+    private function getSectionByIDOrLocale(array $availableSections, string $sectionOrLocale): ?Section
+    {
+        if ($sectionOrLocale === '') {
+            return null;
+        }
+        if (preg_match('/^\d+$/', $sectionOrLocale)) {
+            return $availableSections[(int) $sectionOrLocale] ?? null;
+        }
+        foreach ($availableSections as $section) {
+            // the sections of the site being edited come first, so a locale two sites speak is its own
+            if ($section->getLocale() === $sectionOrLocale) {
+                return $section;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the section a posted form names: its ID, or its locale as an older form sends it.
+     *
+     * @return Section|null NULL where the form names no section of this installation
+     */
+    private function getPostedSection(): ?Section
+    {
+        $sections = $this->getMultilingualSections();
+        $sectionID = $this->request->request->getInt('section');
+        if ($sectionID > 0) {
+            return $sections[$sectionID] ?? null;
+        }
+
+        return $this->getSectionByIDOrLocale($sections, (string) $this->request->request->get('locale'));
+    }
+
+    /**
+     * @param array<int,Section> $sections
+     *
+     * @return string the name of the site the section belongs to, empty where only one site has languages
+     */
+    private function getSiteNameOfSection(Section $section, array $availableSections): string
+    {
+        $siteIDs = [];
+        foreach ($availableSections as $listed) {
+            $site = $listed->getSite();
+            if ($site !== null) {
+                $siteIDs[$site->getSiteID()] = true;
+            }
+        }
+        $site = $section->getSite();
+
+        return count($siteIDs) > 1 && $site !== null ? (string) $site->getSiteName() : '';
     }
 
     /**

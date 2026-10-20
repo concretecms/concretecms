@@ -28,10 +28,9 @@ class Stack implements ItemInterface
         $newNodes = [
             $this->exportStack($xml, $stack, $path)
         ];
-        $sections = SectionObject::getList($stack->getSite());
-        foreach ($sections as $section) {
-            $localizedStack = $stack->getLocalizedStack($section);
-            if ($localizedStack !== null) {
+        foreach ($stack->getLocalizedStacks() as $localizedStack) {
+            $section = $localizedStack->getMultilingualSection();
+            if ($section !== null) {
                 $newNodes[] = $this->exportStack($xml, $localizedStack, $path, $section);
             }
         }
@@ -79,6 +78,10 @@ class Stack implements ItemInterface
         $node->addAttribute('path', $path);
         if ($section !== null) {
             $node->addAttribute('section', $section->getLocale());
+            $site = $section->getSite();
+            if ($site !== null) {
+                $node->addAttribute('site', $site->getSiteHandle());
+            }
         }
 
         // We should have just a 'Main' area in stacks, but just in case.
