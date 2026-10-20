@@ -205,14 +205,14 @@ $userEntity = $user->getEntityObject();
             <dd>
                 <div>
                     <?php
-                    switch ($userEntity->isUserValidated()) {
-                        case '-1':
+                    switch ($userEntity->getUserValidationStatus()) {
+                        case $userEntity::VALIDATION_STATUS_UNKNOWN:
                             print t('Unknown');
                             break;
-                        case '0':
+                        case $userEntity::VALIDATION_STATUS_NOT_VALIDATED:
                             print t('No');
                             break;
-                        case '1':
+                        case $userEntity::VALIDATION_STATUS_VALIDATED:
                             print t('Yes');
                             break;
                     }
