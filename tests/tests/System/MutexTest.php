@@ -67,16 +67,14 @@ class MutexTest extends TestCase
             }
             $this->assertInstanceOf(MutexBusyException::class, $error);
 
-            // Let's launch another process, so that we can check that the mutex system works across different processes
+            // Let's launch another process (booted with the test bootstrap, so that it uses the same temporary directory
+            // and database of this one), so that we can check that the mutex system works across different processes
             $mutex->release($key2);
             foreach ([$key1 => 'Mutex busy', $key2 => 'Mutex acquired'] as $key => $result) {
                 $cmd = escapeshellarg(PHP_BINARY);
                 if (PHP_SAPI === 'phpdbg') {
                     $cmd .= ' -qrr';
                 }
-                $cmd .= ' ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, DIR_BASE_CORE . '/bin/concrete5'));
-                $cmd .= ' c5:exec';
-                $cmd .= ' --no-interaction --ansi';
                 $cmd .= ' ' . escapeshellarg(str_replace('/', DIRECTORY_SEPARATOR, DIR_TESTS . '/assets/System/acquire-mutex.php'));
                 $cmd .= ' ' . escapeshellarg(get_class($mutex));
                 $cmd .= ' ' . escapeshellarg($key);
