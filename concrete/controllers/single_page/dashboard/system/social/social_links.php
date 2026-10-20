@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Social;
 
 use Concrete\Core\Page\Controller\DashboardSitePageController;
 use Concrete\Core\Sharing\SocialNetwork\Link;
+use Concrete\Core\Sharing\SocialNetwork\LinkUrlValidator;
 use Concrete\Core\Sharing\SocialNetwork\ServiceList;
 use Concrete\Core\Sharing\SocialNetwork\Service;
 use Core;
@@ -44,11 +45,10 @@ class SocialLinks extends DashboardSitePageController
             $service = Service::getByHandle($ssHandle);
             $existingLink = Link::getByServiceHandle($ssHandle, $this->getSite());
         }
-        $sec = Core::make('helper/security');
-        $url = $sec->sanitizeURL($this->request->request->get('url'));
-        $scheme = is_string($url) ? strtolower((string) parse_url($url, PHP_URL_SCHEME)) : '';
-        if (!$url || filter_var($url, FILTER_VALIDATE_URL) === false || !in_array($scheme, ['http', 'https'], true)) {
-            $this->error->add(t('You must specify a valid URL.'));
+        $url = $this->request->request->get('url');
+        $validator = $this->app->make(LinkUrlValidator::class);
+        if (!$validator->isValid($url)) {
+            $this->error->add($validator->getInvalidUrlMessage((string) $url));
         }
         if (!is_object($service)) {
             $this->error->add(t('You must choose a service.'));

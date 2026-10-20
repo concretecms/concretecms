@@ -16,13 +16,17 @@ use Concrete\Core\Attribute\SimpleTextExportableAttributeInterface;
 use Concrete\Core\Entity\Attribute\Key\Key;
 use Concrete\Core\Entity\Attribute\Value\Value\SelectedSocialLink;
 use Concrete\Core\Entity\Attribute\Value\Value\SocialLinksValue;
+use Concrete\Core\Error\ErrorList\Error\Error;
+use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Sharing\SocialNetwork\LinkUrlValidator;
 use Concrete\Core\Sharing\SocialNetwork\Service as Service;
 use Concrete\Core\Sharing\SocialNetwork\ServiceList as ServiceList;
 use Environment;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
-use Loader;
 use SimpleXMLElement;
 
 class Controller extends AttributeTypeController implements
@@ -48,33 +52,42 @@ class Controller extends AttributeTypeController implements
 
     public function createAttributeValueFromRequest()
     {
-        $data = $this->post();
-        $values = [];
-        if (!is_array($data['service'])) {
-            $data['service'] = [];
-        }
-        if (!is_array($data['serviceInfo'])) {
-            $data['serviceInfo'] = [];
-        }
-        for ($i = 0; $i < count($data['service']); ++$i) {
-            $values[$data['service'][$i]] = $data['serviceInfo'][$i];
-        }
-
-        return $this->createAttributeValue($values);
+        return $this->createAttributeValue($this->getLinksFromRequestData($this->post()));
     }
 
+    public function validateForm($data)
+    {
+        $links = $this->getLinksFromRequestData($data);
+        if ($links === []) {
+            return new FieldNotPresentError(new AttributeField($this->getAttributeKey()));
+        }
+        $validator = $this->app->make(LinkUrlValidator::class);
+        foreach ($links as $url) {
+            if (!$validator->isValid($url)) {
+                return new Error($validator->getInvalidUrlMessage($url), new AttributeField($this->getAttributeKey()));
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws \Concrete\Core\Error\UserMessageException if a link is not a valid URL
+     */
     public function createAttributeValue($values)
     {
         $av = new SocialLinksValue();
         if (is_iterable($values)) {
             $textHelper = $this->app->make('helper/text');
+            $validator = $this->app->make(LinkUrlValidator::class);
             foreach ($values as $service => $serviceInfo) {
                 if (!$serviceInfo) {
                     continue;
                 }
-                $serviceInfo = filter_var($serviceInfo, FILTER_SANITIZE_URL);
+                if (!$validator->isValid($serviceInfo)) {
+                    throw new UserMessageException($validator->getInvalidUrlMessage($serviceInfo));
+                }
                 $service = $textHelper->entities($service);
-                $serviceInfo = $textHelper->entities($serviceInfo);
                 $link = new SelectedSocialLink();
                 $link->setService($service);
                 $link->setServiceInfo($serviceInfo);
@@ -105,12 +118,15 @@ class Controller extends AttributeTypeController implements
     {
         $result = [];
         if (isset($akn->link)) {
+            $validator = $this->app->make(LinkUrlValidator::class);
             foreach ($akn->link as $xLink) {
                 $service = trim((string) $xLink['service']);
-                if ($service === '') {
+                // Versions up to 9.5.5 exported the URL HTML-encoded
+                $url = html_entity_decode((string) $xLink['detail'], ENT_QUOTES, 'UTF-8');
+                if ($service === '' || !$validator->isValid($url)) {
                     continue;
                 }
-                $result[$service] = (string) $xLink['detail'];
+                $result[$service] = $url;
             }
         }
 
@@ -124,19 +140,22 @@ class Controller extends AttributeTypeController implements
         if (count($services) > 0) {
             $env = Environment::get();
             $url = $env->getURL(DIRNAME_ATTRIBUTES . '/social_links/view.css');
-            $this->addHeaderItem(Loader::helper('html')->css($url));
+            $this->addHeaderItem($this->app->make('helper/html')->css($url));
             $html .= '<span class="ccm-social-link-attribute-display">';
             foreach ($services as $link) {
                 $serviceObject = Service::getByHandle($link->getService());
-                if (is_object($serviceObject)) {
-                    $iconHtml = $serviceObject->getServiceIconHTML();
+                if (!is_object($serviceObject)) {
+                    continue;
                 }
-                $html .= '<span class="ccm-social-link-service">';
-                $html .= '<span class="ccm-social-link-service-icon"><a href="' . filter_var($link->getServiceInfo(),
-                        FILTER_VALIDATE_URL) . '">' . $iconHtml . '</a></span>';
-                $html .= '<span class="ccm-social-link-service-info"><a href="' . filter_var($link->getServiceInfo(),
-                        FILTER_VALIDATE_URL) . '">' . $serviceObject->getName() . '</a></span>';
-                $html .= '</span>';
+                $href = h($link->getServiceInfo());
+                $icon = $serviceObject->getServiceIconHTML();
+                $name = $serviceObject->getDisplayName();
+                $html .= <<<EOT
+                    <span class="ccm-social-link-service">
+                        <span class="ccm-social-link-service-icon"><a href="{$href}">{$icon}</a></span>
+                        <span class="ccm-social-link-service-info"><a href="{$href}">{$name}</a></span>
+                    </span>
+                    EOT;
             }
             $html .= '</span>';
         }
@@ -152,7 +171,7 @@ class Controller extends AttributeTypeController implements
     public function form()
     {
         $data = [];
-        if ($this->isPost()) {
+        if ($this->request->isPost()) {
             $data['service'] = $this->post('service');
             $data['serviceInfo'] = $this->post('serviceInfo');
         } else {
@@ -164,12 +183,15 @@ class Controller extends AttributeTypeController implements
                 }
             }
         }
-        if (!isset($data['service'])) {
-            $data['service'][] = 'facebook';
-            $data['serviceInfo'][] = '';
+        $services = ServiceList::get();
+        if (!is_array($data['service'] ?? null) || !is_string($data['service'][0] ?? null) || $data['service'][0] === '') {
+            $data['service'] = [$services[0]->getHandle()];
+            $data['serviceInfo'] = [''];
+        } elseif (!is_array($data['serviceInfo'] ?? null)) {
+            $data['serviceInfo'] = [];
         }
         $this->set('data', $data);
-        $this->set('services', ServiceList::get());
+        $this->set('services', $services);
     }
 
     /**
@@ -206,6 +228,7 @@ class Controller extends AttributeTypeController implements
             }
         } else {
             $initialized = false;
+            $validator = $this->app->make(LinkUrlValidator::class);
             foreach (explode("\n", $textRepresentation) as $serviceAndInfo) {
                 $serviceAndInfo = trim($serviceAndInfo);
                 if ($serviceAndInfo === '') {
@@ -221,6 +244,10 @@ class Controller extends AttributeTypeController implements
                 $serviceObject = Service::getByHandle($serviceHandle);
                 if ($serviceObject === null) {
                     $warnings->add(t('"%1$s" is not a valid Social Service handle for the attribute with handle %2$s', $serviceHandle, $this->attributeKey->getAttributeKeyHandle()));
+                    continue;
+                }
+                if (!$validator->isValid($serviceInfo)) {
+                    $warnings->add(t('"%1$s" is not a valid URL for the attribute with handle %2$s', $serviceInfo, $this->attributeKey->getAttributeKeyHandle()));
                     continue;
                 }
                 if ($initialized === false) {
@@ -281,5 +308,23 @@ class Controller extends AttributeTypeController implements
         return null;
     }
 
+    /**
+     * @param mixed $data the attribute data in the request (the 'service' and 'serviceInfo' lists)
+     *
+     * @return array service handle => URL
+     */
+    protected function getLinksFromRequestData($data): array
+    {
+        $services = is_array($data['service'] ?? null) ? array_values($data['service']) : [];
+        $urls = is_array($data['serviceInfo'] ?? null) ? array_values($data['serviceInfo']) : [];
+        $result = [];
+        foreach ($services as $index => $service) {
+            $url = $urls[$index] ?? '';
+            if (is_string($service) && is_string($url) && $url !== '') {
+                $result[$service] = $url;
+            }
+        }
 
+        return $result;
+    }
 }
