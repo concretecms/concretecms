@@ -8,8 +8,6 @@ use Concrete\Core\Site\Service;
 class RedirectUriFactory
 {
 
-    const SWAGGER_OAUTH2_CALLBACK = DIR_REL . '/' . DIRNAME_CORE . '/api/swagger/oauth2-redirect.html';
-
     /**
      * @var Service
      */
