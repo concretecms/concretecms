@@ -107,7 +107,7 @@ class CustomStyleRepository
             $r = $qb->execute()->fetchAllAssociative();
             $this->styles[$collectionID][$versionID] = [];
             foreach ($r as $row) {
-                $this->styles[$collectionID][$versionID][$row['arHandle']] = $row['issID'];
+                $this->styles[$collectionID][$versionID][$row['arHandle']] = (int) $row['issID'];
             }
         }
     }
