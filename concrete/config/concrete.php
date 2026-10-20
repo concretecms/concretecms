@@ -8,7 +8,7 @@ return [
      */
     'version' => '9.5.5',
     'version_installed' => '9.5.5',
-    'version_db' => '20261007000000', // the key of the latest database migration
+    'version_db' => '20261020000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -1553,6 +1553,8 @@ return [
             // ['service_handle', 'Service Name', 'icon']
             // Where 'icon' is the handle of a FontAwesome 4 icon (see https://fontawesome.com/v4.7.0/icons/ )
         ],
+        // The URL schemes accepted for the social links besides http, https, mailto and tel (for example 'sms')
+        'additional_schemes' => [],
     ],
 
     'file_chooser' => [

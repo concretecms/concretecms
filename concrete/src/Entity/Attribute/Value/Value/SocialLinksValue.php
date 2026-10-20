@@ -39,7 +39,7 @@ class SocialLinksValue extends AbstractValue
         $services = $this->getSelectedLinks();
         if (count($services) > 0) {
             foreach ($services as $link) {
-                $html .= filter_var($link->getServiceInfo(), FILTER_VALIDATE_URL) . "\r\n";
+                $html .= $link->getServiceInfo() . "\r\n";
             }
         }
 

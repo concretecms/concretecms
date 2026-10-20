@@ -57,11 +57,15 @@ class ServiceList
         $services = static::getServices();
         $return = [];
         foreach ($services as $serviceArray) {
-            $o = new Service($serviceArray[0], $serviceArray[1], $serviceArray[2], isset($serviceArray[3]) ? $serviceArray[3] : null);
-            if ($o) {
-                $return[] = $o;
-            }
+            $return[] = new Service($serviceArray[0], $serviceArray[1], $serviceArray[2], $serviceArray[3] ?? null);
         }
+        $cmp = new \Punic\Comparer();
+        usort(
+            $return,
+            static function (Service $a, Service $b) use ($cmp): int {
+                return $cmp->compare($a->getName(), $b->getName());
+            }
+        );
 
         return $return;
     }
