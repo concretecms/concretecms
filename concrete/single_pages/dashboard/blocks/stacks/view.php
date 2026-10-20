@@ -19,6 +19,8 @@ use Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
  * @var Concrete\Core\Page\Page $c
  * @var string $localeName
  * @var string $localeCode
+ * @var string $siteName the site the language belongs to, empty where only one site has languages
+ * @var int $sectionID
  * @var array $blocks
  */
 
@@ -47,7 +49,13 @@ if (isset($neutralStack)) {
             ?>
             <div class="alert alert-info">
                 <p>
-                    <?= t(/*i18n: %1$s is a language name, %2$s is a language code*/ 'This stack is not defined for %1$s (%2$s): the default version will be used.', $localeName, $localeCode); ?>
+                    <?php
+                    if ($siteName === '') {
+                        echo t(/*i18n: %1$s is a language name, %2$s is a language code*/ 'This stack is not defined for %1$s (%2$s): the default version will be used.', $localeName, $localeCode);
+                    } else {
+                        echo t(/*i18n: %1$s is a language name, %2$s is a language code, %3$s is the name of a site*/ 'This stack is not defined for %1$s (%2$s) of %3$s: the default version will be used.', $localeName, $localeCode, $siteName);
+                    }
+                    ?>
                 </p>
                 <?php
                 $cpc = new Checker($neutralStack);
@@ -56,7 +64,7 @@ if (isset($neutralStack)) {
                     <form method="post" action="<?= $view->action('add_localized_stack') ?>">
                         <?php $token->output('add_localized_stack') ?>
                         <?= $form->hidden('stackID', $neutralStack->getCollectionID()) ?>
-                        <?= $form->hidden('locale', $localeCode) ?>
+                        <?= $form->hidden('section', $sectionID) ?>
                         <p>
                             <button class="btn btn-primary" type="submit">
                                 <?= $isGlobalArea ? t('Create localized global area version') : t('Create localized stack version') ?>

@@ -5,6 +5,7 @@ namespace Concrete\Core\Backup\ContentImporter\Importer\Routine;
 use Concrete\Core\Multilingual\Page\Section\Section;
 use Concrete\Core\Page\Page;
 use Concrete\Core\Page\Stack\Stack;
+use Concrete\Core\Site\Service as SiteService;
 use SimpleXMLElement;
 
 class ImportStacksContentRoutine extends AbstractPageContentRoutine implements SpecifiableHomePageRoutineInterface
@@ -53,7 +54,7 @@ class ImportStacksContentRoutine extends AbstractPageContentRoutine implements S
             $stack = $this->getStack($p);
             $locale = isset($p['section']) ? (string) $p['section'] : '';
             if ($locale !== '') {
-                $section = Section::getByLocale($locale, $this->site);
+                $section = $this->getSection($locale, isset($p['site']) ? (string) $p['site'] : '');
                 if (!$section) {
                     continue;
                 }
@@ -64,6 +65,27 @@ class ImportStacksContentRoutine extends AbstractPageContentRoutine implements S
                 $this->importPageAreas($stack, $p);
             }
         }
+    }
+
+    /**
+     * The language a version of a stack is written in: a language belongs to a site, so the one the
+     * file names settles it, and a file that names none leaves the site being imported into.
+     *
+     * @return \Concrete\Core\Multilingual\Page\Section\Section|null NULL where this installation has no
+     *     such language, or no site of that handle
+     */
+    private function getSection(string $locale, string $siteHandle)
+    {
+        $site = $this->site;
+        if ($siteHandle !== '') {
+            $site = app(SiteService::class)->getByHandle($siteHandle);
+        }
+        if ($site === null) {
+            return null;
+        }
+        $section = Section::getByLocale($locale, $site);
+
+        return $section ?: null;
     }
 
     /**
