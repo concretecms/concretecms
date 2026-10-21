@@ -94,19 +94,26 @@ class Composer extends BackendInterfacePageController
                     $dateTime = new DateTime();
                     $publishDateTime = $dateTime->translate('cvPublishDate');
                     $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
-                    $app = Application::getFacadeApplication();
-                    $appConfig = $app->make(Repository::class);
-                    $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
-                    $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
-                    $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
-                    if ($isUnapproved === !$isKeepOtherScheduling) {
-                        $keepOtherScheduling = true;
+                    if (!$publishDateTime && !$publishEndDateTime) {
+                        $e->add(t('Please specify at least a From or To date to schedule this version.'));
+                        $ptr->setError($e);
+                    } else {
+                        $app = Application::getFacadeApplication();
+                        $appConfig = $app->make(Repository::class);
+                        $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
+                        $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
+                        $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
+                        if ($isUnapproved === !$isKeepOtherScheduling) {
+                            $keepOtherScheduling = true;
+                        }
                     }
                 }
 
-                $pagetype->publish($c, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
-                $nc = Page::getByID($c->getCollectionID(), 'ACTIVE');
-                $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($nc));
+                if (!$e->has()) {
+                    $pagetype->publish($c, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
+                    $nc = Page::getByID($c->getCollectionID(), 'ACTIVE');
+                    $ptr->setRedirectURL($this->app->make('helper/navigation')->getLinkToCollection($nc));
+                }
             }
             $ptr->outputJSON();
         } else {

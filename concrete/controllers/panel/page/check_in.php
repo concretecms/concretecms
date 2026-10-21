@@ -111,22 +111,29 @@ class CheckIn extends BackendInterfacePageController
                         $dateTime = new DateTime();
                         $publishDateTime = $dateTime->translate('cvPublishDate');
                         $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
-                        $app = Application::getFacadeApplication();
-                        $appConfig = $app->make(Repository::class);
-                        $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
-                        $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
-                        $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
-                        if ($isUnapproved === !$isKeepOtherScheduling) {
-                            $pkr->setKeepOtherScheduling(true);
+                        if (!$publishDateTime && !$publishEndDateTime) {
+                            $e->add(t('Please specify at least a From or To date to schedule this version.'));
+                            $pr->setError($e);
+                        } else {
+                            $app = Application::getFacadeApplication();
+                            $appConfig = $app->make(Repository::class);
+                            $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
+                            $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
+                            $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
+                            if ($isUnapproved === !$isKeepOtherScheduling) {
+                                $pkr->setKeepOtherScheduling(true);
+                            }
+                            $pkr->scheduleVersion($publishDateTime, $publishEndDateTime);
                         }
-                        $pkr->scheduleVersion($publishDateTime, $publishEndDateTime);
                     }
 
-                    if ($c->isPageDraft()) {
-                        $pagetype = $c->getPageTypeObject();
-                        $pagetype->publish($c, $pkr);
-                    } else {
-                        $pkr->trigger();
+                    if (!$e->has()) {
+                        if ($c->isPageDraft()) {
+                            $pagetype = $c->getPageTypeObject();
+                            $pagetype->publish($c, $pkr);
+                        } else {
+                            $pkr->trigger();
+                        }
                     }
                 }
             } else {
