@@ -57,6 +57,13 @@ class InstallerOptions
     protected $userEmail = '';
 
     /**
+     * The admin username.
+     *
+     * @var string
+     */
+    protected $userName = USER_SUPER;
+
+    /**
      * The admin password hash.
      *
      * @var string
@@ -204,6 +211,30 @@ class InstallerOptions
     public function setUserEmail($value)
     {
         $this->userEmail = (string) $value;
+
+        return $this;
+    }
+
+    /**
+     * Get the admin username.
+     *
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
+    }
+
+    /**
+     * Set the admin username.
+     *
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setUserName($value)
+    {
+        $this->userName = (string) $value;
 
         return $this;
     }
@@ -450,6 +481,7 @@ class InstallerOptions
             }
             $siteInstallUser = [
                 'userEmail' => INSTALL_USER_EMAIL,
+                'userName' => defined('INSTALL_USER_NAME') ? INSTALL_USER_NAME : USER_SUPER,
                 'userPasswordHash' => INSTALL_USER_PASSWORD_HASH,
                 'startingPointHandle' => defined('INSTALL_STARTING_POINT') ? INSTALL_STARTING_POINT : '',
                 'siteName' => SITE,
@@ -462,6 +494,7 @@ class InstallerOptions
             ->setPrivacyPolicyAccepted($siteInstallUser['privacyPolicy'])
             ->setConfiguration($siteInstall)
             ->setUserEmail($siteInstallUser['userEmail'])
+            ->setUserName($siteInstallUser['userName'] ?? $this->getUserName())
             ->setUserPasswordHash($siteInstallUser['userPasswordHash'])
             ->setStartingPointHandle($siteInstallUser['startingPointHandle'])
             ->setSiteName($siteInstallUser['siteName'])
@@ -482,6 +515,7 @@ class InstallerOptions
         $siteInstall = $render->render();
         $render = new Renderer([
             'userEmail' => $this->getUserEmail(),
+            'userName' => $this->getUserName(),
             'userPasswordHash' => $this->getUserPasswordHash(),
             'startingPointHandle' => $this->getStartingPointHandle(),
             'siteName' => $this->getSiteName(),
