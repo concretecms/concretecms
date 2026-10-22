@@ -4,6 +4,9 @@ namespace Concrete\Core\Console\Command;
 use Concrete\Core\Console\Command;
 use Concrete\Core\Console\ConsoleAwareInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Package\PackageActionLogger;
+use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -63,17 +66,26 @@ EOT
         $output->writeln(sprintf('<info>found (%s).</info>', $pkg->getPackageName()));
 
         $output->write('Checking preconditions... ');
-        $test = $pkg->testForUninstall();
+        $logger = Application::getFacadeApplication()->make(PackageActionLogger::class);
+        $controller = $pkg->getController();
+        $test = $controller->testForUninstall();
         if (is_object($test)) {
             /*
              * @var Error $test
              */
+            $logger->logUninstallFailed($controller, $test);
             throw new Exception(implode("\n", $test->getList()));
         }
         $output->writeln('<info>good.</info>');
 
         $output->write('Uninstalling package... ');
-        $pkg->uninstall();
+        try {
+            $controller->uninstall();
+        } catch (UserMessageException $e) {
+            $logger->logUninstallFailed($controller, $e);
+            throw $e;
+        }
+        $logger->logUninstalled($controller);
         $output->writeln('<info>done.</info>');
 
         if ($input->getOption('trash')) {
