@@ -92,8 +92,10 @@ EOT
             $output->write('Moving package to trash... ');
             $r = $pkg->backup();
             if ($r instanceof ErrorList) {
+                $logger->logDirectoryMoveFailed($controller, $r);
                 throw new Exception(implode("\n", $r->getList()));
             }
+            $logger->logDirectoryMoved($controller, (string) $r->getBackupDestination());
             $output->writeln('<info>done.</info>');
         }
 

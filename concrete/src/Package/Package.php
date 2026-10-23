@@ -942,6 +942,16 @@ abstract class Package implements LocalizablePackageInterface
     }
 
     /**
+     * Full path of the directory moved by the latest successful backup().
+     *
+     * @return string|null
+     */
+    public function getBackupDestination()
+    {
+        return $this->backedUpFname;
+    }
+
+    /**
      * If a package was just backed up by this instance of the package object and the packages/package handle directory doesn't exist,
      * this will restore the package from the trash.
      *

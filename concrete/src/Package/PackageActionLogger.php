@@ -13,7 +13,7 @@ use Concrete\Core\Logging\LoggerFactory;
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * Writes package install, update, and uninstall outcomes to the Packages log channel.
+ * Writes package install, update, uninstall, and directory-move outcomes to the Packages log channel.
  */
 class PackageActionLogger
 {
@@ -100,6 +100,48 @@ class PackageActionLogger
             $package->getPackageHandle(),
             $this->getInstalledVersion($package),
             $this->describeReason($reason)
+        ));
+    }
+
+    public function logDirectoryMoved(Package $package, string $destination): void
+    {
+        $this->notice(t(
+            'Package "%1$s" (%2$s) %3$s directory moved to %4$s.',
+            $this->getPackageName($package),
+            $package->getPackageHandle(),
+            $this->getInstalledVersion($package),
+            $destination
+        ));
+    }
+
+    /**
+     * @param ErrorList|UserMessageException|string $reason
+     */
+    public function logDirectoryMoveFailed(Package $package, $reason, ?string $destination = null): void
+    {
+        $name = $this->getPackageName($package);
+        $handle = $package->getPackageHandle();
+        $version = $this->getInstalledVersion($package);
+        $described = $this->describeReason($reason);
+        if ($destination !== null && $destination !== '') {
+            $this->notice(t(
+                'Package "%1$s" (%2$s) %3$s directory move failed: %4$s. Intended destination: %5$s.',
+                $name,
+                $handle,
+                $version,
+                $described,
+                $destination
+            ));
+
+            return;
+        }
+
+        $this->notice(t(
+            'Package "%1$s" (%2$s) %3$s directory move failed: %4$s',
+            $name,
+            $handle,
+            $version,
+            $described
         ));
     }
 

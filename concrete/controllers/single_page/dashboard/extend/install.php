@@ -127,8 +127,12 @@ class Install extends DashboardPageController implements LoggerAwareInterface
                 $r = Package::uninstall($p);
                 if ($this->post('pkgMoveToTrash')) {
                     $r = $pkg->backup();
+                    $logger = $this->app->make(PackageActionLogger::class);
                     if ($r instanceof ErrorList) {
+                        $logger->logDirectoryMoveFailed($p, $r);
                         $this->error->add($r);
+                    } else {
+                        $logger->logDirectoryMoved($p, (string) $r->getBackupDestination());
                     }
                 }
                 if (!$this->error->has()) {

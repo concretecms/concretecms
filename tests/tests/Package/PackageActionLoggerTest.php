@@ -69,6 +69,40 @@ class PackageActionLoggerTest extends TestCase
         $logger->logUninstallFailed($package, 'Theme is active.');
     }
 
+    public function testLogsDirectoryMovedUsingInstalledVersion(): void
+    {
+        $logger = $this->createLogger('Package "Migration Tool" (migration_tool) 9.1.0 directory moved to /path/to/application/files/trash/migration_tool_20261023154800.');
+        $package = $this->createPackage('9.2.0');
+        $package->setPackageEntity($this->createEntity('9.1.0'));
+
+        $logger->logDirectoryMoved($package, '/path/to/application/files/trash/migration_tool_20261023154800');
+    }
+
+    public function testLogsDirectoryMoveFailureWithIntendedDestination(): void
+    {
+        $logger = $this->createLogger('Package "Migration Tool" (migration_tool) 9.1.0 directory move failed: Unable to backup old package directory to /path/to/application/files/trash. Intended destination: /path/to/application/files/trash/migration_tool_20261023154800.');
+        $package = $this->createPackage('9.2.0');
+        $package->setPackageEntity($this->createEntity('9.1.0'));
+
+        $logger->logDirectoryMoveFailed(
+            $package,
+            'Unable to backup old package directory to /path/to/application/files/trash',
+            '/path/to/application/files/trash/migration_tool_20261023154800'
+        );
+    }
+
+    public function testLogsDirectoryMoveFailureWithoutDestination(): void
+    {
+        $logger = $this->createLogger('Package "Migration Tool" (migration_tool) 9.1.0 directory move failed: Unable to backup old package directory to /path/to/application/files/trash');
+        $package = $this->createPackage('9.2.0');
+        $package->setPackageEntity($this->createEntity('9.1.0'));
+
+        $logger->logDirectoryMoveFailed(
+            $package,
+            'Unable to backup old package directory to /path/to/application/files/trash'
+        );
+    }
+
     public function testLogsEveryErrorInTheList(): void
     {
         $errors = new ErrorList();
