@@ -6,6 +6,7 @@ use Concrete\Core\Application\Application;
 use Concrete\Core\Database\EntityManagerConfigUpdater;
 use Concrete\Core\Database\EntityManager\Provider\PackageProviderFactory;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Marketplace\PackageRepository;
@@ -246,7 +247,15 @@ class PackageService
      */
     public function uninstall(Package $p)
     {
-        $p->uninstall();
+        $logger = $this->application->make(PackageActionLogger::class);
+        try {
+            $p->uninstall();
+        } catch (UserMessageException $e) {
+            $logger->logUninstallFailed($p, $e);
+            throw $e;
+        }
+        $logger->logUninstalled($p);
+
         $config = $this->entityManager->getConfiguration();
         $cache = $config->getMetadataCacheImpl();
         if ($cache) {
@@ -268,32 +277,42 @@ class PackageService
     public function install(Package $p, $data)
     {
         $this->localization->pushActiveContext(Localization::CONTEXT_SYSTEM);
+        $logger = $this->application->make(PackageActionLogger::class);
 
-        if (method_exists($p, 'validate_install')) {
-            $response = $p->validate_install($data);
-        }
-
-        if (isset($response) && $response instanceof ErrorList && $response->has()) {
-            return $response;
-        }
-
-        $this->bootPackageEntityManager($p, true);
-        $p->install($data);
-
-        $inspector = $this->application->make(Inspector::class);
-        $command = new UpdateRemoteDataCommand([$inspector->getPackagesField()]);
-        $this->application->executeCommand($command);
-
-        $u = $this->application->make(User::class);
-        $swapper = $p->getContentSwapper();
-        if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && isset($data['pkgDoFullContentSwap']) && $data['pkgDoFullContentSwap']) {
-            $swapper->swapContent($p, $data);
-            if (method_exists($p, 'on_after_swap_content')) {
-                $p->on_after_swap_content($data);
+        try {
+            if (method_exists($p, 'validate_install')) {
+                $response = $p->validate_install($data);
             }
+
+            if (isset($response) && $response instanceof ErrorList && $response->has()) {
+                $logger->logInstallFailed($p, $response);
+
+                return $response;
+            }
+
+            $this->bootPackageEntityManager($p, true);
+            $p->install($data);
+
+            $inspector = $this->application->make(Inspector::class);
+            $command = new UpdateRemoteDataCommand([$inspector->getPackagesField()]);
+            $this->application->executeCommand($command);
+
+            $u = $this->application->make(User::class);
+            $swapper = $p->getContentSwapper();
+            if ($u->isSuperUser() && $swapper->allowsFullContentSwap($p) && isset($data['pkgDoFullContentSwap']) && $data['pkgDoFullContentSwap']) {
+                $swapper->swapContent($p, $data);
+                if (method_exists($p, 'on_after_swap_content')) {
+                    $p->on_after_swap_content($data);
+                }
+            }
+        } catch (UserMessageException $e) {
+            $logger->logInstallFailed($p, $e);
+            throw $e;
         }
+
         $this->localization->popActiveContext();
         $this->getByHandle($p->getPackageHandle());
+        $logger->logInstalled($p);
 
         return $p;
     }

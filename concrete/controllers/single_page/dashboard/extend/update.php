@@ -10,6 +10,7 @@ use Concrete\Core\Localization\Localization;
 use Concrete\Core\Marketplace\Exception\UnableToPlacePackageException;
 use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
+use Concrete\Core\Package\PackageActionLogger;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Permission\Checker;
@@ -19,9 +20,11 @@ class Update extends DashboardPageController
     protected function updatePackage(string $pkgHandle): void
     {
         $packageService = $this->app->make(PackageService::class);
+        $logger = $this->app->make(PackageActionLogger::class);
         $packageController = $packageService->getClass($pkgHandle);
         $testResult = $packageController->testForUpgrade();
         if ($testResult !== true) {
+            $logger->logUpdateFailed($packageController, $testResult);
             $this->error->add($testResult);
 
             return;
@@ -30,19 +33,27 @@ class Update extends DashboardPageController
         $newVersion = $packageController->getPackageVersion();
         if (version_compare($newVersion, $previousVersion, '<=')) {
             OpCache::clear();
-            $this->error->add(t(
+            $message = t(
                 'Package "%1$s" was not updated because the loaded package controller still reports version %2$s. Try again.',
                 t($packageController->getPackageName()) ?: $packageController->getPackageHandle(),
                 $newVersion
-            ));
+            );
+            $logger->logUpdateFailed($packageController, $message);
+            $this->error->add($message);
 
             return;
         }
 
-        Localization::getInstance()->withContext(Localization::CONTEXT_SYSTEM, static function () use ($packageController) {
-            $packageController->upgradeCoreData();
-            $packageController->upgrade();
-        });
+        try {
+            Localization::getInstance()->withContext(Localization::CONTEXT_SYSTEM, static function () use ($packageController) {
+                $packageController->upgradeCoreData();
+                $packageController->upgrade();
+            });
+        } catch (UserMessageException $e) {
+            $logger->logUpdateFailed($packageController, $e);
+            throw $e;
+        }
+        $logger->logUpdated($packageController, $previousVersion);
         $this->set('message',
             t('Package "%1$s" has been updated successfully from version %2$s to version %3$s.',
                 t($packageController->getPackageName()) ?: $packageController->getPackageHandle(),

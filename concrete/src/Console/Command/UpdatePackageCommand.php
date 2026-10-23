@@ -3,6 +3,10 @@ namespace Concrete\Core\Console\Command;
 
 use Concrete\Core\Console\Command;
 use Concrete\Core\Console\ConsoleAwareInterface;
+use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Package\Package as PackageController;
+use Concrete\Core\Package\PackageActionLogger;
+use Concrete\Core\Support\Facade\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -113,21 +117,46 @@ EOT
         if ($upPkg === null && $force !== true) {
             $output->writeln(sprintf("<info>the package is already up-to-date (v%s)</info>", $pkg->getPackageVersion()));
         } else {
+            $logger = Application::getFacadeApplication()->make(PackageActionLogger::class);
             $test = $pkg->testForUpgrade();
             if ($test !== true) {
+                $logger->logUpdateFailed($pkg->getController(), $test);
                 throw new Exception(implode("\n", $test->getList()));
             }
             $output->writeln('<info>good.</info>');
 
             if ($upPkg === null) {
                 $output->write(sprintf('Forcing upgrade at v%s... ', $pkg->getPackageVersion()));
+                $fromVersion = $pkg->getPackageVersion();
                 $upPkg = Package::getByHandle($pkgHandle);
             } else {
-                $output->write(sprintf('Updating from v%s to v%s... ', $upPkg->getPackageEntity()->getPackageVersion(), $upPkg->getPackageVersion()));
+                $fromVersion = $upPkg->getPackageEntity()->getPackageVersion();
+                $output->write(sprintf('Updating from v%s to v%s... ', $fromVersion, $upPkg->getPackageVersion()));
             }
-            $upPkg->upgradeCoreData();
-            $upPkg->upgrade();
+            $updatedPackage = $this->resolvePackageController($upPkg);
+            try {
+                $upPkg->upgradeCoreData();
+                $upPkg->upgrade();
+            } catch (UserMessageException $e) {
+                $logger->logUpdateFailed($updatedPackage, $e);
+                throw $e;
+            }
+            $logger->logUpdated($updatedPackage, $fromVersion);
             $output->writeln('<info>done.</info>');
         }
+    }
+
+    /**
+     * @param \Concrete\Core\Package\Package|\Concrete\Core\Entity\Package $package
+     *
+     * @return \Concrete\Core\Package\Package
+     */
+    private function resolvePackageController($package)
+    {
+        if ($package instanceof PackageController) {
+            return $package;
+        }
+
+        return $package->getController();
     }
 }
