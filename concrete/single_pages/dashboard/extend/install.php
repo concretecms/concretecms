@@ -80,6 +80,7 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
     <?php
 } elseif (isset($pkg) && is_object($pkg) && $this->controller->getTask() == 'uninstall' && $tp->canUninstallPackages()) {
     $pkgID = $pkg->getPackageID();
+    $canMovePackageToTrash = !isset($packageBackupErrors) || !$packageBackupErrors->has();
     ?>
     <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?= $view->action('do_uninstall_package'); ?>">
         <?= $token->output('uninstall'); ?>
@@ -103,9 +104,28 @@ if ($this->controller->getTask() == 'install_package' && isset($showInstallOptio
             <div class="form-group">
                 <label class="control-label form-label"><?= t('Move package to trash directory on server?'); ?></label>
                 <div class="form-check">
-                    <?= $app->make('helper/form')->checkbox('pkgMoveToTrash', 1); ?>
+                    <?= $app->make('helper/form')->checkbox('pkgMoveToTrash', 1, false, $canMovePackageToTrash ? [] : ['disabled' => 'disabled']); ?>
                     <label for="pkgMoveToTrash" class="form-check-label"><?= t('Yes, remove the package\'s directory from the installation directory.'); ?></label>
                 </div>
+                <?php
+                if (!$canMovePackageToTrash) {
+                    ?>
+                    <div class="alert alert-warning">
+                        <p><?= t('If you click "Uninstall", the package will be uninstalled, but the checkbox option above cannot be selected because Concrete CMS cannot move this package directory to the trash directory. Package files will remain on the server.'); ?></p>
+                        <p class="mb-1"><?= t('Reason:'); ?></p>
+                        <ul class="mb-0">
+                            <?php
+                            foreach ($packageBackupErrors->getList() as $error) {
+                                ?>
+                                <li><?= h((string) $error); ?></li>
+                                <?php
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                    <?php
+                }
+                ?>
             </div>
         </fieldset>
         <div class="ccm-dashboard-form-actions-wrapper">
