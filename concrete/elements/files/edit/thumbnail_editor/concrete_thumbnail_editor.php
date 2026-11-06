@@ -20,8 +20,8 @@ $thumbnailHandle = $thumbnail->getHandle();
     <concrete-thumbnail-editor
         upload-url="<?=$uploadUrl?>"
         access-token="<?=$accessToken?>"
-        :width="<?=$width?>"
-        :height="<?=$height?>"
+        :width="<?=json_encode($width)?>"
+        :height="<?=json_encode($height)?>"
         sizing-mode="<?=$sizingMode?>"
         :file-id="<?=$fID?>"
         :file-version-id="<?=$fvID?>"
