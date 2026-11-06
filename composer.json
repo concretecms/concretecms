@@ -82,6 +82,9 @@
     "test": "phpunit",
     "post-create-project-cmd": [
       "composer config --unset platform.php"
+    ],
+    "post-autoload-dump": [
+      "Concrete\\TestHelpers\\Git\\Hooker::installHooks"
     ]
   }
 }
