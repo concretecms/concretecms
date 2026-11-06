@@ -10,7 +10,7 @@ use Concrete\Core\Updater\Migrations\Configuration as MigrationsConfiguration;
 use Doctrine\Migrations\OutputWriter;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
+use Concrete\Core\Messenger\Command\ConsumeMessagesCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesRemoveCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesRetryCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesShowCommand;
