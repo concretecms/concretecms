@@ -8,15 +8,15 @@
 			<unsigned/>
 			<key/>
 		</field>
-		<field name="exEntityID" type="guid">
+		<field name="exEntityID" type="guid" comment="The ID of the Express entity the entry belongs to (it's not used when entryMode is A, since the attribute knows the entity)">
 		</field>
-		<field name="exSpecificEntryID" type="integer">
+		<field name="exSpecificEntryID" type="integer" comment="The ID of the entry to be displayed (used if entryMode is S)">
 			<unsigned/>
 		</field>
-		<field name="exEntryAttributeKeyHandle" type="string" size="255"/>
-		<field name="exFormID" type="guid">
+		<field name="exEntryAttributeKeyHandle" type="string" size="255" comment="The handle of the Express attribute of the page holding the entry to be displayed (used if entryMode is A)"/>
+		<field name="exFormID" type="guid" comment="The ID of the form of the Express entity that renders the entry">
 		</field>
-		<field name="entryMode" type="string" size="1">
+		<field name="entryMode" type="string" size="1" comment="E: the entry comes from the list block of another page; S: it's the one in exSpecificEntryID; A: it's the one held by the page attribute named by exEntryAttributeKeyHandle">
 			<default value="S"/>
 		</field>
 	</table>

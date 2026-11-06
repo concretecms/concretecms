@@ -8,19 +8,19 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="icon" type="string" size="255"/>
-    <field name="title" type="string" size="255"/>
-    <field name="paragraph" type="text" size="65535"/>
-    <field name="externalLink" type="string" size="255"/>
-    <field name="internalLinkCID" type="integer">
+    <field name="icon" type="string" size="255" comment="The class names of the Font Awesome icon displayed above the title, for instance fas fa-address-book (it's ignored when fID is set)"/>
+    <field name="title" type="string" size="255" comment="The title of the feature"/>
+    <field name="paragraph" type="text" size="65535" comment="The rich text displayed below the title"/>
+    <field name="externalLink" type="string" size="255" comment="The URL the feature links to (used if internalLinkCID is 0)"/>
+    <field name="internalLinkCID" type="integer" comment="The ID of the page the feature links to (0 or NULL: it links to externalLink, if that one is filled)">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="titleFormat" type="string" size="20">
+    <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the title: h1, h2, h3, h4, h5, h6 or p">
       <default value="h4" />
 	  <notnull/>
     </field>
-    <field name="fID" type="integer">
+    <field name="fID" type="integer" comment="The ID of the image displayed above the title, which replaces the icon (0 or NULL: none)">
             <unsigned/>
             <default value="0" />
     </field>

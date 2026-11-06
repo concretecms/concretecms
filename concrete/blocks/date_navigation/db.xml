@@ -7,30 +7,30 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="title" type="string" size="255">
+    <field name="title" type="string" size="255" comment="The text displayed above the list of the dates">
       <default value=""/>
       <notnull/>
     </field>
-    <field name="filterByParent" type="boolean">
+    <field name="filterByParent" type="boolean" comment="true: the months come from the pages under cParentID; false or NULL: they come from the whole site">
       <default value="0"/>
     </field>
-    <field name="redirectToResults" type="boolean">
+    <field name="redirectToResults" type="boolean" comment="true: the links that the block builds point to the cTargetID page; false or NULL: they point to the page holding the block">
       <default value="0"/>
     </field>
-    <field name="cParentID" type="integer">
+    <field name="cParentID" type="integer" comment="The ID of the page holding the pages the months come from (used if filterByParent is true)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="cTargetID" type="integer" comment="this field is where the links will direct you">
+    <field name="cTargetID" type="integer" comment="The ID of the page that the links of the block point to, where a page list block filters its pages by the chosen month (used if redirectToResults is true)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="ptID" type="smallint">
+    <field name="ptID" type="smallint" comment="The ID of the page type that those pages must have (0 or NULL: any page type)">
       <unsigned/>
     </field>
-    <field name="titleFormat" type="string" size="20">
+    <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the title: h1, h2, h3, h4, h5, h6 or p">
         <default value="h5" />
 		<notnull/>
     </field>

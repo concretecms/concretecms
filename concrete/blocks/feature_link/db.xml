@@ -7,27 +7,27 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="title" type="string" />
-        <field name="body" type="text" />
-        <field name="buttonText" type="string" />
-        <field name="buttonExternalLink" type="string" size="255" />
-        <field name="buttonInternalLinkCID" type="integer">
+        <field name="title" type="string" comment="The title of the block" />
+        <field name="body" type="text" comment="The rich text displayed below the title" />
+        <field name="buttonText" type="string" comment="The text of the button (empty: no button is displayed, unless it links to something)" />
+        <field name="buttonExternalLink" type="string" size="255" comment="The URL the button links to: it's used only when buttonInternalLinkCID and buttonFileLinkID are 0" />
+        <field name="buttonInternalLinkCID" type="integer" comment="The ID of the page the button links to (0 or NULL: it links to buttonFileLinkID or to buttonExternalLink)">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="buttonFileLinkID" type="integer">
+        <field name="buttonFileLinkID" type="integer" comment="The ID of the file the button links to (0 or NULL: none): it's used only when buttonInternalLinkCID is 0">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="buttonColor" type="string" />
-        <field name="buttonStyle" type="string" />
-        <field name="buttonSize" type="string" />
-        <field name="titleFormat" type="string" size="20">
+        <field name="buttonColor" type="string" comment="The color of the button, one of the colors of the theme of the site" />
+        <field name="buttonStyle" type="string" comment="empty: the button is drawn as usual; outline: it's outlined; link: it's drawn as a plain link" />
+        <field name="buttonSize" type="string" comment="empty: the button has its regular size; lg: it's large; sm: it's small" />
+        <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the title: h1, h2, h3, h4, h5, h6 or p">
             <default value="h2" />
             <notnull/>
         </field>
-        <field name="icon" type="string" />
-        <field name="fID" type="integer">
+        <field name="icon" type="string" comment="The class names of the Font Awesome icon displayed in the button, for instance fas fa-address-card" />
+        <field name="fID" type="integer" comment="The ID of the image displayed above the title (0 or NULL: none)">
             <unsigned/>
             <default value="0" />
     </field>

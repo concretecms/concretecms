@@ -8,7 +8,7 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="label" type="string" size="255">
+    <field name="label" type="string" size="255" comment="The text displayed above the languages (empty: none)">
       <default value=""/>
     </field>
   </table>

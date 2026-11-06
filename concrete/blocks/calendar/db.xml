@@ -5,31 +5,31 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="caID" type="integer" size="10">
+        <field name="caID" type="integer" size="10" comment="The ID of the calendar to be displayed (0: it's the one held by the page attribute named by calendarAttributeKeyHandle)">
             <unsigned/>
             <default value="0" />
             <notnull/>
         </field>
-        <field name="calendarAttributeKeyHandle" type="string" size="255" />
-        <field name="filterByTopicAttributeKeyID" type="integer" size="10">
+        <field name="calendarAttributeKeyHandle" type="string" size="255" comment="The handle of the page attribute holding the calendar to be displayed (used if caID is 0)" />
+        <field name="filterByTopicAttributeKeyID" type="integer" size="10" comment="The ID of the topics attribute of the events used to filter them (0: they are not filtered)">
             <unsigned/>
             <default value="0" />
             <notnull/>
         </field>
-        <field name="filterByTopicID" type="integer" size="10">
+        <field name="filterByTopicID" type="integer" size="10" comment="The ID of the topic the events must be assigned to (used if filterByTopicAttributeKeyID is not 0)">
             <unsigned/>
             <default value="0" />
             <notnull/>
         </field>
-        <field name="viewTypes" type="text" />
-        <field name="viewTypesOrder" type="text" />
-        <field name="defaultView" type="text" />
-        <field name="navLinks" type="boolean">
+        <field name="viewTypes" type="text" comment="A JSON array of the views the visitors can switch to: month, basicWeek, basicDay, listYear, listMonth, listWeek, listDay" />
+        <field name="viewTypesOrder" type="text" comment="A JSON array of the views in the order they are offered, every item being the name of a view, an underscore, and the text of its button" />
+        <field name="defaultView" type="text" comment="The view the calendar opens on, one of the views listed in viewTypes (empty: the calendar decides)" />
+        <field name="navLinks" type="boolean" comment="true: clicking a day or a week moves the calendar to it; false or NULL: the days and the weeks are not clickable">
             <default value="0"/>
         </field>
-        <field name="eventLimit" type="boolean">
+        <field name="eventLimit" type="boolean" comment="true: a day displays a limited number of events, with a link to the other ones; false or NULL: it displays all of them">
             <default value="0"/>
         </field>
-        <field name="lightboxProperties" type="text" />
+        <field name="lightboxProperties" type="text" comment="A JSON array of what the lightbox of an event shows: title, date, description, linkToPage, or ak_&lt;event attribute key ID&gt; (used if the theme supports the lightbox)" />
     </table>
 </schema>

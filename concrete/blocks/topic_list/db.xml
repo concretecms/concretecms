@@ -8,29 +8,29 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="mode" type="string" size="1" comment="S = Search, P = Page">
+    <field name="mode" type="string" size="1" comment="S: the topics of the topicTreeID tree are listed; P: the ones assigned to the page holding the block are listed">
       <default value="S"/>
       <notnull/>
     </field>
-    <field name="topicAttributeKeyHandle" type="string" size="255">
+    <field name="topicAttributeKeyHandle" type="string" size="255" comment="The handle of the topics attribute of the page holding the topics to be listed (used if mode is P)">
       <default value=""/>
       <notnull/>
     </field>
-    <field name="topicTreeID" type="integer" size="10">
+    <field name="topicTreeID" type="integer" size="10" comment="The ID of the topic tree holding the topics to be listed, 0 for none (used if mode is S)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="cParentID" type="integer">
+    <field name="cParentID" type="integer" comment="The ID of the page that the links of the block point to, where a page list block filters its pages by the chosen topic (0: they point to the page holding the block)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="title" type="string" size="255">
+    <field name="title" type="string" size="255" comment="The text displayed above the topics">
       <default value=""/>
       <notnull/>
     </field>
-    <field name="titleFormat" type="string" size="20">
+    <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the text displayed above the topics: h1, h2, h3, h4, h5, h6 or p">
       <default value="h5" />
 	  <notnull/>
     </field>

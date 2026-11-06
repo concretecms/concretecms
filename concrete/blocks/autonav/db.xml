@@ -8,33 +8,33 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="orderBy" type="string" size="255">
+    <field name="orderBy" type="string" size="255" comment="display_asc: the pages are listed in the order of the sitemap; display_desc: in the reverse order; chrono_asc: by date, oldest first; chrono_desc: by date, most recent first; alpha_asc: by name; alpha_desc: by name, reversed">
       <default value="alpha_asc"/>
     </field>
-    <field name="displayPages" type="string" size="255" comment="was enum('top','current','above','below','custom')">
+    <field name="displayPages" type="string" size="255" comment="top, second_level, third_level: the navigation starts at that level of the site; above, current, below: at the level of the page holding the block, above it or below it; custom: at the displayPagesCID page">
       <default value="top"/>
     </field>
-    <field name="displayPagesCID" type="integer">
+    <field name="displayPagesCID" type="integer" comment="The ID of the page the navigation starts from (used if displayPages is custom)">
       <unsigned/>
       <default value="1"/>
       <notnull/>
     </field>
-    <field name="displayPagesIncludeSelf" type="boolean">
+    <field name="displayPagesIncludeSelf" type="boolean" comment="Deprecated, not used">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="displaySubPages" type="string" size="255" comment="was enum('none','all','relevant','relevant_breadcrumb')">
+    <field name="displaySubPages" type="string" size="255" comment="none: no child page is listed; relevant: the ones under the current page are listed; relevant_breadcrumb: its breadcrumb trail is listed too; all: every child page is listed">
       <default value="none"/>
     </field>
-    <field name="displaySubPageLevels" type="string" size="255" comment="was enum('all','none','enough','enough_plus1','custom')">
+    <field name="displaySubPageLevels" type="string" size="255" comment="enough: the child pages are listed down to the current page; enough_plus1: one level deeper; all: down to the deepest one; custom: displaySubPageLevelsNum levels deep">
       <default value="none"/>
     </field>
-    <field name="displaySubPageLevelsNum" type="smallint">
+    <field name="displaySubPageLevelsNum" type="smallint" comment="How many levels of child pages are listed (used if displaySubPageLevels is custom)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="displayUnavailablePages" type="boolean">
+    <field name="displayUnavailablePages" type="boolean" comment="true: the pages that the visitor may not be allowed to view are listed too; false: they are left out">
       <default value="0"/>
       <notnull/>
     </field>
