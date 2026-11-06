@@ -22,8 +22,8 @@ class ImageTest extends TestCase
     public function setUp():void
     {
         $local = new LocalConfiguration();
-        $local->setRootPath(sys_get_temp_dir());
-        $local->setWebRootRelativePath(sys_get_temp_dir());
+        $local->setRootPath(CCM_TESTS_TEMPDIR);
+        $local->setWebRootRelativePath(CCM_TESTS_TEMPDIR);
 
         $sl = new TestStorageLocation();
         $sl->setConfigurationObject($local);
@@ -103,7 +103,7 @@ class ImageTest extends TestCase
 
             $service->create($path, $this->output[$expectedFormat], $width, $height, $fit);
             $this->assertTrue($fsl->has($this->output[$expectedFormat], "{$this->output[$expectedFormat]} should exist"));
-            list($width, $height, $type) = getimagesize(sys_get_temp_dir() . $this->output[$expectedFormat]);
+            list($width, $height, $type) = getimagesize(CCM_TESTS_TEMPDIR . $this->output[$expectedFormat]);
             $fsl->delete($this->output[$expectedFormat]);
             $this->assertEquals($expectedWidth, $width, 'Invalid width');
             $this->assertEquals($expectedHeight, $height, 'Invalid height');

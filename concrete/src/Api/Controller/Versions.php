@@ -50,7 +50,7 @@ class Versions extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/PageVersion"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to access this resource."
      *     ),
      *     @OA\Response(
@@ -67,7 +67,7 @@ class Versions extends ApiController
         }
         $checker = new Checker($page);
         if (!$checker->canViewPageVersions()) {
-            return $this->error(t('You do not have access to read versions about this page.'), 401);
+            return $this->error(t('You do not have access to read versions about this page.'), 403);
         }
 
         $version = Version::get($page, (int) $versionID);
@@ -132,7 +132,7 @@ class Versions extends ApiController
         }
         $checker = new Checker($page);
         if (!$checker->canViewPageVersions()) {
-            return $this->error(t('You do not have access to read versions about this page.'), 401);
+            return $this->error(t('You do not have access to read versions about this page.'), 403);
         }
         $list = new VersionList($page);
         $this->addLimitToPaginationIfSpecified($list, $this->request);
@@ -170,7 +170,7 @@ class Versions extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/PageVersion"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to create a draft for this page."
      *     ),
      *     @OA\Response(
@@ -194,7 +194,7 @@ class Versions extends ApiController
 
         $checker = new Checker($page);
         if (!$checker->canEditPageContents()) {
-            return $this->error(t('You do not have access to create a draft version of this page.'), 401);
+            return $this->error(t('You do not have access to create a draft version of this page.'), 403);
         }
 
         $versionComments = null;
@@ -247,7 +247,7 @@ class Versions extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/DeletedResponse"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to delete this resource."
      *     ),
      *     @OA\Response(
@@ -264,7 +264,7 @@ class Versions extends ApiController
         }
         $checker = new Checker($page);
         if (!$checker->canDeletePageVersions()) {
-            return $this->error(t('You do not have access to delete page versions from this page.'), 401);
+            return $this->error(t('You do not have access to delete page versions from this page.'), 403);
         }
         $version = Version::get($page, (int) $versionID);
         if ($version->isError() && $version->getError() === VERSION_NOT_FOUND) {
@@ -272,7 +272,7 @@ class Versions extends ApiController
         }
 
         if ($version->isApproved()) {
-            return $this->error(t('You may not delete the approved version of a page.'), 401);
+            return $this->error(t('You may not delete the approved version of a page.'), 403);
         }
 
         $version->delete();
@@ -315,7 +315,7 @@ class Versions extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/PageVersion"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to update this resource."
      *     ),
      *     @OA\Response(
@@ -335,7 +335,7 @@ class Versions extends ApiController
         }
         $checker = new Checker($page);
         if (!$checker->canApprovePageVersions()) {
-            return $this->error(t('You do not have access to approve page versions from this page.'), 401);
+            return $this->error(t('You do not have access to approve page versions from this page.'), 403);
         }
         $version = Version::get($page, $versionID);
         if ($version->isError() && $version->getError() === VERSION_NOT_FOUND) {

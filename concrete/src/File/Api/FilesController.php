@@ -44,7 +44,7 @@ class FilesController extends ApiController
         } else {
             $permissions = new Checker($file);
             if (!$permissions->canViewFileInFileManager()) {
-                return $this->error(t('You do not have access to read properties about this file.'), 401);
+                return $this->error(t('You do not have access to read properties about this file.'), 403);
             }
         }
 
