@@ -79,7 +79,7 @@ class EntityManagerClassLoaderTest extends TestCase
 
     public function testApplicationEntityClasses(): void
     {
-        $entitiesDir = dirname(DIR_BASE_CORE) . '/application/src/Entity';
+        $entitiesDir = DIR_APPLICATION . '/' . DIRNAME_CLASSES . '/' . DIRNAME_ENTITIES;
         static::assertFalse(is_dir($entitiesDir));
         static::assertTrue(@mkdir("{$entitiesDir}/Advertisement", 0777, true));
         try {
