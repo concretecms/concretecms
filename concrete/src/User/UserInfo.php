@@ -1153,9 +1153,9 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     /**
      * @deprecated Use app('user/registration')->createSuperUser()
      */
-    public static function addSuperUser($uPasswordEncrypted, $uEmail)
+    public static function addSuperUser($uPasswordEncrypted, $uEmail, $uName = USER_SUPER)
     {
-        return app('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail);
+        return app('user/registration')->createSuperUser($uPasswordEncrypted, $uEmail, $uName);
     }
 
     /**

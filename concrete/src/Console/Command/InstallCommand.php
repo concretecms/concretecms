@@ -74,6 +74,7 @@ class InstallCommand extends Command
             ->addOption('starting-point', null, InputOption::VALUE_REQUIRED, 'Starting point to use', 'atomik_blank')
             ->addOption('session-handler', null, InputOption::VALUE_REQUIRED, 'Session Handler. Use "file" or "database".', '')
             ->addOption('admin-email', null, InputOption::VALUE_REQUIRED, 'Email of the admin user of the install', 'admin@example.com')
+            ->addOption('admin-username', null, InputOption::VALUE_REQUIRED, 'Username of the admin user of the install', USER_SUPER)
             ->addOption('admin-password', null, InputOption::VALUE_REQUIRED, 'Password of the admin user of the install')
             ->addOption('demo-username', null, InputOption::VALUE_REQUIRED, 'Additional user username')
             ->addOption('demo-password', null, InputOption::VALUE_REQUIRED, 'Additional user password')
@@ -530,6 +531,24 @@ EOT
                 },
             ],
             'admin-email',
+            ['admin-username', USER_SUPER],
+            function (InputInterface $input, OutputInterface $output) {
+                $error = new \ArrayObject();
+                Application::getFacadeApplication()->make('validator/user/name')->isValid(
+                    (string) $input->getOption('admin-username'),
+                    $error
+                );
+
+                if (count($error)) {
+                    foreach ($error->getIterator() as $message) {
+                        $output->writeln(sprintf('<error>%s</error>', $message));
+                    }
+
+                    return 'admin-username';
+                }
+
+                return true;
+            },
             [
                 'admin-password',
                 function (Question $question, InputInterface $input) {
@@ -750,6 +769,7 @@ EOT
             ->setStartingPointHandle($options['starting-point'])
             ->setSiteName($options['site'])
             ->setUserEmail($options['admin-email'])
+            ->setUserName($options['admin-username'])
             ->setUserPasswordHash($hasher->hashPassword($options['admin-password']))
             ->setServerTimeZoneId($options['timezone'])
             ->setIsConnectToMarketplaceEnabled($options['disable-marketplace-connect'] ? false : true)
