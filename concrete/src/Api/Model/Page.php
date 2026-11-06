@@ -100,7 +100,7 @@ class Page
     private $areas;
 
     /**
-     * @OA\Property(type="array", title="Custom Attributes", @OA\Items(ref="#/components/schemas/File"))
+     * @OA\Property(type="array", title="Files", @OA\Items(ref="#/components/schemas/File"))
      *
      * @var string
      */

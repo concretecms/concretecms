@@ -79,7 +79,9 @@ class RefreshTokenGrantTest extends TestCase
         ], $overrides);
 
         $encrypt = new ReflectionMethod($this->grant, 'encrypt');
-        $encrypt->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $encrypt->setAccessible(true);
+        }
 
         return $encrypt->invoke($this->grant, json_encode($payload));
     }
@@ -101,7 +103,9 @@ class RefreshTokenGrantTest extends TestCase
             ]);
 
         $validate = new ReflectionMethod($this->grant, 'validateOldRefreshToken');
-        $validate->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $validate->setAccessible(true);
+        }
 
         return $validate->invoke($this->grant, $request, self::CLIENT_ID);
     }

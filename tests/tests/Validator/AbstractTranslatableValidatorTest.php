@@ -16,7 +16,9 @@ class AbstractTranslatableValidatorTest extends TestCase
 
         $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
         $method = new \ReflectionMethod($mock, 'getErrorString');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         /* @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setErrorString(5, function ($validator, $code, $passed) use ($mock, $test_code, $test_string, $obj) {
@@ -34,7 +36,9 @@ class AbstractTranslatableValidatorTest extends TestCase
     {
         $mock = $this->getMockForAbstractClass('\Concrete\Core\Validator\AbstractTranslatableValidator');
         $method = new \ReflectionMethod($mock, 'getErrorString');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         /* @type \Concrete\Core\Validator\AbstractTranslatableValidator $mock */
         $mock->setErrorString(5, 'ERROR');

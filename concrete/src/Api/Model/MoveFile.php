@@ -3,7 +3,10 @@
 namespace Concrete\Core\Api\Model;
 
 /**
- * @OA\Schema(title="MoveFile model")
+ * @OA\Schema(
+ *     title="MoveFile model",
+ *     required={"folder"}
+ * )
  */
 class MoveFile
 {

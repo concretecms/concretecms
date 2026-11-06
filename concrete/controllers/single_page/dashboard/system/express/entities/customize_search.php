@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
 use Concrete\Controller\Element\Search\Express\CustomizeResults;
+use Concrete\Core\Controller\Traits\DashboardExpressEntityBreadcrumbTrait;
 use Concrete\Core\Entity\Express\Entity;
 use Concrete\Core\Entity\Search\Query;
 use Concrete\Core\Page\Controller\DashboardPageController;
@@ -10,6 +11,8 @@ use Concrete\Core\Express\Search\SearchProvider;
 
 class CustomizeSearch extends DashboardPageController
 {
+    use DashboardExpressEntityBreadcrumbTrait;
+
     protected $repository;
 
     public function on_start()

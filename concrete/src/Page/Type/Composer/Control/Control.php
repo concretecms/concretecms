@@ -200,7 +200,7 @@ abstract class Control extends ConcreteObject
     public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set)
     {
         $pageType = $set->getPageTypeObject();
-        if ($pageType !== null) {
+        if ($pageType !== null && !$this->canPageTypeComposerControlBeAddedMoreThanOnce()) {
             foreach (static::getList($pageType) as $existing) {
                 if ($existing->getPageTypeComposerControlTypeHandle() === $this->getPageTypeComposerControlTypeHandle()
                     && (string) $existing->getPageTypeComposerControlIdentifier() === (string) $this->getPageTypeComposerControlIdentifier()
@@ -250,11 +250,13 @@ abstract class Control extends ConcreteObject
             $setControls = PageTypeComposerFormLayoutSetControl::getList($s);
             foreach ($setControls as $sc) {
                 $cnt = $sc->getPageTypeComposerControlObject();
-                $key = $cnt->getPageTypeComposerControlTypeHandle() . ':' . $cnt->getPageTypeComposerControlIdentifier();
-                if (isset($seen[$key])) {
-                    continue;
+                if (!$cnt->canPageTypeComposerControlBeAddedMoreThanOnce()) {
+                    $key = $cnt->getPageTypeComposerControlTypeHandle() . ':' . $cnt->getPageTypeComposerControlIdentifier();
+                    if (isset($seen[$key])) {
+                        continue;
+                    }
+                    $seen[$key] = true;
                 }
-                $seen[$key] = true;
                 $cnt->setPageTypeComposerFormLayoutSetControlObject($sc);
                 $cnt->setPageTypeComposerFormControlRequired($sc->isPageTypeComposerFormLayoutSetControlRequired());
                 $controls[] = $cnt;
@@ -267,6 +269,14 @@ abstract class Control extends ConcreteObject
     public function isPageTypeComposerControlRequiredByDefault()
     {
         return $this->ptComposerControlRequiredByDefault;
+    }
+
+    /**
+     * By default no: publishing a page with the same attribute or property twice hangs on MySQL.
+     */
+    public function canPageTypeComposerControlBeAddedMoreThanOnce(): bool
+    {
+        return false;
     }
 
     public function objectExists()

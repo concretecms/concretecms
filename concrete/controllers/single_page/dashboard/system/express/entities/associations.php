@@ -1,10 +1,13 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Express\Entities;
 
+use Concrete\Core\Controller\Traits\DashboardExpressEntityBreadcrumbTrait;
 use Concrete\Core\Page\Controller\DashboardPageController;
 
 class Associations extends DashboardPageController
 {
+    use DashboardExpressEntityBreadcrumbTrait;
+
     protected $repository;
     protected $associationRepository;
     protected $entity;

@@ -48,7 +48,9 @@ class PasswordUsageTrackerTest extends TestCase
     public function testUserNegotiation()
     {
         $method = new ReflectionMethod(PasswordUsageTracker::class, 'resolveUserID');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         $entityManager = M::mock(EntityManagerInterface::class);
         $tracker = new PasswordUsageTracker($entityManager, 1);
@@ -76,7 +78,9 @@ class PasswordUsageTrackerTest extends TestCase
         $repository->shouldReceive('findBy')->with(['subject' => 1337], ['id' => 'desc'])->andReturn([$mock5, $mock4, $mock3, $mock2, $mock1]);
 
         $method = new ReflectionMethod(PasswordUsageTracker::class, 'pruneUses');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         $entityManager = M::mock(EntityManagerInterface::class);
         $entityManager->shouldReceive('getRepository')->with(UsedString::class)->once()->andReturn($repository);

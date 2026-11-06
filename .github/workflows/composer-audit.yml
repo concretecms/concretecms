@@ -1,0 +1,30 @@
+name: Composer audit
+
+on:
+  pull_request:
+  push:
+  schedule:
+    # Security advisories are published independently of commits
+    - cron: "0 6 * * *"
+
+jobs:
+  composer-audit:
+    name: Validate and audit
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v7
+      -
+        name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          coverage: none
+          tools: composer:v2
+      -
+        name: Validate composer.json
+        run: composer validate --strict --ansi --no-interaction
+      -
+        name: Check security advisories
+        run: composer audit --locked --abandoned=ignore --ansi --no-interaction

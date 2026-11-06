@@ -23,6 +23,12 @@
                     <?= t('Increase Toolbar Font Size') ?>
                 </label>
             </div>
+            <div class="form-check">
+                <input class="form-check-input" id="display_help_system" name="display_help_system" value="1" type="checkbox" <?= $display_help_system ? 'checked' : '' ?> />
+                <label class="form-check-label" for="display_help_system">
+                    <?= t('Display the Help Menu/Panel') ?>
+                </label>
+            </div>
         </div>
     </fieldset>
 

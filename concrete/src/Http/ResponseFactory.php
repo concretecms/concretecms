@@ -7,6 +7,7 @@ use Concrete\Core\Application\ApplicationAwareTrait;
 use Concrete\Core\Command\Process\Menu\Item\RunningProcessesItem;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Controller\Controller;
+use Concrete\Core\Http\Traits\AcceptsJsonTrait;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Page\Collection\Collection;
 use Concrete\Core\Page\Controller\PageController;
@@ -28,6 +29,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInterface
 {
+    use AcceptsJsonTrait;
     use ApplicationAwareTrait;
 
     /**
@@ -71,7 +73,7 @@ class ResponseFactory implements ResponseFactoryInterface, ApplicationAwareInter
      */
     public function notFound($content, $code = Response::HTTP_NOT_FOUND, $headers = [])
     {
-        if ($this->request->isXmlHttpRequest() || in_array($this->request->getPreferredFormat(), ['json', 'jsonld'], true)) {
+        if (static::requestAcceptsJson($this->request)) {
             $this->localization->pushActiveContext(Localization::CONTEXT_SITE);
             $responseData = [
                 'error' => t('Page not found'),

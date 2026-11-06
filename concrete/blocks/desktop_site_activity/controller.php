@@ -65,7 +65,7 @@ class Controller extends BlockController implements UsesFeatureInterface
      */
     public function save($args)
     {
-        $types = json_encode($args['types']);
+        $types = json_encode(is_array($args['types'] ?? null) ? $args['types'] : []);
         parent::save(['types' => $types]);
     }
 

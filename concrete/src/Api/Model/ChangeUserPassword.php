@@ -3,7 +3,10 @@
 namespace Concrete\Core\Api\Model;
 
 /**
- * @OA\Schema(title="ChangeUserPassword model")
+ * @OA\Schema(
+ *     title="ChangeUserPassword model",
+ *     required={"password"}
+ * )
  */
 class ChangeUserPassword
 {

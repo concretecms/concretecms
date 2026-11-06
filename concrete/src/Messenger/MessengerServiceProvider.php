@@ -14,7 +14,7 @@ use Concrete\Core\Messenger\Transport\TransportInterface;
 use Concrete\Core\Messenger\Transport\TransportManager;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
+use Concrete\Core\Messenger\Command\ConsumeMessagesCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesRemoveCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesRetryCommand;
 use Symfony\Component\Messenger\Command\FailedMessagesShowCommand;
