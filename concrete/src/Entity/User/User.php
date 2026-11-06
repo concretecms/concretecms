@@ -18,6 +18,27 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
 class User implements UserEntityInterface, \JsonSerializable
 {
     /**
+     * Email validation status: unknown (for example, the user was created when email validation was disabled).
+     *
+     * @var int
+     */
+    const VALIDATION_STATUS_UNKNOWN = -1;
+
+    /**
+     * Email validation status: the email address has not been validated.
+     *
+     * @var int
+     */
+    const VALIDATION_STATUS_NOT_VALIDATED = 0;
+
+    /**
+     * Email validation status: the email address has been validated.
+     *
+     * @var int
+     */
+    const VALIDATION_STATUS_VALIDATED = 1;
+
+    /**
      * @ORM\Id @ORM\Column(type="integer", options={"unsigned": true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -69,9 +90,11 @@ class User implements UserEntityInterface, \JsonSerializable
     protected $uIsFullRecord = true;
 
     /**
-     * @ORM\Column(type="boolean", options={"default"=-1})
+     * One of the VALIDATION_STATUS_... constants.
+     *
+     * @ORM\Column(type="smallint", options={"default"=-1})
      */
-    protected $uIsValidated = -1;
+    protected $uIsValidated = self::VALIDATION_STATUS_UNKNOWN;
 
     /**
      * @ORM\Column(type="datetime")
@@ -210,11 +233,23 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
+     * Returns false only if the email address has not been validated: an unknown validation status returns true.
+     *
      * @return bool
+     *
+     * @see \Concrete\Core\Entity\User\User::getUserValidationStatus()
      */
     public function isUserValidated()
     {
-        return $this->uIsValidated;
+        return (bool) $this->uIsValidated;
+    }
+
+    /**
+     * @return int One of the VALIDATION_STATUS_... constants
+     */
+    public function getUserValidationStatus()
+    {
+        return (int) $this->uIsValidated;
     }
 
     /**
@@ -372,11 +407,14 @@ class User implements UserEntityInterface, \JsonSerializable
     }
 
     /**
-     * @param bool $uIsValidated
+     * @param bool|int $uIsValidated One of the VALIDATION_STATUS_... constants, or a boolean
      */
     public function setUserIsValidated($uIsValidated)
     {
-        $this->uIsValidated = $uIsValidated;
+        if (is_bool($uIsValidated)) {
+            $uIsValidated = $uIsValidated ? self::VALIDATION_STATUS_VALIDATED : self::VALIDATION_STATUS_NOT_VALIDATED;
+        }
+        $this->uIsValidated = (int) $uIsValidated;
     }
 
     /**

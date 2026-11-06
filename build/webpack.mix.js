@@ -77,6 +77,11 @@ mix.copy('node_modules/ckeditor4/vendor', '../concrete/js/ckeditor/vendor');
 
 mix.copy('node_modules/ace-builds/src-min', '../concrete/js/ace');
 
+// The Swagger UI console that shows the API documentation of this installation
+mix.copy('node_modules/swagger-ui-dist/swagger-ui-bundle.js', '../concrete/api/swagger/swagger-ui-bundle.js');
+mix.copy('node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js', '../concrete/api/swagger/swagger-ui-standalone-preset.js');
+mix.copy('node_modules/swagger-ui-dist/swagger-ui.css', '../concrete/api/swagger/swagger-ui.css');
+
 // Copy Bedrock assets so that themes can include them for style customization, etc...
 if (mix.inProduction()) {
     // Note: this should only copy SCSS assets if possible, because the only reason we're copying them is because

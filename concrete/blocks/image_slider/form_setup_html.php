@@ -240,7 +240,7 @@ echo $userInterface->tabs([
             image_url: '',
             <?php
             } ?>
-            link_url: '<?php echo $row['linkURL']; ?>',
+            link_url: <?= json_encode((string) $row['linkURL']) ?>,
             link_type: '<?php echo $linkType; ?>',
             title: '<?php echo addslashes(h($row['title'])); ?>',
             description: <?= json_encode((string) $row['description']) ?>,

@@ -164,7 +164,7 @@ class DefaultPackageProviderTest extends TestCase
 
     private function createPackageFolderOfTestMetadataDriverAdditionalNamespace()
     {
-        $base = DIR_BASE . '/' . DIRNAME_PACKAGES . '/test_metadatadriver_additional_namespace/';
+        $base = DIR_PACKAGES . '/test_metadatadriver_additional_namespace/';
         $this->filesystem->makeDirectory($base, 0755, false, true);
         $this->filesystem->makeDirectory($base . DIRNAME_CLASSES, 0755, false, true);
         $this->filesystem->makeDirectory($base . DIRNAME_CLASSES . '/Concrete', 0755, false, true);
@@ -173,31 +173,25 @@ class DefaultPackageProviderTest extends TestCase
 
     private function removePackageFolderOfTestMetadataDriverAdditionalNamespace()
     {
-        $packagePath = DIR_BASE . '/' .
-            DIRNAME_PACKAGES .'/test_metadatadriver_additional_namespace';
+        $packagePath = DIR_PACKAGES .'/test_metadatadriver_additional_namespace';
         if ($this->filesystem->isDirectory($packagePath)) {
-            $this->filesystem->deleteDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
+            $this->filesystem->deleteDirectory(DIR_PACKAGES .
                 '/test_metadatadriver_additional_namespace');
         }
     }
 
     private function createPackageFolderOfTestMetadatadriverDefault()
     {
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
+        $this->filesystem->makeDirectory(DIR_PACKAGES .
                 '/test_metadatadriver_default');
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
+        $this->filesystem->makeDirectory(DIR_PACKAGES .
                 '/test_metadatadriver_default/' .
                 DIRNAME_CLASSES);
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
+        $this->filesystem->makeDirectory(DIR_PACKAGES .
                 '/test_metadatadriver_default/' .
                 DIRNAME_CLASSES .
                 '/Concrete');
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
+        $this->filesystem->makeDirectory(DIR_PACKAGES .
                 '/test_metadatadriver_default/' .
                 DIRNAME_CLASSES .
                 '/Concrete/' . DIRNAME_ENTITIES);
@@ -205,8 +199,7 @@ class DefaultPackageProviderTest extends TestCase
 
     private function removePackageFolderOfTestMetadataDriverDefault()
     {
-        $packagePath = DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
+        $packagePath = DIR_PACKAGES .
                 '/test_metadatadriver_default';
 
         if ($this->filesystem->isDirectory($packagePath)) {
@@ -216,19 +209,16 @@ class DefaultPackageProviderTest extends TestCase
 
     private function createPackageFolderOfTestMetadataDriverLegacy()
     {
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
+        $this->filesystem->makeDirectory(DIR_PACKAGES .
                 '/test_metadatadriver_legacy');
-        $this->filesystem->makeDirectory(DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
+        $this->filesystem->makeDirectory(DIR_PACKAGES .
                 '/test_metadatadriver_legacy/' .
                 DIRNAME_CLASSES);
     }
 
     private function removePackageFolderOfTestMetadataDriverLegacy()
     {
-        $packagePath = DIR_BASE . '/' .
-                DIRNAME_PACKAGES .
+        $packagePath = DIR_PACKAGES .
                 '/test_metadatadriver_legacy';
 
         if ($this->filesystem->isDirectory($packagePath)) {

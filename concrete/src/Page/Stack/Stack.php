@@ -342,11 +342,8 @@ class Stack extends Page
         }
 
         if ($this->isNeutralStack()) {
-            foreach (Section::getList() as $section) {
-                $localized = $this->getLocalizedStack($section);
-                if ($localized !== null) {
-                    $localized->delete();
-                }
+            foreach ($this->getLocalizedStacks() as $localized) {
+                $localized->delete();
             }
         }
         parent::delete();
@@ -525,6 +522,43 @@ class Stack extends Page
     }
 
     /**
+     * Returns every localized version of this stack, for every site.
+     *
+     * @param string|int $cvID
+     *
+     * @return self[]
+     */
+    public function getLocalizedStacks($cvID = 'RECENT'): array
+    {
+        $mySectionID = $this->getMultilingualSectionID();
+        $neutralID = $mySectionID === 0 ? $this->getCollectionID() : $this->getNeutralStackID();
+        $db = Database::connection();
+        $rows = $db->fetchAll(
+            '
+                select
+                    Stacks.cID
+                from
+                    Stacks
+                    inner join Pages on Stacks.cID = Pages.cID
+                where
+                    Pages.cParentID = ? and Stacks.stMultilingualSection <> 0
+                order by
+                    Stacks.cID
+            ',
+            [$neutralID]
+        );
+        $localizedStacks = [];
+        foreach ($rows as $row) {
+            $localized = static::getByID($row['cID'], $cvID);
+            if ($localized instanceof self && !$localized->isError()) {
+                $localizedStacks[] = $localized;
+            }
+        }
+
+        return $localizedStacks;
+    }
+
+    /**
      * @param \Concrete\Core\Multilingual\Page\Section\Section $section
      * @param array{copyContents: bool = true} $options 
      *
@@ -592,17 +626,15 @@ class Stack extends Page
     {
         // Create localized stacks only this is a neutral stack
         if ($this->isNeutralStack()) {
-            foreach (Section::getList() as $section) {
-                $localized = $this->getLocalizedStack($section);
+            foreach ($original->getLocalizedStacks() as $originalLocalized) {
+                $section = $originalLocalized->getMultilingualSection();
                 // We should skip if localized stack is already created
-                if ($localized === null) {
-                    $originalLocalized = $original->getLocalizedStack($section);
-                    if ($originalLocalized !== null) {
-                        $copiedLocalized = $originalLocalized->duplicate($this);
-                        $copiedLocalized->update(['cName' => $this->getStackName()]);
-                        $copiedLocalized->setMultilingualSection($section, $this->getStackName());
-                    }
+                if ($section === null || $this->getLocalizedStack($section) !== null) {
+                    continue;
                 }
+                $copiedLocalized = $originalLocalized->duplicate($this);
+                $copiedLocalized->update(['cName' => $this->getStackName()]);
+                $copiedLocalized->setMultilingualSection($section, $this->getStackName());
             }
         }
     }

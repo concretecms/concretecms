@@ -34,6 +34,7 @@ if (!$frontendPageID) {
 $show_titles = (bool) $config->get('concrete.accessibility.toolbar_titles');
 $show_tooltips = (bool) $config->get('concrete.accessibility.toolbar_tooltips');
 $large_font = (bool) $config->get('concrete.accessibility.toolbar_large_font');
+$display_help_system = (bool) $config->get('concrete.accessibility.display_help_system');
 $colorScheme = $config->get('concrete.appearance.color_scheme');
 
 ?><!DOCTYPE html>
@@ -124,6 +125,7 @@ $colorScheme = $config->get('concrete.appearance.color_scheme');
                     }
                 }
                 ?>
+                <?php if ($display_help_system) { ?>
                 <li data-guide-toolbar-action="help" class="float-end d-none d-sm-block">
                     <a <?php if ($show_tooltips) {
                         ?>class="launch-tooltip"<?php
@@ -135,6 +137,7 @@ $colorScheme = $config->get('concrete.appearance.color_scheme');
                                 class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page"><?= tc('toolbar', 'Help'); ?></span>
                     </a>
                 </li>
+                <?php } ?>
                 <li class="ccm-toolbar-search float-end d-none d-sm-none d-lg-block">
                     <?php
                     $menu = Element::get('navigation/intelligent_search');
