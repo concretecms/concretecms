@@ -96,9 +96,9 @@ class Pages extends ApiController
                 return $this->transform($page, $pageTransformer, Resources::RESOURCE_PAGES);
             } else {
                 if ($version === 'RECENT') {
-                    return $this->error(t('You do not have access to read the most recent unapproved version of page.'), 401);
+                    return $this->error(t('You do not have access to read the most recent unapproved version of page.'), 403);
                 } else {
-                    return $this->error(t('You do not have access to read properties about this page.'), 401);
+                    return $this->error(t('You do not have access to read properties about this page.'), 403);
                 }
             }
         } else {
@@ -249,7 +249,7 @@ class Pages extends ApiController
         }
 
         if (!isset($parentPage)) {
-            return $this->error(t('Invalid parent page specified.'), 401);
+            return $this->error(t('Invalid parent page specified.'), 400);
         }
 
         $results = $list->getResults();
@@ -306,7 +306,7 @@ class Pages extends ApiController
         }
 
         if ($e->has()) {
-            return $this->error($e, 401);
+            return $this->error($e, 400);
         }
 
         $parentPagePermissions = new Checker($parentPage);
@@ -365,7 +365,7 @@ class Pages extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/Page"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to update this resource."
      *     ),
      *     @OA\Response(
@@ -389,7 +389,7 @@ class Pages extends ApiController
 
         $checker = new Checker($page);
         if (!$checker->canEditPageContents()) {
-            return $this->error(t('You do not have access to edit this page.', 401));
+            return $this->error(t('You do not have access to edit this page.'), 403);
         }
 
         $body = json_decode($this->request->getContent(), true);
@@ -397,7 +397,7 @@ class Pages extends ApiController
 
         if (isset($body['type'])) {
             if (!$checker->canEditPageType()) {
-                return $this->error(t('You do not have access to edit the type of this page.'), 401);
+                return $this->error(t('You do not have access to edit the type of this page.'), 403);
             }
             $type = Type::getByHandle($body['type']);
             if (!$type) {
@@ -406,7 +406,7 @@ class Pages extends ApiController
         }
         if (isset($body['template'])) {
             if (!$checker->canEditPageTemplate()) {
-                return $this->error(t('You do not have access to edit the template of this page.'), 401);
+                return $this->error(t('You do not have access to edit the template of this page.'), 403);
             }
             $template = Template::getByHandle($body['template']);
             if (!$template) {
@@ -414,11 +414,11 @@ class Pages extends ApiController
             }
         }
         if ((isset($body['name']) || isset($body['description']) || isset($body['attributes'])) && !$checker->canEditPageProperties()) {
-            return $this->error(t('You do not have access to edit the properties of this page.'), 401);
+            return $this->error(t('You do not have access to edit the properties of this page.'), 403);
         }
 
         if ($e->has()) {
-            return $this->error($e, 401);
+            return $this->error($e, 400);
         }
 
         $page = $page->getVersionToModify();
@@ -475,7 +475,7 @@ class Pages extends ApiController
      *         @OA\JsonContent(ref="#/components/schemas/DeletedResponse"),
      *     ),
      *     @OA\Response(
-     *         response=401,
+     *         response=403,
      *         description="You do not have the proper permissions to delete this resource."
      *     ),
      *     @OA\Response(
@@ -498,7 +498,7 @@ class Pages extends ApiController
                 $this->app->executeCommand($command);
                 return $this->deleted(Resources::RESOURCE_PAGES, $pageID);
             } else {
-                return $this->error(t('You do not have access to delete this page.'), 401);
+                return $this->error(t('You do not have access to delete this page.'), 403);
             }
         } else {
             return $this->error(t('Page not found.'), 404);

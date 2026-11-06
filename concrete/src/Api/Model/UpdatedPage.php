@@ -12,7 +12,7 @@ class UpdatedPage
 {
 
     /**
-     * @OA\Property(type="string", title="ID")
+     * @OA\Property(type="string", title="Page Name")
      *
      * @var string
      */
@@ -33,7 +33,7 @@ class UpdatedPage
     private $type;
 
     /**
-     * @OA\Property(type="string", title="Page Type", description="The handle of the page template you want to apply to this page.")
+     * @OA\Property(type="string", title="Page Template", description="The handle of the page template you want to apply to this page.")
      *
      * @var string
      */

@@ -63,7 +63,9 @@ class SessionFactoryTest extends TestCase
         // Make the private `getSessionHandler` method accessible
         $reflection = new \ReflectionClass(get_class($this->factory));
         $method = $reflection->getMethod('getSessionHandler');
-        $method->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
 
         // Make sure database session gives us something other than native file session
         $pdo_handler = $method->invokeArgs($this->factory, [['handler' => 'database', 'save_path' => '/tmp']]);

@@ -39,8 +39,15 @@ class ReindexPageCommandHandler
             // reindex page attributes
             $indexer = $this->pageCategory->getSearchIndexer();
             $values = $this->pageCategory->getAttributeValues($c);
+            $presentKeyIds = [];
             foreach ($values as $value) {
+                $presentKeyIds[$value->getAttributeKey()->getAttributeKeyID()] = true;
                 $indexer->indexEntry($this->pageCategory, $value, $c);
+            }
+            foreach ($this->pageCategory->getSearchableList() as $key) {
+                if (!isset($presentKeyIds[$key->getAttributeKeyID()])) {
+                    $indexer->clearIndexEntryForAttributeKey($this->pageCategory, $key, $c);
+                }
             }
 
             // clear page cache

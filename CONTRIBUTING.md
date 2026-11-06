@@ -16,10 +16,13 @@ Before submitting pull requests, please be sure to read our extensive guidelines
 
 Need to fix the coding style of your PHP files prior to submissions? Are you working on Concrete version 9? 
 
-To fix the coding style of the files you created/modified, simply call:  
+Apply the coding style only to the files you created, or to the existing ones you rewrote for the most part: please don't reformat the other files, since that buries the actual change in the diff.  
+To fix the coding style of those files, simply call:  
   `./concrete/bin/concrete c5:phpcs fix <path>`  
   (On Windows, replace `/` with `\`).  
-  Where `<path>` is the file you modified (you can also specify multiple files, as well as using directories).
+  Where `<path>` is the file to be fixed (you can also specify multiple files, as well as using directories).  
+  This requires [PHP CS Fixer](https://cs.symfony.com/): if the `php-cs-fixer` command is not in your PATH, specify its location with the `--pcfpath` option.  
+  You can also run `php-cs-fixer fix <path>` from the root directory of the repository: it uses the same rules.
 
 - Pull requests that address existing issues are much **much** more likely to be accepted than unsolicited pull requests. 
 

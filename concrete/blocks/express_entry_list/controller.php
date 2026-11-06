@@ -18,11 +18,13 @@ use Concrete\Core\Express\Search\ColumnSet\DefaultSet;
 use Concrete\Core\Express\Search\SearchProvider;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
+use Concrete\Core\Foundation\Serializer\SafeClassUnserializerTrait;
 use Concrete\Core\Localization\Localization;
 use Concrete\Core\Search\Column\AttributeKeyColumn;
 use Concrete\Core\Search\Column\Column as SearchColumn;
 use Concrete\Core\Search\Field\AttributeKeyField;
 use Concrete\Core\Search\Field\Field\KeywordsField;
+use Concrete\Core\Search\Field\FieldInterface;
 use Concrete\Core\Search\Field\ManagerFactory;
 use Concrete\Core\Search\Query\Modifier\AutoSortColumnRequestModifier;
 use Concrete\Core\Search\Query\Modifier\CustomItemsPerPageRequestModifier;
@@ -42,6 +44,8 @@ use Symfony\Component\Serializer\Encoder\JsonDecode;
 
 class Controller extends BlockController implements UsesFeatureInterface
 {
+    use SafeClassUnserializerTrait;
+
     /**
      * @var string|null
      */
@@ -280,11 +284,11 @@ class Controller extends BlockController implements UsesFeatureInterface
 
                 $query = new Query();
                 if ($this->filterFields) {
-                    $filterFields = unserialize($this->filterFields);
-                    $query->setFields($filterFields);
+                    $filterFields = static::safeUnserializeObjectArray($this->filterFields, FieldInterface::class);
+                    $query->setFields($filterFields ?? []);
                 }
 
-                $columns = unserialize($this->columns);
+                $columns = static::safeUnserializeObject($this->columns, ColumnSet::class);
                 if ($columns) {
                     $query->setColumns($columns);
                 }
@@ -350,7 +354,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         if (is_object($entity)) {
             $filterFields = [];
             if ($this->filterFields) {
-                $filterFieldsUnserialized = unserialize($this->filterFields);
+                $filterFieldsUnserialized = static::safeUnserializeObjectArray($this->filterFields, FieldInterface::class);
                 if (is_array($filterFieldsUnserialized)) {
                     $filterFields = $filterFieldsUnserialized;
                 }
@@ -419,7 +423,7 @@ class Controller extends BlockController implements UsesFeatureInterface
             }
 
             // Use the columns saved in the instance
-            $columnSet = unserialize($this->columns);
+            $columnSet = static::safeUnserializeObject($this->columns, ColumnSet::class);
             if (!$columnSet) {
                 $columnSet = new DefaultSet($category);
             }
@@ -770,10 +774,10 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         unset($xRecord->filterFields[0]);
         $xFilterFields = $xRecord->addChild('filterFields');
-        $filterFields = $this->filterFields ? unserialize($this->filterFields) : [];
+        $filterFields = $this->filterFields ? static::safeUnserializeObjectArray($this->filterFields, FieldInterface::class) : [];
         if (is_array($filterFields)) {
             foreach ($filterFields as $filterField) {
-                if ($filterField instanceof \Concrete\Core\Search\Field\FieldInterface) {
+                if ($filterField instanceof FieldInterface) {
                     $filterField->export($xFilterFields);
                 }
             }
@@ -781,7 +785,7 @@ class Controller extends BlockController implements UsesFeatureInterface
 
         unset($xRecord->columns[0]);
         $xColumns = $xRecord->addChild('columns');
-        $columnSet = $this->columns ? unserialize($this->columns) : null;
+        $columnSet = $this->columns ? static::safeUnserializeObject($this->columns, ColumnSet::class) : null;
         if ($columnSet instanceof ColumnSet) {
             $defaultSortColumn = $columnSet->getDefaultSortColumn();
             if ($defaultSortColumn) {

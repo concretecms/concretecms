@@ -56,12 +56,14 @@ $c = Page::getCurrentPage();
         </li>
 
         <?php if ($entity->isPublished()) { ?>
-            <li class="nav-item">
-                <a class="nav-link <?php echo ($c->getCollectionPath() === '/dashboard/system/express/entities/order_entries') ? ' active' : '' ?>"
-                   href="<?php echo (string)Url::to('/dashboard/system/express/entities/order_entries', $entity->getId()) ?>">
-                    <?php echo t('Re-Order Entries') ?>
-                </a>
-            </li>
+            <?php if ($entity->supportsCustomDisplayOrder()) { ?>
+                <li class="nav-item">
+                    <a class="nav-link <?php echo ($c->getCollectionPath() === '/dashboard/system/express/entities/order_entries') ? ' active' : '' ?>"
+                       href="<?php echo (string)Url::to('/dashboard/system/express/entities/order_entries', $entity->getId()) ?>">
+                        <?php echo t('Re-Order Entries') ?>
+                    </a>
+                </li>
+            <?php } ?>
 
             <li class="nav-item">
                 <a class="nav-link" href="<?=$entity->getEntryListingUrl()?>">

@@ -102,7 +102,9 @@ class EntryCacheTest extends ConcreteDatabaseTestCase
         // layer. There is no other way doing this than through ReflectionClass.
         $reflectionClass = new \ReflectionClass('Doctrine\Persistence\Mapping\AbstractClassMetadataFactory');
         $prop = $reflectionClass->getProperty('loadedMetadata');
-        $prop->setAccessible(true); // needed for PHP 7
+        if (PHP_VERSION_ID < 80100) {
+            $prop->setAccessible(true);
+        }
         $prop->setValue($mdf, []);
     }
 

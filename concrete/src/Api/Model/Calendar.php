@@ -18,7 +18,7 @@ class Calendar
     private $id;
 
     /**
-     * @OA\Property(type="string", format="string", title="Block Area")
+     * @OA\Property(type="string", format="string", title="Calendar Name")
      *
      * @var string
      */

@@ -136,6 +136,9 @@ $publishDate = $v->getPublishDate();
                         data.push({'name': 'action', 'value': 'schedule'});
                         ConcreteEvent.fire('PanelComposerPublish', {data: data});
                     });
+                },
+                onClose: function() {
+                    $('div[data-dialog=schedule-page]').parent().remove();
                 }
             });
         });

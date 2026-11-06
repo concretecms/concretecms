@@ -16,14 +16,14 @@ class Locale
     private $id;
 
     /**
-     * @OA\Property(type="string", title="Site handle")
+     * @OA\Property(type="string", title="Country code")
      *
      * @var string
      */
     private $country;
 
     /**
-     * @OA\Property(type="string", title="Site Name")
+     * @OA\Property(type="string", title="Language code")
      *
      * @var string
      */

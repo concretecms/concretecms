@@ -163,9 +163,9 @@ class Design extends BackendUIPageController
                 if (is_object($pl)) {
                     $nvc->setTheme($pl);
                     if ($this->request->request->has('skinIdentifier')) {
-                        if ($pl->hasSkins() && ($skin = $pl->getSkinByIdentifier(h($this->request->request->get('skinIdentifier'))))) {
-                            $nvc->setThemeSkin($skin);
-                        }
+                        $skinIdentifier = h($this->request->request->get('skinIdentifier'));
+                        // a skin of the theme the page had must not stay attached to it
+                        $nvc->setThemeSkin($skinIdentifier === '' ? null : $pl->getSkinByIdentifier($skinIdentifier));
                     }
                 }
             }

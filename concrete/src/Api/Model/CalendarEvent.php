@@ -18,7 +18,7 @@ class CalendarEvent
     private $id;
 
     /**
-     * @OA\Property(type="string", format="string", title="Block Area")
+     * @OA\Property(type="string", format="string", title="Event Name")
      *
      * @var string
      */

@@ -51,7 +51,9 @@ class SystemUserTest extends TestCase
     {
         $method = new ReflectionMethod($systemUser, $methodName);
         if (PHP_VERSION_ID < 80100) {
-            $method->setAccessible(true);
+            if (PHP_VERSION_ID < 80100) {
+                $method->setAccessible(true);
+            }
         }
 
         return $method->invoke($systemUser);

@@ -13,7 +13,7 @@ class ArchiveItem extends AbstractItem
     {
         $item = new LinkItem(
             '#',
-            tc('Verb', 'Archive'),
+            t('Delete from list'),
             ['data-notification-action' => 'archive']
         );
         return $item->getItemElement();

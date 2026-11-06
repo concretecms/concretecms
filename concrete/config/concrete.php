@@ -6,9 +6,9 @@ return [
      *
      * @var string
      */
-    'version' => '9.5.4',
-    'version_installed' => '9.5.4',
-    'version_db' => '20260914000000', // the key of the latest database migration
+    'version' => '9.5.7',
+    'version_installed' => '9.5.7',
+    'version_db' => '20261106000000', // the key of the latest database migration
 
     /*
      * Installation status
@@ -956,6 +956,14 @@ return [
          * @var bool
          */
         'toolbar_tooltips' => true,
+
+        /*
+         * Display the Help menu item/panel (dashboard toolbar, frontend edit toolbar, and the help panel/dialog
+         * routes themselves).
+         *
+         * @var bool
+         */
+        'display_help_system' => true,
     ],
 
     /*
@@ -1545,6 +1553,8 @@ return [
             // ['service_handle', 'Service Name', 'icon']
             // Where 'icon' is the handle of a FontAwesome 4 icon (see https://fontawesome.com/v4.7.0/icons/ )
         ],
+        // The URL schemes accepted for the social links besides http, https, mailto and tel (for example 'sms')
+        'additional_schemes' => [],
     ],
 
     'file_chooser' => [

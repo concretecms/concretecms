@@ -21,7 +21,9 @@ class FileTest extends TestCase
 
         // Note odd capitalization of "URL" in this method name
         $accessor = new \ReflectionMethod($controller, 'checkRemoteURlsToImport');
-        $accessor->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $accessor->setAccessible(true);
+        }
         $closure = $accessor->getClosure($controller);
 
         // Expect an exception if one was provided, otherwise we expect to complete successfully

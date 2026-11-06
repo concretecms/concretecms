@@ -11,10 +11,10 @@
     <field name="question" type="string" size="255">
       <default value=""/>
     </field>
-    <field name="requiresRegistration" type="integer">
+    <field name="requiresRegistration" type="boolean">
       <default value="0"/>
     </field>
-    <field name="showResults" type="integer">
+    <field name="showResults" type="boolean">
       <default value="0"/>
     </field>
     <field name="customMessage" type="string" size="255">

@@ -284,7 +284,7 @@ class Controller extends BlockController implements FileTrackableInterface, Uses
      */
     public function save($args)
     {
-        $args["includeDownloadLink"] = isset($args["includeDownloadLink"]) ? 1 : 0;
+        $args["includeDownloadLink"] = !empty($args["includeDownloadLink"]) ? 1 : 0;
 
         parent::save($args);
 

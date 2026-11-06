@@ -148,7 +148,7 @@ $(function() {
                 if ($controller->getAction() === 'edit') {
                 ?>
                 deleteBlock(e) {
-                    var editor = new Concrete.getEditMode(),
+                    var editor = Concrete.getEditMode(),
                         area = editor.getAreaByID(this.areaId),
                         block = area.getBlockByID(this.blockId);
                     ConcreteEvent.subscribe('EditModeBlockDeleteAfterComplete', function() {
@@ -171,7 +171,7 @@ $(function() {
                 },
                 bindPeper() {
                     const peper = $('[data-layout-command="move-block"]');
-                    let editor = new Concrete.getEditMode(),
+                    let editor = Concrete.getEditMode(),
                         area = editor.getAreaByID(this.areaId),
                         block = area.getBlockByID(this.blockId);
                     $.pep.unbind(peper);

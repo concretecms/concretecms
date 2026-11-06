@@ -203,7 +203,9 @@ class AggregateTrackerTest extends TestCase
     {
         $reflection = new ReflectionClass($object);
         $property = $reflection->getProperty($property);
-        $property->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $property->setAccessible(true);
+        }
 
         $property->setValue($object, $value);
     }

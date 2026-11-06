@@ -139,6 +139,12 @@ class AdvancedSearch extends AdvancedSearchController
 
     public function getSavedSearchEditURL(SavedSearch $search)
     {
-        return $this->app->make('url')->to('/ccm/system/dialogs/express/advanced_search/preset/edit?presetID=' . $search->getID() . '&exEntityID=' . $this->entity->getId());
+        $url = '/ccm/system/dialogs/express/advanced_search/preset/edit?presetID=' . $search->getID() . '&exEntityID=' . $this->entity->getId();
+        $cID = $this->request->query->getInt('cID');
+        if ($cID > 0) {
+            $url .= '&cID=' . $cID;
+        }
+
+        return $this->app->make('url')->to($url);
     }
 }

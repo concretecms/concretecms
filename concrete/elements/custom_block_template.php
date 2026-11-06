@@ -37,7 +37,7 @@
                 },
                 methods: {
                     handleResponse(resp, callback = null) {
-                        var editor = new Concrete.getEditMode()
+                        var editor = Concrete.getEditMode()
                         var area = editor.getAreaByID(resp.aID)
                         var block = area.getBlockByID(parseInt(resp.originalBlockID))
                         var arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0

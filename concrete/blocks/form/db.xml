@@ -22,7 +22,7 @@
       <notnull/>
     </field>
     <field name="recipientEmail" type="string" size="255"/>
-    <field name="displayCaptcha" type="integer">
+    <field name="displayCaptcha" type="boolean">
       <default value="1"/>
     </field>
     <field name="redirectCID" type="integer">
@@ -72,7 +72,7 @@
     <field name="defaultDate" type="string" size="255">
       <default value=""/>
     </field>
-    <field name="required" type="integer">
+    <field name="required" type="boolean">
       <default value="0"/>
     </field>
     <index name="questionSetId">

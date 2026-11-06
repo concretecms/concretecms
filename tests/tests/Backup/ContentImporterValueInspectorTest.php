@@ -135,13 +135,27 @@ EOL;
 EOL;
 
         $expected = <<<EOL
-        <p><concrete-picture fID="1" />Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip <concrete-picture fID="1" /></p>
+        <p><concrete-picture fID="1" alt="Lorem ipsum" />Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip <concrete-picture fID="1" alt="ex ea commodo consequat." width="200" height="100" style="border: 1px solid black;" /></p>
 EOL;
 
         $inspector = app('import/value_inspector');
         $result = $inspector->inspect($content);
 
         $this->assertEquals($expected, $result->getReplacedContent());
+    }
+
+    public function testReplacedContentOfAPictureWhoseAttributesHoldTheEndOfTheElement()
+    {
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+        $importer = app(FileImporter::class);
+        $prefix = $importer->generatePrefix();
+        \Concrete\Core\File\File::add('test.jpg', $prefix);
+        $content = '<concrete-picture file="test.jpg" alt="a > b" class="wide" />';
+
+        $result = app('import/value_inspector')->inspect($content);
+
+        $this->assertEquals('<concrete-picture fID="1" alt="a > b" class="wide" />', $result->getReplacedContent());
     }
 }

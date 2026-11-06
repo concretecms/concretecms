@@ -44,21 +44,21 @@ class PageVersion
     private $comments;
 
     /**
-     * @OA\Property(type="date", title="Date page created")
+     * @OA\Property(type="date", title="Version creation date")
      *
      * @var string
      */
     private $date_created;
 
     /**
-     * @OA\Property(type="date", title="Date approved")
+     * @OA\Property(type="date", title="Version approval date")
      *
      * @var string
      */
     private $date_approved;
 
     /**
-     * @OA\Property(type="date", title="Publish end date")
+     * @OA\Property(type="date", title="Version publish end date")
      *
      * @var string
      */

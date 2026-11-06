@@ -2,6 +2,8 @@
 
 namespace Concrete\Block\TopicList;
 
+use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Backup\ContentImporter\ValueInspector\ValueInspectorInterface;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Feature\Features;
 use Concrete\Core\Feature\UsesFeatureInterface;
@@ -203,6 +205,8 @@ class Controller extends BlockController implements UsesFeatureInterface
      * @param int $treeID
      *
      * @return string|null
+     *
+     * @deprecated nothing calls it, and no {ccm:export:tree:...} placeholder is ever read back
      */
     public static function replaceTreeWithPlaceHolder($treeID)
     {
@@ -231,11 +235,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         if (is_object($tree)) {
             $data->addChild('tree', $tree->getTreeName());
         }
-        $path = null;
-        if ($this->cParentID) {
-            $parent = Page::getByID($this->cParentID);
-            $path = '{ccm:export:page:' . $parent->getCollectionPath() . '}';
-        }
+        $path = ContentExporter::replacePageWithPlaceHolder($this->cParentID);
         $data->addChild('cParentID', $path);
         $data->addChild('titleFormat', $this->titleFormat);
     }
@@ -264,11 +264,11 @@ class Controller extends BlockController implements UsesFeatureInterface
             $args['titleFormat'] = 'h5';
         }
         $args['topicAttributeKeyHandle'] = (string) $blockNode->data->topicAttributeKeyHandle;
-        if ($page) {
-            if (preg_match('/\{ccm:export:page:(.*?)\}/i', $page, $matches)) {
-                $c = Page::getByPath($matches[1]);
+        if ($page !== '') {
+            $cID = (int) $this->app->make(ValueInspectorInterface::class)->inspect($page)->getReplacedValue();
+            if ($cID > 0) {
                 $args['externalTarget'] = 1;
-                $args['cParentID'] = $c->getCollectionID();
+                $args['cParentID'] = $cID;
             }
         }
 

@@ -95,8 +95,6 @@ abstract class ConcreteDatabaseTestCase extends TestCase
         // Make sure tables are removed
         $testCase = new static('');
         $testCase->removeTables();
-
-        // Call parent teardown
         parent::tearDownAfterClass();
     }
 

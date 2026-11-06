@@ -16,7 +16,7 @@ class WorkflowProgressListViewMenu extends DropdownMenu
 
         $item = new LinkItem(
             '#',
-            tc('Verb', 'Archive'),
+            t('Delete from list'),
             ['data-notification-action' => 'archive']
         );
         $menu->appendChild($item->getItemElement());

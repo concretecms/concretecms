@@ -8,6 +8,9 @@ jobs:
   composer-detection:
     name: composer v${{ matrix.composer-version }}
     runs-on: ubuntu-latest
+    env:
+      # Security advisories are checked by the composer-audit workflow
+      COMPOSER_NO_BLOCKING: "1"
     strategy:
       fail-fast: false
       matrix:
@@ -21,7 +24,6 @@ jobs:
             -
               php-version: "8.3"
               composer-version: 2
-              disable-composer-audit: 1
     steps:
       -
         name: Install PHP ${{ matrix.php-version }}
@@ -88,11 +90,6 @@ jobs:
           repository: mlocati/concretecms-skeleton
           ref: main
           path: composer-repo
-      -
-        name: Disable composer audit
-        if: ${{ matrix.disable-composer-audit }}
-        working-directory: composer-repo
-        run: composer config --ansi --no-interaction audit.block-insecure false
       -
         name: Install dependencies
         working-directory: composer-repo

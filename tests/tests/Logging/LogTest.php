@@ -37,6 +37,11 @@ class LogTest extends ConcreteDatabaseTestCase
      */
     protected $db;
 
+    /**
+     * @var mixed
+     */
+    private $previousLogHandler;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -46,6 +51,24 @@ class LogTest extends ConcreteDatabaseTestCase
 
         $this->app = Facade::getFacadeApplication();
         $this->db = $this->app->make(Connection::class);
+        // These tests check the log entries saved in the database
+        $this->previousLogHandler = $this->app->make('config')->get('concrete.log.configuration.simple.handler');
+        $this->setLogHandler('database');
+    }
+
+    public function tearDown(): void
+    {
+        $this->setLogHandler($this->previousLogHandler);
+        parent::tearDown();
+    }
+
+    private function setLogHandler($handler): void
+    {
+        $this->app->make('config')->set('concrete.log.configuration.simple.handler', $handler);
+        // The loggers are built once, when they are first asked for
+        $this->app->forgetInstance(LoggerFactory::class);
+        $this->app->forgetInstance('log/application');
+        $this->app->forgetInstance('log/exceptions');
     }
 
     // The application logger is used whenever the \Log facade is used. Consequently, the default behavior is to

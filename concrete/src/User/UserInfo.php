@@ -907,6 +907,14 @@ class UserInfo extends ConcreteObject implements AttributeObjectInterface, Permi
     }
 
     /**
+     * @see \Concrete\Core\Entity\User\User::getUserValidationStatus()
+     */
+    public function getValidationStatus()
+    {
+        return $this->entity->getUserValidationStatus();
+    }
+
+    /**
      * @see \Concrete\Core\Entity\User\User::isUserFullRecord()
      */
     public function isFullRecord()
