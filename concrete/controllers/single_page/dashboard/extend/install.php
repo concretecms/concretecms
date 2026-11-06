@@ -20,6 +20,7 @@ use Concrete\Core\Marketplace\Model\RemotePackage;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
 use Concrete\Core\Package\BrokenPackage;
 use Concrete\Core\Package\ItemCategory\Manager;
+use Concrete\Core\Package\PackageActionLogger;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Routing\RedirectResponse;
@@ -126,14 +127,19 @@ class Install extends DashboardPageController implements LoggerAwareInterface
                 $r = Package::uninstall($p);
                 if ($this->post('pkgMoveToTrash')) {
                     $r = $pkg->backup();
+                    $logger = $this->app->make(PackageActionLogger::class);
                     if ($r instanceof ErrorList) {
+                        $logger->logDirectoryMoveFailed($p, $r);
                         $this->error->add($r);
+                    } else {
+                        $logger->logDirectoryMoved($p, (string) $r->getBackupDestination());
                     }
                 }
                 if (!$this->error->has()) {
                     $this->redirect('/dashboard/extend/install', 'package_uninstalled');
                 }
             } else {
+                $this->app->make(PackageActionLogger::class)->logUninstallFailed($p, $test);
                 $this->error->add($test);
             }
         }
@@ -175,6 +181,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
             $packageService = $this->app->make(PackageService::class);
             $p = $packageService->getClass($package);
             if ($p instanceof BrokenPackage) {
+                $this->app->make(PackageActionLogger::class)->logInstallFailed($p, $p->getInstallErrorMessage());
                 $this->error->add($p->getInstallErrorMessage());
             } elseif (is_object($p)) {
                 $showInstallOptionsScreen = $p->showInstallOptionsScreen();
@@ -216,6 +223,7 @@ class Install extends DashboardPageController implements LoggerAwareInterface
                 if (!$showInstallOptionsScreen || $isInstallOptionsSubmission) {
                     $tests = $p->testForInstall();
                     if (is_object($tests)) {
+                        $this->app->make(PackageActionLogger::class)->logInstallFailed($p, $tests);
                         $this->error->add($tests);
                     } else {
                         $r = $packageService->install($p, $this->post());
