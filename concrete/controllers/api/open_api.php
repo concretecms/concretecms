@@ -2,7 +2,7 @@
 namespace Concrete\Controller\Api;
 
 use Concrete\Core\Api\OpenApi\SpecGenerator;
-use Concrete\Core\Error\UserMessageException;
+use Concrete\Core\Error\UserMessageHttpException;
 use Concrete\Core\Permission\Checker;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,7 +29,7 @@ class OpenApi
             $r = $this->specGenerator->getSpec();
             return new Response($r->toYaml());
         } else {
-            throw new UserMessageException(t('Access Denied.'));
+            throw new UserMessageHttpException(t('Access Denied.'), 403);
         }
     }
 
