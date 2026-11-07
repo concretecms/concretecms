@@ -86,6 +86,7 @@ class FileAssignment extends TreeNodeAssignment
     {
         $db = Database::connection();
         $db->Execute('update FilePermissionAssignments set paID = 0 where pkID = ? and fID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getFileID()));
+        $this->dispatchClearEvent();
     }
 
     public function assignPermissionAccess(Access $pa)

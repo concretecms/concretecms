@@ -89,6 +89,8 @@ class PageAssignment extends Assignment
             $this->getPermissionObject()->getPermissionObjectIdentifier()
         );
         $cache->delete($identifier);
+
+        $this->dispatchClearEvent();
     }
 
     /**
