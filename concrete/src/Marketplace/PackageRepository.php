@@ -8,6 +8,7 @@ use Concrete\Core\Marketplace\Exception\ErrorSavingRemoteDataException;
 use Concrete\Core\Config\Repository\Repository;
 use Concrete\Core\Entity\Site\Site;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\File\Service\VolatileDirectory;
 use Concrete\Core\Marketplace\Exception\InvalidConnectResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidDownloadResponseException;
 use Concrete\Core\Marketplace\Exception\InvalidPackageException;
@@ -150,7 +151,9 @@ final class PackageRepository implements PackageRepositoryInterface
         }
 
         // Unzip the archive
-        $unzipPath = '/tmp/' . uniqid($package->handle, true);
+        // Kept in scope until the end of the method: its destructor removes the directory
+        $volatileDirectory = app(VolatileDirectory::class, ['parentDirectory' => $this->fileHelper->getTemporaryDirectory()]);
+        $unzipPath = $volatileDirectory->getPath();
         $archive = new \ZipArchive();
         $archive->open($output);
         $archive->extractTo($unzipPath);
@@ -195,7 +198,6 @@ final class PackageRepository implements PackageRepositoryInterface
         }
 
         $this->rimraf($package->handle . '.old');
-        rmdir($unzipPath);
     }
 
     protected function rename(string $old, string $new): bool
