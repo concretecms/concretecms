@@ -13,7 +13,7 @@ class FileFolderItem extends AbstractItem
      */
     public function getDisplayName()
     {
-        return t('Page Template');
+        return t('File Folder');
     }
 
     /**
