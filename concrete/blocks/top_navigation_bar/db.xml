@@ -31,7 +31,7 @@
         <field name="includeSearchInput" type="boolean" comment="true: a search box is displayed in the bar; false or NULL: it isn't">
             <default value="0"/>
         </field>
-        <field name="searchInputFormActionPageID" type="integer" comment="The ID of the page that displays the results of the search (0 or NULL: the page holding the block)" />
+        <field name="searchInputFormActionPageID" type="integer" comment="The ID of the page that displays the results of the search (0 or NULL, or no such page: the home page of the language the visitor reads, or of the site)" />
         <field name="includeSwitchLanguage" type="boolean" comment="true: the visitors are offered the languages of the site; false or NULL: they are not">
             <default value="0"/>
         </field>

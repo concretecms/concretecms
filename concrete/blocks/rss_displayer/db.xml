@@ -10,7 +10,7 @@
     </field>
     <field name="title" type="string" size="255" comment="The text displayed above the items of the feed"/>
     <field name="url" type="string" size="255" comment="The address of the RSS or Atom feed the items are read from"/>
-    <field name="dateFormat" type="string" size="100" comment="A format accepted by the date() PHP function, used for the date of the items"/>
+    <field name="dateFormat" type="string" size="100" comment="The format of the date of the items: one of the formats of the locale, which are :shortDate:, :longDate:, :shortTime:, :longTime: and the four pairs of a date and a time like :longDate:shortTime:, or else a format accepted by the date() PHP function"/>
     <field name="itemsToDisplay" type="integer" comment="How many items of the feed are displayed">
       <unsigned/>
       <default value="5"/>

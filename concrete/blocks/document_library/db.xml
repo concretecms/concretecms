@@ -21,7 +21,7 @@
     <field name="onlyCurrentUser" type="boolean" comment="true: only the files added by the visitor are listed; false or NULL: all of them are listed">
       <default value="0"/>
     </field>
-    <field name="tags" type="string" size="128" comment="The tags the files must have, separated by commas"/>
+    <field name="tags" type="string" size="128" comment="The text the tags of a file must contain for it to be listed, searched as it is and not as a list of tags (empty: the files are not filtered by their tags)"/>
     <field name="viewProperties" type="text" comment="A JSON object pairing every column with how it's displayed: the key is a property of the files (thumbnail, filename, tags, date, extension, size, description, ak_&lt;file attribute key ID&gt;), the value is -1 (hidden), 1 (displayed) or 5 (sortable)"/>
     <field name="expandableProperties" type="string" size="255" comment="A JSON array of the properties displayed when a file is expanded: image, description, tags, filename, date, extension, size, or ak_&lt;file attribute key ID&gt;"/>
     <field name="searchProperties" type="string" size="255" comment="A JSON array of the properties the visitors can search the files by: keywords, type, extension, or ak_&lt;file attribute key ID&gt; (used if enableSearch is true)"/>

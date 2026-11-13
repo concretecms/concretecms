@@ -13,7 +13,7 @@
     <field name="displayMode" type="string" size="20" comment="page: the tags of the page holding the block are listed; cloud: the ones of the whole site are listed">
       <default value="page"/>
     </field>
-    <field name="cloudCount" type="integer" comment="How many tags are listed at most (0 or NULL: all of them): it's used only when displayMode is cloud">
+    <field name="cloudCount" type="integer" comment="How many tags are listed at most, whatever displayMode says (0 or NULL: all of them)">
       <default value="10"/>
     </field>
     <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the text displayed above the tags: h1, h2, h3, h4, h5, h6 or p">

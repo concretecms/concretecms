@@ -20,7 +20,7 @@
     <field name="thumbnailWidth" type="integer" comment="The width of the thumbnail, in pixels, used when the value is an image (0 or NULL: the height decides)">
       <unsigned/>
     </field>
-	<field name="delimiter" type="string" size="255" comment="The text separating the items, used when the value holds more than one (for instance a topics attribute)"/>
+	<field name="delimiter" type="string" size="255" comment="What separates the items where the value holds more than one (for instance a topics attribute): comma, commaSpace, pipe, dash, semicolon, semicolonSpace or break, anything else separating them with a space"/>
   </table>
 
 </schema>

@@ -24,12 +24,12 @@
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="externalLink" type="string" size="255" comment="The URL the image links to: it's used only when internalLinkCID and fileLinkID are 0" />
-        <field name="internalLinkCID" type="integer" comment="The ID of the page the image links to (0 or NULL: it links to fileLinkID or to externalLink)">
+        <field name="externalLink" type="string" size="255" comment="The URL the image links to, which wins over internalLinkCID and fileLinkID" />
+        <field name="internalLinkCID" type="integer" comment="The ID of the page the image links to (0 or NULL: none): it's used only when externalLink is empty">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="fileLinkID" type="integer" comment="The ID of the file the image links to (0 or NULL: none): it's used only when internalLinkCID is 0">
+        <field name="fileLinkID" type="integer" comment="The ID of the file the image links to (0 or NULL: none): it's used only when externalLink is empty and internalLinkCID is 0">
             <unsigned/>
             <default value="0" />
         </field>

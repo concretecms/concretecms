@@ -18,7 +18,7 @@
     <field name="speed" type="integer" comment="How many milliseconds the transition between two slides lasts">
       <unsigned/>
     </field>
-    <field name="noAnimate" type="boolean" comment="true: the slides are switched without animating them; false or NULL: they slide">
+    <field name="noAnimate" type="boolean" comment="true: the slides are not advanced on their own, and a visitor moves them by hand; false or NULL: each is replaced by the next after timeout">
       <default value="0"/>
     </field>
     <field name="pause" type="boolean" comment="true: the slideshow stops while the pointer is over it; false or NULL: it keeps going">
@@ -46,12 +46,12 @@
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="linkURL" type="string" size="255" comment="The URL the slide links to (used if internalLinkCID is 0)"/>
-    <field name="internalLinkCID" type="integer" comment="The ID of the page the slide links to (0 or NULL: it links to linkURL)">
+    <field name="linkURL" type="string" size="255" comment="The URL the slide links to, which wins over internalLinkCID (empty: it links to internalLinkCID)"/>
+    <field name="internalLinkCID" type="integer" comment="The ID of the page the slide links to (0 or NULL: none): it's used only when linkURL is empty">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="title" type="text" comment="The title displayed over the image, as rich text"/>
+    <field name="title" type="text" comment="The title displayed over the image, as plain text"/>
     <field name="description" type="text" comment="The text displayed below the title, as rich text"/>
     <field name="sortOrder" type="integer" comment="The position of the slide in the slideshow, starting from zero"/>
   </table>

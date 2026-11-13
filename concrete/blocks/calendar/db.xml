@@ -5,12 +5,12 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="caID" type="integer" size="10" comment="The ID of the calendar to be displayed (0: it's the one held by the page attribute named by calendarAttributeKeyHandle)">
+        <field name="caID" type="integer" size="10" comment="The ID of the calendar to be displayed: it's used only when calendarAttributeKeyHandle is empty, or when the attribute it names holds no calendar">
             <unsigned/>
             <default value="0" />
             <notnull/>
         </field>
-        <field name="calendarAttributeKeyHandle" type="string" size="255" comment="The handle of the page attribute holding the calendar to be displayed (used if caID is 0)" />
+        <field name="calendarAttributeKeyHandle" type="string" size="255" comment="The handle of the attribute of the site holding the calendar to be displayed, which wins over caID when it holds one" />
         <field name="filterByTopicAttributeKeyID" type="integer" size="10" comment="The ID of the topics attribute of the events used to filter them (0: they are not filtered)">
             <unsigned/>
             <default value="0" />

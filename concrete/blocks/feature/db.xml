@@ -11,8 +11,8 @@
     <field name="icon" type="string" size="255" comment="The class names of the Font Awesome icon displayed above the title, for instance fas fa-address-book (it's ignored when fID is set)"/>
     <field name="title" type="string" size="255" comment="The title of the feature"/>
     <field name="paragraph" type="text" size="65535" comment="The rich text displayed below the title"/>
-    <field name="externalLink" type="string" size="255" comment="The URL the feature links to (used if internalLinkCID is 0)"/>
-    <field name="internalLinkCID" type="integer" comment="The ID of the page the feature links to (0 or NULL: it links to externalLink, if that one is filled)">
+    <field name="externalLink" type="string" size="255" comment="The URL the feature links to, which wins over internalLinkCID (empty: it links to internalLinkCID)"/>
+    <field name="internalLinkCID" type="integer" comment="The ID of the page the feature links to (0 or NULL: none): it's used only when externalLink is empty">
       <unsigned/>
       <default value="0"/>
     </field>

@@ -22,7 +22,7 @@
     <field name="displayCaptcha" type="boolean" comment="true: the visitors must solve a captcha before submitting the form; false or NULL: they don't">
       <default value="1"/>
     </field>
-    <field name="storeFormSubmission" type="boolean" comment="true: the submitted forms are saved as entries of the Express entity; false or NULL: they are not kept">
+    <field name="storeFormSubmission" type="boolean" comment="true: the submitted forms are saved as entries of the Express entity; false or NULL: they are not kept. It counts only where concrete.form.store_form_submissions is auto">
      <default value="1"/>
     </field>
     <field name="redirectCID" type="integer" comment="The ID of the page the visitors are sent to once the form has been submitted (0 or NULL: thankyouMsg is displayed instead)">

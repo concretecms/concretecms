@@ -11,12 +11,12 @@
         <field name="title" type="string" comment="The title displayed over the image" />
         <field name="body" type="text" comment="The rich text displayed below the title, over the image" />
         <field name="buttonText" type="string" comment="The text of the button (empty: no button is displayed, unless it links to something)" />
-        <field name="buttonExternalLink" type="string" size="255" comment="The URL the button links to: it's used only when buttonInternalLinkCID and buttonFileLinkID are 0" />
-        <field name="buttonInternalLinkCID" type="integer" comment="The ID of the page the button links to (0 or NULL: it links to buttonFileLinkID or to buttonExternalLink)">
+        <field name="buttonExternalLink" type="string" size="255" comment="The URL the button links to, which wins over buttonInternalLinkCID and buttonFileLinkID" />
+        <field name="buttonInternalLinkCID" type="integer" comment="The ID of the page the button links to (0 or NULL: none): it's used only when buttonExternalLink is empty">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="buttonFileLinkID" type="integer" comment="The ID of the file the button links to (0 or NULL: none): it's used only when buttonInternalLinkCID is 0">
+        <field name="buttonFileLinkID" type="integer" comment="The ID of the file the button links to (0 or NULL: none): it's used only when buttonExternalLink is empty and buttonInternalLinkCID is 0">
             <unsigned/>
             <default value="0" />
         </field>
