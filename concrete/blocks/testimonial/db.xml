@@ -8,16 +8,16 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="fID" type="integer">
+    <field name="fID" type="integer" comment="The ID of the picture of the person (0 or NULL: none)">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="name" type="string" size="255"/>
-    <field name="position" type="string" size="255"/>
-    <field name="company" type="string" size="255"/>
-    <field name="companyURL" type="string" size="255"/>
-    <field name="paragraph" type="text" size="65535"/>
-    <field name="awardImageID" type="integer">
+    <field name="name" type="string" size="255" comment="The name of the person the block quotes"/>
+    <field name="position" type="string" size="255" comment="The role of the person"/>
+    <field name="company" type="string" size="255" comment="The name of the company of the person"/>
+    <field name="companyURL" type="string" size="255" comment="The address that the name of the company links to (empty: it is not a link)"/>
+    <field name="paragraph" type="text" size="65535" comment="The quote, or the biography of the person, as plain text"/>
+    <field name="awardImageID" type="integer" comment="The ID of the image of an award (0 or NULL: none)">
       <unsigned/>
       <default value="0"/>
     </field>

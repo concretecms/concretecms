@@ -9,7 +9,7 @@
       <key/>
       <notnull/>
     </field>
-    <field name="bOriginalID" type="integer">
+    <field name="bOriginalID" type="integer" comment="The ID of the block that this block is an alias of">
       <unsigned/>
       <notnull/>
     </field>

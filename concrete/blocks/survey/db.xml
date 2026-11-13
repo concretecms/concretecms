@@ -8,29 +8,29 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="question" type="string" size="255">
+    <field name="question" type="string" size="255" comment="The question the visitors answer">
       <default value=""/>
     </field>
-    <field name="requiresRegistration" type="boolean">
+    <field name="requiresRegistration" type="boolean" comment="true: only the registered users can vote; false: anyone can">
       <default value="0"/>
     </field>
-    <field name="showResults" type="boolean">
+    <field name="showResults" type="boolean" comment="true: a visitor that has voted is shown customMessage instead of the results, despite what the name of this field says; false: the results are displayed">
       <default value="0"/>
     </field>
-    <field name="customMessage" type="string" size="255">
+    <field name="customMessage" type="string" size="255" comment="The text displayed to a visitor that has voted (used if showResults is true)">
       <default value=""/>
     </field>
   </table>
 
   <table name="btSurveyOptions">
-    <field name="optionID" type="integer">
+    <field name="optionID" type="integer" comment="The ID of the answer">
       <unsigned/>
       <autoincrement/>
       <key/>
     </field>
     <field name="bID" type="integer"/>
-    <field name="optionName" type="string" size="255"/>
-    <field name="displayOrder" type="integer">
+    <field name="optionName" type="string" size="255" comment="The text of the answer, displayed beside its radio button"/>
+    <field name="displayOrder" type="integer" comment="The position of the answer in the survey, starting from zero">
       <default value="0"/>
     </field>
     <index name="bID">
@@ -40,23 +40,23 @@
   </table>
 
   <table name="btSurveyResults">
-    <field name="resultID" type="integer">
+    <field name="resultID" type="integer" comment="The ID of the vote">
       <unsigned/>
       <autoincrement/>
       <key/>
     </field>
-    <field name="optionID" type="integer">
+    <field name="optionID" type="integer" comment="The ID of the answer that was voted">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="uID" type="integer">
+    <field name="uID" type="integer" comment="The ID of the user that voted (0 or NULL: nobody was logged in)">
       <unsigned/>
       <default value="0"/>
     </field>
     <field name="bID" type="integer"/>
-    <field name="cID" type="integer"/>
-    <field name="ipAddress" type="string" size="128"/>
-    <field name="timestamp" type="timestamp">
+    <field name="cID" type="integer" comment="The ID of the page the vote was cast from, which tells the stacks apart from the pages displaying them"/>
+    <field name="ipAddress" type="string" size="128" comment="The IP address the vote came from, which keeps the visitors that are not logged in from voting twice"/>
+    <field name="timestamp" type="timestamp" comment="When the vote was cast">
       <deftimestamp/>
       <notnull/>
     </field>

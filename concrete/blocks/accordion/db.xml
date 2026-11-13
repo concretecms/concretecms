@@ -5,23 +5,23 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="initialState" type="string" size="20">
+        <field name="initialState" type="string" size="20" comment="openfirst: the first item is expanded when the page is displayed; closed: every item is collapsed; open: every item is expanded">
           <default value="openfirst" />
           <notnull/>
         </field>
-        <field name="itemHeadingFormat" type="string" size="20">
+        <field name="itemHeadingFormat" type="string" size="20" comment="The HTML element wrapping the title of the items: h1, h2, h3, h4, h5, h6 or p">
           <default value="h2" />
           <notnull/>
         </field>
-        <field name="alwaysOpen" type="boolean">
+        <field name="alwaysOpen" type="boolean" comment="true: the items stay open when another one is opened; false or NULL: opening an item closes the other ones">
           <default value="0"/>
         </field>
-        <field name="flush" type="boolean">
+        <field name="flush" type="boolean" comment="true: the accordion is rendered edge-to-edge, without borders and rounded corners; false or NULL: it keeps them">
           <default value="0"/>
         </field>
     </table>
     <table name="btAccordionEntries">
-        <field name="id" type="integer">
+        <field name="id" type="integer" comment="The ID of the item">
             <unsigned/>
             <autoincrement/>
             <key/>
@@ -29,9 +29,9 @@
         <field name="bID" type="integer">
             <unsigned/>
         </field>
-        <field name="title" type="string" size="255" />
-        <field name="sortOrder" type="integer" />
-        <field name="description" type="text" />
+        <field name="title" type="string" size="255" comment="The title of the item, displayed in its header" />
+        <field name="sortOrder" type="integer" comment="The position of the item in the accordion, starting from zero" />
+        <field name="description" type="text" comment="The contents of the item, as rich text" />
         <index name="bID">
             <col>bID</col>
             <col>sortOrder</col>

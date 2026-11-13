@@ -8,46 +8,46 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="title" type="string" size="255"/>
-    <field name="videoURL" type="string" size="255"/>
-    <field name="vHeight" type="string" size="255"/>
-    <field name="vWidth" type="string" size="255"/>
-    <field name="sizing" type="string" size="10"/>
-    <field name="startTimeEnabled" type="boolean">
+    <field name="title" type="string" size="255" comment="The text displayed above the video"/>
+    <field name="videoURL" type="string" size="255" comment="The address of the video on YouTube, from which its identifier is taken"/>
+    <field name="vHeight" type="string" size="255" comment="The height of the player, in pixels (used if sizing is fixed)"/>
+    <field name="vWidth" type="string" size="255" comment="The width of the player, in pixels (used if sizing is fixed)"/>
+    <field name="sizing" type="string" size="10" comment="16:9 or 4:3: the player fills the width available, keeping that ratio; fixed: it's vWidth by vHeight pixels"/>
+    <field name="startTimeEnabled" type="boolean" comment="true: the video starts at startTime; false or NULL: it starts from the beginning">
       <default value="0"/>
     </field>
-    <field name="startTime" type="string" size="10" />
-    <field name="noCookie" type="boolean">
+    <field name="startTime" type="string" size="10" comment="Where the playback starts, as 1h2m3s or as 1:02:03 (used if startTimeEnabled is true)" />
+    <field name="noCookie" type="boolean" comment="true: the video is loaded from youtube-nocookie.com, which doesn't track the visitors; false or NULL: it's loaded from youtube.com">
       <default value="0"/>
     </field>
-    <field name="autoplay" type="boolean">
+    <field name="autoplay" type="boolean" comment="true: the video starts as soon as the page is displayed; false: the visitor starts it">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="color" type="string" size="10"/>
-    <field name="controls" type="boolean">
+    <field name="color" type="string" size="10" comment="red: the progress bar of the player is red; white: it's white"/>
+    <field name="controls" type="boolean" comment="true: the player displays its controls; false or NULL: they are hidden">
       <default value="0"/>
     </field>
-    <field name="iv_load_policy" type="integer">
+    <field name="iv_load_policy" type="integer" comment="1: the annotations of the video are displayed; 3: they are hidden">
       <unsigned/>
     </field>
-    <field name="loopEnd" type="boolean">
+    <field name="loopEnd" type="boolean" comment="true: the video starts over when it ends; false: it stops">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="modestbranding" type="boolean">
+    <field name="modestbranding" type="boolean" comment="true: the YouTube logo is kept out of the controls; false: it's displayed">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="lazyLoad" type="boolean">
+    <field name="lazyLoad" type="boolean" comment="true: the player is loaded only when it's about to be displayed; false: it's loaded right away">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="rel" type="boolean">
+    <field name="rel" type="boolean" comment="true: the videos offered when the playback ends come from other channels too; false: they come from the same channel">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="showCaptions" type="boolean">
+    <field name="showCaptions" type="boolean" comment="true: the captions of the video are displayed; false: they are hidden">
       <default value="0"/>
       <notnull/>
     </field>

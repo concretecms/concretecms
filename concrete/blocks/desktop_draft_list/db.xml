@@ -8,7 +8,7 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="draftsPerPage" type="integer" />
+    <field name="draftsPerPage" type="integer" comment="How many drafts a page of the list displays" />
   </table>
 
 </schema>

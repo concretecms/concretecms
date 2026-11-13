@@ -10,56 +10,56 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="exEntityID" type="string" size="255">
+    <field name="exEntityID" type="string" size="255" comment="The ID of the Express entity whose entries are listed">
       <notnull/>
     </field>
-    <field name="detailPage" type="integer">
+    <field name="detailPage" type="integer" comment="The ID of the page that displays the details of an entry, linked by the columns listed in linkedProperties (0: no link)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="linkedProperties" type="string" size="255"/>
-    <field name="searchProperties" type="string" size="255"/>
-    <field name="searchAssociations" type="text" />
-    <field name="columns" type="text"/>
-    <field name="filterFields" type="text"/>
-    <field name="displayLimit" type="integer">
+    <field name="linkedProperties" type="string" size="255" comment="A JSON array of the IDs of the attributes of the entity whose columns link to the detailPage page"/>
+    <field name="searchProperties" type="string" size="255" comment="A JSON array of the IDs of the attributes of the entity the visitors can search the entries by (used if enableSearch is true)"/>
+    <field name="searchAssociations" type="text" comment="A JSON array of the IDs of the associations of the entity the visitors can search the entries by (used if enableSearch is true)" />
+    <field name="columns" type="text" comment="The columns of the table, as the PHP serialization of the column set holding them and the column the entries are sorted by"/>
+    <field name="filterFields" type="text" comment="The filters the entries must match, as the PHP serialization of the search fields holding them"/>
+    <field name="displayLimit" type="integer" comment="How many entries a page displays">
       <default value="20"/>
     </field>
-    <field name="enableItemsPerPageSelection" type="boolean">
+    <field name="enableItemsPerPageSelection" type="boolean" comment="true: the visitors can choose how many entries a page displays; false or NULL: they are stuck with displayLimit">
       <default value="0"/>
     </field>
-    <field name="enablePagination" type="boolean">
+    <field name="enablePagination" type="boolean" comment="true: the visitors can move to the other pages of the list; false or NULL: only the first page is reachable">
       <default value="0"/>
     </field>
-    <field name="enableSearch" type="boolean">
+    <field name="enableSearch" type="boolean" comment="true: the visitors are offered a form to search the entries, unless there is nothing to search by; false or NULL: they are not">
       <default value="0"/>
     </field>
-    <field name="enableKeywordSearch" type="boolean">
+    <field name="enableKeywordSearch" type="boolean" comment="true: the form to search the entries accepts keywords too; false or NULL: it doesn't (used if enableSearch is true)">
       <default value="0"/>
     </field>
-    <field name="headerBackgroundColor" type="string" size="32">
+    <field name="headerBackgroundColor" type="string" size="32" comment="The background color of the header of the table, as a CSS color such as rgb(255, 0, 0)">
       <default value=""/>
     </field>
-    <field name="headerBackgroundColorActiveSort" type="string" size="32">
+    <field name="headerBackgroundColorActiveSort" type="string" size="32" comment="The background color of the column of the header the entries are sorted by, as a CSS color such as rgb(255, 0, 0)">
       <default value=""/>
     </field>
-    <field name="headerTextColor" type="string" size="32">
+    <field name="headerTextColor" type="string" size="32" comment="The color of the text of the header of the table, as a CSS color such as rgb(255, 0, 0)">
       <default value=""/>
     </field>
-    <field name="tableName" type="string" size="255">
+    <field name="tableName" type="string" size="255" comment="The title displayed above the table">
       <default value=""/>
     </field>
-    <field name="tableDescription" type="string" size="255">
+    <field name="tableDescription" type="string" size="255" comment="The text displayed below the title of the table">
       <default value=""/>
     </field>
-    <field name="tableStriped" type="boolean">
+    <field name="tableStriped" type="boolean" comment="true: the rows of the table alternate two colors, the second one being rowBackgroundColorAlternate; false or NULL: they all look the same">
       <default value="0"/>
     </field>
-    <field name="rowBackgroundColorAlternate" type="string" size="32">
+    <field name="rowBackgroundColorAlternate" type="string" size="32" comment="The color of the even rows of the table, as a CSS color such as rgb(255, 0, 0) (used if tableStriped is true)">
       <default value=""/>
     </field>
-    <field name="titleFormat" type="string" size="20">
+    <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the title of the table: h1, h2, h3, h4, h5, h6 or p">
       <default value="h2" />
 	  <notnull/>
     </field>

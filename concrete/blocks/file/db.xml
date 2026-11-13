@@ -8,12 +8,12 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="fID" type="integer">
+    <field name="fID" type="integer" comment="The ID of the file the block links to">
       <unsigned/>
     </field>
-    <field name="fileLinkText" type="string" size="255"/>
-    <field name="filePassword" type="string" size="255"/>
-    <field name="forceDownload" type="boolean">
+    <field name="fileLinkText" type="string" size="255" comment="The text of the link (empty: the name of the file)"/>
+    <field name="filePassword" type="string" size="255" comment="Deprecated, not used"/>
+    <field name="forceDownload" type="boolean" comment="true: the link makes the browser download the file; false: the browser decides whether to display it">
       <default value="0"/>
       <notnull/>
     </field>
