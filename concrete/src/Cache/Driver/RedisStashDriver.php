@@ -129,7 +129,7 @@ class RedisStashDriver extends AbstractDriver
 
             foreach ($this->getRedisServers($servers, $database) as $server) {
                 if (class_exists('RedisArray')) {
-                    if ($servers['scheme'] === 'unix') {
+                    if ($server['scheme'] === 'unix') {
                         $serverString = $server['path'];
                     } else {
                         $serverString = $server['host'];
