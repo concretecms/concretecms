@@ -54,6 +54,7 @@ class ConversationAssignment extends Assignment
             'update ConversationPermissionAssignments set paID = 0 where pkID = ? and cnvID = ?',
             array($this->pk->getPermissionKeyID(), $cnvID)
         );
+        $this->dispatchClearEvent();
     }
 
     public function assignPermissionAccess(Access $pa)

@@ -4,7 +4,10 @@ namespace Concrete\Core\Permission\Assignment;
 
 use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Permission\Access\Access;
+use Concrete\Core\Permission\Event\PermissionAssignmentEvent;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\User\User;
+use Events;
 use PermissionKeyCategory;
 
 class Assignment
@@ -72,11 +75,29 @@ class Assignment
         return $akc->getTaskURL($task, $options);
     }
 
+    protected function dispatchClearEvent()
+    {
+        $app = Application::getFacadeApplication();
+        $u = null;
+        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
+            $u = $app->make(User::class);
+        }
+
+        $event = new PermissionAssignmentEvent(
+            $this->pk,
+            null,
+            $this->getPermissionObject(),
+            $u
+        );
+        Events::dispatch('on_permission_assignment_clear', $event);
+    }
+
     public function clearPermissionAssignment()
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
         $db->executeQuery('update PermissionAssignments set paID = 0 where pkID = ?', [$this->pk->getPermissionKeyID()]);
+        $this->dispatchClearEvent();
     }
 
     /**
