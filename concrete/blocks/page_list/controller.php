@@ -265,8 +265,12 @@ class Controller extends BlockController implements UsesFeatureInterface
         $bt = BlockType::getByHandle($this->btHandle);
         $controller = $bt->getController();
 
+        $currentPage = Page::getByID($this->request->get('current_page'));
+        $currentParentID = ($currentPage && !$currentPage->isError()) ? (string) $currentPage->getCollectionParentID() : null;
+
         $this->request->query->set('num', ($this->request->get('num') > 0) ? 20 : 0);
         $this->request->query->set('cThis', ($this->request->get('cParentID') == $this->request->get('current_page')) ? '1' : '0');
+        $this->request->query->set('cThisParent', ($currentParentID !== null && (string) $this->request->get('cParentID') === $currentParentID) ? '1' : '0');
         $this->request->query->set('cParentID', ($this->request->get('cParentID') === 'OTHER') ? $this->request->get('cParentIDValue') : $this->request->get('cParentID'));
 
         if ($this->request->get('filterDateOption') !== 'between') {
@@ -285,6 +289,7 @@ class Controller extends BlockController implements UsesFeatureInterface
         $controller->num = $this->request->get('num');
         $controller->cParentID = $this->request->get('cParentID');
         $controller->cThis = $this->request->get('cThis');
+        $controller->cThisParent = $this->request->get('cThisParent');
         $controller->orderBy = $this->request->get('orderBy');
         $controller->ptID = $this->request->get('ptID');
         $controller->rss = $this->request->get('rss');
