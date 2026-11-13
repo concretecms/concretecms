@@ -87,9 +87,15 @@ if (!isset($rssFeed)) {
 
 $c = Page::getCurrentPage();
 
+$thisPageID = '';
+$thisParentID = '';
 $siteType = null;
 
 if ($c) {
+    // Use strings so the "unchecked" value ('') can't loosely match a parent ID of 0 (home page's parent)
+    $thisPageID = (string) $c->getCollectionID();
+    $thisParentID = (string) $c->getCollectionParentID();
+
     $pageType = $c->getPageTypeObject();
 
     if ($pageType) {
@@ -362,12 +368,12 @@ echo $userInterface->tabs([
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("cParentID", $c->getCollectionID(), $cThis ? $c->getCollectionID() : null, ["id" => "cThisPageField"]); ?>
+                    <?php echo $form->radio("cParentID", $thisPageID, $cThis ? $thisPageID : '', ["id" => "cThisPageField"]); ?>
                     <?php echo $form->label("cThisPageField", t('Beneath this page'), ["class" => "form-check-label"]); ?>
                 </div>
 
                 <div class="form-check">
-                    <?php echo $form->radio("cParentID", $c->getCollectionParentID(), $cThisParent ? $c->getCollectionParentID() : null, ["id" => "cThisParentField"]); ?>
+                    <?php echo $form->radio("cParentID", $thisParentID, $cThisParent ? $thisParentID : '', ["id" => "cThisParentField"]); ?>
                     <?php echo $form->label("cThisParentField", t('At the current level'), ["class" => "form-check-label"]); ?>
                 </div>
 
