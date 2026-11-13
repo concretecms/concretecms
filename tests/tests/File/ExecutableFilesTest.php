@@ -29,6 +29,7 @@ class ExecutableFilesTest extends TestCase
         $expected = [
             'concrete/bin/concrete',
             'concrete/bin/concrete5',
+            'tests/helpers/Git/hooks/pre-push.sh',
         ];
         $this->assertSame(
             $expected,

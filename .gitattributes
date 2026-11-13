@@ -19,6 +19,7 @@
 *.js normalizetext
 *.md normalizetext
 *.php normalizetext diff=php
+*.sh normalizetext
 *.sql normalizetext
 *.tpl normalizetext
 *.txt normalizetext
