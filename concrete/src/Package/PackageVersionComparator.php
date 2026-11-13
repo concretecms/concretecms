@@ -25,7 +25,7 @@ final class PackageVersionComparator
     private static function withoutTrailingZeros($version)
     {
         $parts = explode('.', $version);
-        while (count($parts) > 1 && end($parts) === '0') {
+        while (count($parts) > 1 && preg_match('/\A0+\z/', end($parts)) === 1) {
             array_pop($parts);
         }
 

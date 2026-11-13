@@ -36,6 +36,12 @@ class PackageVersionComparatorTest extends TestCase
             'prerelease remains untouched' => ['1.0.6.0', '1.0.6RC1', true],
             'empty update' => [null, '1.0.6', false],
             'all-zero versions' => ['0.0.0', '0', false],
+            'padded zero in available' => ['1.0.6.00', '1.0.6.0', false],
+            'padded zero in installed' => ['1.0.6.0', '1.0.6.000', false],
+            'multiple padded zeros in available' => ['1.0.6.000.00', '1.0.6', false],
+            'multiple padded zeros in installed' => ['1.0.6', '1.0.6.000.00', false],
+            'nonzero padded segment is upgrade' => ['1.0.6.01', '1.0.6', true],
+            'padded zero before nonzero is upgrade' => ['1.0.6.00.1', '1.0.6', true],
         ];
     }
 }
