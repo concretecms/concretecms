@@ -10,8 +10,8 @@ final class PackageVersionComparator
     public static function isNewer($available, $installed)
     {
         if (self::isNumericVersion($available) && self::isNumericVersion($installed)) {
-            $available = self::withoutTrailingZeros($available);
-            $installed = self::withoutTrailingZeros($installed);
+            $available = preg_replace('/(?:\.0+)+\z/', '', (string) $available);
+            $installed = preg_replace('/(?:\.0+)+\z/', '', (string) $installed);
         }
 
         return version_compare((string) $available, (string) $installed, '>');
@@ -20,15 +20,5 @@ final class PackageVersionComparator
     private static function isNumericVersion($version)
     {
         return is_string($version) && preg_match('/\A[0-9]+(?:\.[0-9]+)*\z/', $version) === 1;
-    }
-
-    private static function withoutTrailingZeros($version)
-    {
-        $parts = explode('.', $version);
-        while (count($parts) > 1 && preg_match('/\A0+\z/', end($parts)) === 1) {
-            array_pop($parts);
-        }
-
-        return implode('.', $parts);
     }
 }
