@@ -141,7 +141,7 @@ class PackageService
         foreach ($packages as $p) {
             $entity = $this->getByHandle($p->getPackageHandle());
             if ($entity) {
-                if (version_compare($p->getPackageVersion(), $entity->getPackageVersion(), '>')) {
+                if (PackageVersionComparator::isNewer($p->getPackageVersion(), $entity->getPackageVersion())) {
                     $p->pkgCurrentVersion = $entity->getPackageVersion();
                     $upgradeables[] = $p;
                 }
@@ -179,7 +179,7 @@ class PackageService
         $packages = $this->getInstalledList();
         $upgradeables = [];
         foreach ($packages as $p) {
-            if (version_compare($p->getPackageVersion(), $p->getPackageVersionUpdateAvailable(), '<')) {
+            if (PackageVersionComparator::isNewer($p->getPackageVersionUpdateAvailable(), $p->getPackageVersion())) {
                 $upgradeables[] = $p;
             }
         }
