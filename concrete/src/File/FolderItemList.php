@@ -262,6 +262,13 @@ class FolderItemList extends AttributedItemList implements PagerProviderInterfac
         $this->query->setParameter('fsID' . $fs->getFileSetID(), $fs->getFileSetID());
     }
 
+    public function filterByNoSet()
+    {
+        $this->query->leftJoin('f', 'FileSetFiles', 'fsex', 'f.fID = fsex.fID');
+        $this->query->andWhere('fsex.fsID IS NULL');
+        $this->query->andWhere('f.fID IS NOT NULL');
+    }
+
     /**
      * Filters the file list by file size (in kilobytes).
      *
