@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
 
+use Concrete\Core\Database\Connection\Connection;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\File\Set\SetList as FileSetList;
 use FileSet;
@@ -27,6 +28,22 @@ class Sets extends DashboardPageController
             $this->set('fsType', FileSet::TYPE_PUBLIC);
         }
         $fileSets = $fsl->getPage();
+        $fileCounts = [];
+        if ($fileSets) {
+            $setIDs = array_map(static function ($set) {
+                return (int) $set->getFileSetID();
+            }, $fileSets);
+            $db = $this->app->make(Connection::class);
+            $rows = $db->fetchAllAssociative(
+                'SELECT fsID, COUNT(DISTINCT fID) AS fileCount FROM FileSetFiles WHERE fsID IN (?) GROUP BY fsID',
+                [$setIDs],
+                [Connection::PARAM_INT_ARRAY]
+            );
+            foreach ($rows as $row) {
+                $fileCounts[$row['fsID']] = (int) $row['fileCount'];
+            }
+        }
+        $this->set('fileCounts', $fileCounts);
         $this->set('fileSets', $fileSets);
         $this->set('fsl', $fsl);
     }

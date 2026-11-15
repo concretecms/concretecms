@@ -10,10 +10,13 @@ use Concrete\Core\User\User;
 class SetList extends DatabaseItemList
 {
     protected $itemsPerPage = 10;
+    protected $autoSortColumns = ['fsName', 'fileCount'];
 
     public function __construct()
     {
-        $this->setQuery("SELECT FileSets.fsID FROM FileSets");
+        $this->setQuery('SELECT FileSets.fsID,
+            (SELECT COUNT(DISTINCT fID) FROM FileSetFiles WHERE fsID = FileSets.fsID) AS fileCount
+            FROM FileSets');
         $this->sortBy('fsName', 'asc');
     }
 
