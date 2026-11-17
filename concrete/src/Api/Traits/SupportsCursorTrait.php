@@ -4,6 +4,7 @@ namespace Concrete\Core\Api\Traits;
 
 use Concrete\Core\Search\Column\PagerColumnInterface;
 use Concrete\Core\Search\ItemList\ItemList;
+use Concrete\Core\Search\ItemList\Pager\PagerProviderInterface;
 use League\Fractal\Pagination\Cursor;
 use League\Fractal\Resource\ResourceAbstract;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +52,9 @@ trait SupportsCursorTrait
     ) {
         $currentCursor = $this->getCurrentCursorFromRequest($request);
         $list->sortBySearchColumn($column);
+        if ($list instanceof PagerProviderInterface) {
+            $list->getPagerManager()->sortListByCursor($list, $list->getActiveSortDirection());
+        }
         if ($currentCursor) {
             $object = $getCursorObjectFunction($currentCursor);
             if ($object) {
