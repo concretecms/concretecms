@@ -37,6 +37,11 @@ class Set
     protected $fileSetFiles;
 
     /**
+     * @var int|null
+     */
+    protected $fileCount;
+
+    /**
      * @var int File Set ID
      */
     public $fsID;
@@ -343,6 +348,29 @@ class Set
     }
 
     /**
+     * @return int
+     */
+    public function getFileCount()
+    {
+        if ($this->fileCount !== null) {
+            return $this->fileCount;
+        }
+
+        return (int) Database::connection()->fetchColumn(
+            'SELECT COUNT(DISTINCT fID) FROM FileSetFiles WHERE fsID = ?',
+            [$this->getFileSetID()]
+        );
+    }
+
+    /**
+     * @param int $fileCount
+     */
+    public function setFileCount($fileCount)
+    {
+        $this->fileCount = (int) $fileCount;
+    }
+
+    /**
      * Get a list of files associated with this set.
      *
      * Can obsolete this when we get version of ADOdB with one/many support
@@ -500,6 +528,7 @@ class Set
             $result = null;
         } else {
             $file_set_file = File::createAndGetFile($f_id, $this->fsID);
+            $this->fileCount = null;
             $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
             $director = $app->make(EventDispatcher::class);
             $director->dispatch('on_file_added_to_set', $fe);
@@ -555,6 +584,7 @@ class Set
                 'DELETE FROM FileSetFiles WHERE fID = ? AND fsID = ?',
                 [$f_id, $this->getFileSetID()]
             );
+            $this->fileCount = null;
             $fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
             $director = $app->make(EventDispatcher::class);
             $director->dispatch('on_file_removed_from_set', $fe);
@@ -588,6 +618,7 @@ class Set
         $db->delete('FileSets', array('fsID' => $this->fsID));
         $db->executeQuery('DELETE FROM FileSetSavedSearches WHERE fsID = ?', array($this->fsID));
         $db->executeQuery('DELETE FROM FileSetFiles WHERE fsID = ?', array($this->fsID));
+        $this->fileCount = null;
         $db->executeQuery('DELETE FROM FileImageThumbnailTypeFileSets WHERE ftfsFileSetID = ?', [$this->fsID]);
     }
 

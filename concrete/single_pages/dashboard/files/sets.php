@@ -272,7 +272,7 @@ $dh = $app->make(Date::class);
                                 <?php echo $fs->getFileSetDisplayName() ?>
                             </td>
                             <td class="text-end">
-                                <?php echo $fileCounts[$fs->getFileSetID()] ?? 0 ?>
+                                <?php echo $fs->getFileCount() ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

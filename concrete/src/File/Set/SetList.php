@@ -44,6 +44,7 @@ class SetList extends DatabaseItemList
         foreach ($r as $row) {
             $fs = FileSet::getByID($row['fsID']);
             if (is_object($fs)) {
+                $fs->setFileCount($row['fileCount']);
                 $sets[] = $fs;
             }
         }

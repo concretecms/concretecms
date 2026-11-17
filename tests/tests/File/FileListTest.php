@@ -183,6 +183,39 @@ class FileListTest extends FileStorageTestCase
         $this->assertEquals(9, count($results));
     }
 
+    public function testFileSetCounts()
+    {
+        $emptySet = \FileSet::create('Counted empty set');
+        $filledSet = \FileSet::create('Counted filled set');
+        $filledSet->addFileToSet(\File::getByID(1));
+
+        $list = new \Concrete\Core\File\Set\SetList();
+        $list->filterByKeywords('Counted ');
+        $list->sortBy('fileCount', 'asc');
+        $sets = $list->get();
+        $this->assertCount(2, $sets);
+        $this->assertEquals($emptySet->getFileSetID(), $sets[0]->getFileSetID());
+        $this->assertEquals($filledSet->getFileSetID(), $sets[1]->getFileSetID());
+
+        $configuration = $this->connection()->getConfiguration();
+        $previousLogger = $configuration->getSQLLogger();
+        $logger = new \Doctrine\DBAL\Logging\DebugStack();
+        $configuration->setSQLLogger($logger);
+        try {
+            $this->assertSame(0, $sets[0]->getFileCount());
+            $this->assertSame(1, $sets[1]->getFileCount());
+            $this->assertCount(0, $logger->queries);
+        } finally {
+            $configuration->setSQLLogger($previousLogger);
+        }
+
+        $sets[0]->addFileToSet(\File::getByID(4));
+        $this->assertSame(1, $sets[0]->getFileCount());
+        $sets[1]->removeFileFromSet(\File::getByID(1));
+        $this->assertSame(0, $sets[1]->getFileCount());
+        $this->assertSame(1, \FileSet::getByID($emptySet->getFileSetID())->getFileCount());
+    }
+
     public function testSortByFilename()
     {
         $this->list->sortByFilenameAscending();
