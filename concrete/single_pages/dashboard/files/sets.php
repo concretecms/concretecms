@@ -453,7 +453,12 @@ $dh = $app->make(Date::class);
             <table class="ccm-search-results-table">
                 <thead>
                     <tr>
-                        <th class="ccm-results-list-active-sort-asc"><a><?php echo t('Set Name') ?></a></th>
+                        <th class="<?php echo $fsl->getSearchResultsClass('fsName') ?>">
+                            <a href="<?php echo h($fsl->getSortByURL('fsName')) ?>"><?php echo t('Set Name') ?></a>
+                        </th>
+                        <th class="text-end <?php echo $fsl->getSearchResultsClass('fileCount') ?>">
+                            <a href="<?php echo h($fsl->getSortByURL('fileCount')) ?>"><?php echo t('Files') ?></a>
+                        </th>
                     </tr>
                 </thead>
 
@@ -462,6 +467,9 @@ $dh = $app->make(Date::class);
                         <tr data-details-url="<?php echo Url::to('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID()) ?>">
                             <td>
                                 <?php echo $fs->getFileSetDisplayName() ?>
+                            </td>
+                            <td class="text-end">
+                                <?php echo $fs->getFileCount() ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
