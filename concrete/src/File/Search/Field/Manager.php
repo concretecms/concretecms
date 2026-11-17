@@ -8,6 +8,7 @@ use Concrete\Core\File\Search\Field\Field\DateAddedField;
 use Concrete\Core\File\Search\Field\Field\ExtensionField;
 use Concrete\Core\File\Search\Field\Field\FileSetField;
 use Concrete\Core\File\Search\Field\Field\FolderField;
+use Concrete\Core\File\Search\Field\Field\NoFileSetField;
 use Concrete\Core\File\Search\Field\Field\SizeField;
 use Concrete\Core\File\Search\Field\Field\StorageLocationField;
 use Concrete\Core\File\Search\Field\Field\TypeField;
@@ -30,6 +31,7 @@ class Manager extends FieldManager
             new KeywordsField(),
             new FolderField(),
             new FileSetField(),
+            new NoFileSetField(),
             new ExtensionField(),
             new TypeField(),
             new SizeField(),
