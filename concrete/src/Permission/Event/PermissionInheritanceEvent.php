@@ -2,14 +2,13 @@
 
 namespace Concrete\Core\Permission\Event;
 
-use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\User\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class PermissionInheritanceEvent extends Event
 {
     /**
-     * @var ObjectInterface|mixed
+     * @var object|null
      */
     protected $permissionObject;
 
@@ -21,45 +20,41 @@ class PermissionInheritanceEvent extends Event
     /**
      * @var User|null
      */
-    protected $applier;
+    protected $user;
 
-    public function __construct(
-        $permissionObject,
-        string $inheritanceMode,
-        ?User $applier = null
-    ) {
+    /**
+     * @param object|null $permissionObject
+     * @param string $inheritanceMode
+     * @param User|null $user
+     */
+    public function __construct($permissionObject, $inheritanceMode, $user = null)
+    {
         $this->permissionObject = $permissionObject;
         $this->inheritanceMode = $inheritanceMode;
-        $this->applier = $applier;
+        $this->user = $user;
     }
 
+    /**
+     * @return object|null
+     */
     public function getPermissionObject()
     {
         return $this->permissionObject;
     }
 
-    public function getInheritanceMode(): string
+    /**
+     * @return string
+     */
+    public function getInheritanceMode()
     {
         return $this->inheritanceMode;
     }
 
-    public function getMode(): string
+    /**
+     * @return User|null
+     */
+    public function getUserObject()
     {
-        return $this->inheritanceMode;
-    }
-
-    public function getApplier(): ?User
-    {
-        return $this->applier;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->applier;
-    }
-
-    public function getUserObject(): ?User
-    {
-        return $this->applier;
+        return $this->user;
     }
 }

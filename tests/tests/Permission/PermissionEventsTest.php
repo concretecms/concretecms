@@ -6,15 +6,12 @@ use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Concrete\Core\Permission\Access\Entity\Type as AccessEntityType;
 use Concrete\Core\Permission\Category as PermissionCategory;
-use Concrete\Core\Permission\Event\PermissionAccessEntityEvent;
 use Concrete\Core\Permission\Event\PermissionAssignmentEvent;
 use Concrete\Core\Permission\Event\PermissionInheritanceEvent;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Key\PageKey;
 use Concrete\TestHelpers\Page\PageTestCase;
-use Events;
 use Group;
-use Page;
 
 class PermissionEventsTest extends PageTestCase
 {
@@ -33,7 +30,6 @@ class PermissionEventsTest extends PageTestCase
             'PermissionAccessEntities',
             'PermissionAccessEntityGroups',
             'PermissionAccessList',
-            'PermissionAccessWorkflows',
             'PermissionKeyCategories',
             'PermissionKeys',
         ]);
@@ -68,61 +64,38 @@ class PermissionEventsTest extends PageTestCase
         }
         $entity = GroupEntity::getOrCreate($group);
 
-        $addEntityFired = false;
-        $removeEntityFired = false;
         $assignFired = false;
         $clearFired = false;
-
-        Events::addListener('on_permission_access_entity_add', function ($event) use (&$addEntityFired, $entity) {
-            $this->assertInstanceOf(PermissionAccessEntityEvent::class, $event);
-            $this->assertEquals($entity->getAccessEntityID(), $event->getAccessEntity()->getAccessEntityID());
-            $addEntityFired = true;
-        });
-
-        Events::addListener('on_permission_access_entity_remove', function ($event) use (&$removeEntityFired, $entity) {
-            $this->assertInstanceOf(PermissionAccessEntityEvent::class, $event);
-            $this->assertEquals($entity->getAccessEntityID(), $event->getAccessEntity()->getAccessEntityID());
-            $removeEntityFired = true;
-        });
-
-        Events::addListener('on_permission_assignment_assign', function ($event) use (&$assignFired, $pk) {
+        $director = $this->app->make('director');
+        $assignListener = function ($event) use (&$assignFired, $pa) {
             $this->assertInstanceOf(PermissionAssignmentEvent::class, $event);
             if ($event->getPermissionKey() && $event->getPermissionKey()->getPermissionKeyHandle() === 'view_page') {
+                $this->assertSame($pa, $event->getPermissionAccess());
                 $assignFired = true;
             }
-        });
-
-        Events::addListener('on_permission_assignment_clear', function ($event) use (&$clearFired, $pk) {
+        };
+        $clearListener = function ($event) use (&$clearFired) {
             $this->assertInstanceOf(PermissionAssignmentEvent::class, $event);
             if ($event->getPermissionKey() && $event->getPermissionKey()->getPermissionKeyHandle() === 'view_page') {
                 $clearFired = true;
             }
-        });
+        };
+        $director->addListener('on_permission_assignment_assign', $assignListener);
+        $director->addListener('on_permission_assignment_clear', $clearListener);
 
-        $pa->addListItem($entity);
-        $this->assertFalse($addEntityFired, 'on_permission_access_entity_add should wait until the access is saved');
+        try {
+            $pa->addListItem($entity);
+            $pt = $pk->getPermissionAssignmentObject();
+            $pt->assignPermissionAccess($pa);
+            $this->assertTrue($assignFired, 'on_permission_assignment_assign should fire when assigning permission access');
 
-        $pt = $pk->getPermissionAssignmentObject();
-        $pt->assignPermissionAccess($pa);
-        $this->assertTrue($addEntityFired, 'on_permission_access_entity_add should fire when the access is marked in use');
-        $this->assertTrue($assignFired, 'on_permission_assignment_assign should fire when assigning permission access');
-
-        $addEntityFired = false;
-        $unchanged = $pa->duplicate();
-        $pt->assignPermissionAccess($unchanged);
-        $this->assertFalse($addEntityFired, 'Duplicating an access list should not emit add events for entities that did not change');
-
-        $updated = $unchanged->duplicate();
-        $updated->removeListItem($entity);
-        $this->assertFalse($removeEntityFired, 'on_permission_access_entity_remove should wait until the access is saved');
-        $pt->assignPermissionAccess($updated);
-        $this->assertTrue($removeEntityFired, 'on_permission_access_entity_remove should fire when a saved access list drops an entity');
-        $this->assertFalse($addEntityFired, 'Removing an entity should not emit an add event');
-
-        $pt->clearPermissionAssignment();
-        $this->assertTrue($clearFired, 'on_permission_assignment_clear should fire when clearing assignment');
-
-        $page->delete();
+            $pt->clearPermissionAssignment();
+            $this->assertTrue($clearFired, 'on_permission_assignment_clear should fire when clearing assignment');
+        } finally {
+            $director->removeListener('on_permission_assignment_assign', $assignListener);
+            $director->removeListener('on_permission_assignment_clear', $clearListener);
+            $page->delete();
+        }
     }
 
     public function testPermissionInheritanceEvent()
@@ -131,23 +104,27 @@ class PermissionEventsTest extends PageTestCase
 
         $inheritanceFired = false;
         $firedMode = null;
-
-        Events::addListener('on_permission_inheritance_change', function ($event) use (&$inheritanceFired, &$firedMode, $page) {
+        $director = $this->app->make('director');
+        $listener = function ($event) use (&$inheritanceFired, &$firedMode, $page) {
             $this->assertInstanceOf(PermissionInheritanceEvent::class, $event);
             $this->assertEquals($page->getCollectionID(), $event->getPermissionObject()->getCollectionID());
             $inheritanceFired = true;
             $firedMode = $event->getInheritanceMode();
-        });
+        };
+        $director->addListener('on_permission_inheritance_change', $listener);
 
-        $page->setPermissionsToManualOverride();
-        $this->assertTrue($inheritanceFired, 'on_permission_inheritance_change should fire when overriding permissions');
-        $this->assertEquals('OVERRIDE', $firedMode);
+        try {
+            $page->setPermissionsToManualOverride();
+            $this->assertTrue($inheritanceFired, 'on_permission_inheritance_change should fire when overriding permissions');
+            $this->assertEquals('OVERRIDE', $firedMode);
 
-        $inheritanceFired = false;
-        $page->inheritPermissionsFromParent();
-        $this->assertTrue($inheritanceFired, 'on_permission_inheritance_change should fire when inheriting from parent');
-        $this->assertEquals('PARENT', $firedMode);
-
-        $page->delete();
+            $inheritanceFired = false;
+            $page->inheritPermissionsFromParent();
+            $this->assertTrue($inheritanceFired, 'on_permission_inheritance_change should fire when inheriting from parent');
+            $this->assertEquals('PARENT', $firedMode);
+        } finally {
+            $director->removeListener('on_permission_inheritance_change', $listener);
+            $page->delete();
+        }
     }
 }

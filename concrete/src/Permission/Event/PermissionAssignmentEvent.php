@@ -4,7 +4,6 @@ namespace Concrete\Core\Permission\Event;
 
 use Concrete\Core\Permission\Access\Access;
 use Concrete\Core\Permission\Key\Key;
-use Concrete\Core\Permission\ObjectInterface;
 use Concrete\Core\User\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -21,91 +20,58 @@ class PermissionAssignmentEvent extends Event
     protected $permissionAccess;
 
     /**
-     * @var ObjectInterface|null
+     * @var object|null
      */
     protected $permissionObject;
 
     /**
      * @var User|null
      */
-    protected $applier;
+    protected $user;
 
-    public function __construct(
-        ?Key $permissionKey = null,
-        ?Access $permissionAccess = null,
-        ?ObjectInterface $permissionObject = null,
-        ?User $applier = null
-    ) {
+    /**
+     * @param Key|null $permissionKey
+     * @param Access|null $permissionAccess
+     * @param object|null $permissionObject
+     * @param User|null $user
+     */
+    public function __construct($permissionKey = null, $permissionAccess = null, $permissionObject = null, $user = null)
+    {
         $this->permissionKey = $permissionKey;
         $this->permissionAccess = $permissionAccess;
         $this->permissionObject = $permissionObject;
-        $this->applier = $applier;
+        $this->user = $user;
     }
 
-    public function getPermissionKey(): ?Key
+    /**
+     * @return Key|null
+     */
+    public function getPermissionKey()
     {
         return $this->permissionKey;
     }
 
-    public function getPermissionKeyObject(): ?Key
-    {
-        return $this->permissionKey;
-    }
-
-    public function setPermissionKey(?Key $permissionKey): void
-    {
-        $this->permissionKey = $permissionKey;
-    }
-
-    public function getPermissionAccess(): ?Access
+    /**
+     * @return Access|null
+     */
+    public function getPermissionAccess()
     {
         return $this->permissionAccess;
     }
 
-    public function getPermissionAccessObject(): ?Access
+    /**
+     * @return object|null
+     */
+    public function getPermissionObject()
     {
-        return $this->permissionAccess;
+        return $this->permissionObject;
     }
 
-    public function setPermissionAccess(?Access $permissionAccess): void
+    /**
+     * @return User|null
+     */
+    public function getUserObject()
     {
-        $this->permissionAccess = $permissionAccess;
-    }
-
-    public function getPermissionObject(): ?ObjectInterface
-    {
-        if ($this->permissionObject !== null) {
-            return $this->permissionObject;
-        }
-        if ($this->permissionKey !== null) {
-            return $this->permissionKey->getPermissionObject();
-        }
-
-        return null;
-    }
-
-    public function setPermissionObject(?ObjectInterface $permissionObject): void
-    {
-        $this->permissionObject = $permissionObject;
-    }
-
-    public function getApplier(): ?User
-    {
-        return $this->applier;
-    }
-
-    public function setApplier(?User $applier): void
-    {
-        $this->applier = $applier;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->applier;
-    }
-
-    public function getUserObject(): ?User
-    {
-        return $this->applier;
+        return $this->user;
     }
 }
