@@ -78,13 +78,13 @@ class Assignment
     protected function dispatchClearEvent()
     {
         $app = Application::getFacadeApplication();
-        $u = $app->make(User::class);
+        $user = $app->make(User::class);
 
         $event = new PermissionAssignmentEvent(
             $this->pk,
             null,
             $this->getPermissionObject(),
-            $u
+            $user
         );
         Events::dispatch('on_permission_assignment_clear', $event);
     }

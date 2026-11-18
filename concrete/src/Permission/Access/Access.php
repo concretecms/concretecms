@@ -291,18 +291,18 @@ class Access extends ConcreteObject
         $db->executeQuery('update PermissionAccess set paIsInUse = 1 where paID = ?', [$this->paID]);
         $this->paIsInUse = true;
 
-        $u = $app->make(User::class);
+        $user = $app->make(User::class);
         $event = new PermissionAssignmentEvent(
             isset($this->pk) ? $this->pk : null,
             $this,
             isset($this->pk) ? $this->getPermissionObject() : null,
-            $u
+            $user
         );
         Events::dispatch('on_permission_assignment_assign', $event);
 
         $logger = $app->make(Logger::class);
         $entry = $app->make(PermissionAssignmentLogEntry::class, [
-           'applier' => $u,
+           'applier' => $user,
            'key' => $this->pk,
            'access' => $this,
         ]);

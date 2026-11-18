@@ -2673,8 +2673,8 @@ EOT
         $this->clearPagePermissions();
         $this->rescanAreaPermissions();
 
-        $u = Application::getFacadeApplication()->make(User::class);
-        $event = new PermissionInheritanceEvent($this, 'PARENT', $u);
+        $user = Application::getFacadeApplication()->make(User::class);
+        $event = new PermissionInheritanceEvent($this, 'PARENT', $user);
         Events::dispatch('on_permission_inheritance_change', $event);
     }
 
@@ -2698,8 +2698,8 @@ EOT
                 $this->clearPagePermissions();
                 $this->rescanAreaPermissions();
 
-                $u = Application::getFacadeApplication()->make(User::class);
-                $event = new PermissionInheritanceEvent($this, 'TEMPLATE', $u);
+                $user = Application::getFacadeApplication()->make(User::class);
+                $event = new PermissionInheritanceEvent($this, 'TEMPLATE', $user);
                 Events::dispatch('on_permission_inheritance_change', $event);
             }
         }
@@ -2724,8 +2724,8 @@ EOT
             $this->cInheritPermissionsFromCID = $cpID;
             $this->rescanAreaPermissions();
 
-            $u = Application::getFacadeApplication()->make(User::class);
-            $event = new PermissionInheritanceEvent($this, 'OVERRIDE', $u);
+            $user = Application::getFacadeApplication()->make(User::class);
+            $event = new PermissionInheritanceEvent($this, 'OVERRIDE', $user);
             Events::dispatch('on_permission_inheritance_change', $event);
         }
     }
