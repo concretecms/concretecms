@@ -2673,11 +2673,7 @@ EOT
         $this->clearPagePermissions();
         $this->rescanAreaPermissions();
 
-        $app = Application::getFacadeApplication();
-        $u = null;
-        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
-            $u = $app->make(User::class);
-        }
+        $u = Application::getFacadeApplication()->make(User::class);
         $event = new PermissionInheritanceEvent($this, 'PARENT', $u);
         Events::dispatch('on_permission_inheritance_change', $event);
         Events::dispatch('on_page_permission_inheritance_change', $event);
@@ -2703,11 +2699,7 @@ EOT
                 $this->clearPagePermissions();
                 $this->rescanAreaPermissions();
 
-                $app = Application::getFacadeApplication();
-                $u = null;
-                if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
-                    $u = $app->make(User::class);
-                }
+                $u = Application::getFacadeApplication()->make(User::class);
                 $event = new PermissionInheritanceEvent($this, 'TEMPLATE', $u);
                 Events::dispatch('on_permission_inheritance_change', $event);
                 Events::dispatch('on_page_permission_inheritance_change', $event);
@@ -2734,11 +2726,7 @@ EOT
             $this->cInheritPermissionsFromCID = $cpID;
             $this->rescanAreaPermissions();
 
-            $app = Application::getFacadeApplication();
-            $u = null;
-            if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
-                $u = $app->make(User::class);
-            }
+            $u = Application::getFacadeApplication()->make(User::class);
             $event = new PermissionInheritanceEvent($this, 'OVERRIDE', $u);
             Events::dispatch('on_permission_inheritance_change', $event);
             Events::dispatch('on_page_permission_inheritance_change', $event);

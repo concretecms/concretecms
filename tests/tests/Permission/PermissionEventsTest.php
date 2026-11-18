@@ -33,6 +33,7 @@ class PermissionEventsTest extends PageTestCase
             'PermissionAccessEntities',
             'PermissionAccessEntityGroups',
             'PermissionAccessList',
+            'PermissionAccessWorkflows',
             'PermissionKeyCategories',
             'PermissionKeys',
         ]);
@@ -99,17 +100,27 @@ class PermissionEventsTest extends PageTestCase
         });
 
         $pa->addListItem($entity);
-        $this->assertTrue($addEntityFired, 'on_permission_access_entity_add should fire when adding list item');
+        $this->assertFalse($addEntityFired, 'on_permission_access_entity_add should wait until the access is saved');
 
         $pt = $pk->getPermissionAssignmentObject();
         $pt->assignPermissionAccess($pa);
+        $this->assertTrue($addEntityFired, 'on_permission_access_entity_add should fire when the access is marked in use');
         $this->assertTrue($assignFired, 'on_permission_assignment_assign should fire when assigning permission access');
+
+        $addEntityFired = false;
+        $unchanged = $pa->duplicate();
+        $pt->assignPermissionAccess($unchanged);
+        $this->assertFalse($addEntityFired, 'Duplicating an access list should not emit add events for entities that did not change');
+
+        $updated = $unchanged->duplicate();
+        $updated->removeListItem($entity);
+        $this->assertFalse($removeEntityFired, 'on_permission_access_entity_remove should wait until the access is saved');
+        $pt->assignPermissionAccess($updated);
+        $this->assertTrue($removeEntityFired, 'on_permission_access_entity_remove should fire when a saved access list drops an entity');
+        $this->assertFalse($addEntityFired, 'Removing an entity should not emit an add event');
 
         $pt->clearPermissionAssignment();
         $this->assertTrue($clearFired, 'on_permission_assignment_clear should fire when clearing assignment');
-
-        $pa->removeListItem($entity);
-        $this->assertTrue($removeEntityFired, 'on_permission_access_entity_remove should fire when removing list item');
 
         $page->delete();
     }

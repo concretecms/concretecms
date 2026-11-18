@@ -11,6 +11,7 @@ use Concrete\Core\Permission\Event\PermissionAccessEntityEvent;
 use Concrete\Core\Permission\Event\PermissionAssignmentEvent;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Permission\Logger;
+use Concrete\Core\Session\SessionValidator;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\User\User;
 use Concrete\Core\Workflow\Workflow;
@@ -39,6 +40,20 @@ class Access extends ConcreteObject
     protected $listItems;
 
     /**
+     * Session key for baselines that have to survive the permission dialog,
+     * which duplicates an access list and saves it in a later request.
+     */
+    const PERMISSION_ACCESS_BASELINE_SESSION_KEY = 'ccm.permissionAccessBaselines';
+
+    /**
+     * Baseline access IDs recorded in this process.
+     * 0 means the access was created empty. A positive ID is the access this one was copied from.
+     *
+     * @var array<int, int>
+     */
+    protected static $permissionAccessBaselines = [];
+
+    /**
      * @param \Concrete\Core\Permission\Access\ListItem\ListItem[] $listItems
      */
     public function setListItems($listItems)
@@ -57,21 +72,21 @@ class Access extends ConcreteObject
     /**
      * Get the object associated to the permission (for example, a Page instance).
      *
-     * @return object|null
+     * @return object
      */
     public function getPermissionObject()
     {
-        return isset($this->pk) && is_object($this->pk) ? $this->pk->getPermissionObject() : null;
+        return $this->pk->getPermissionObject();
     }
 
     /**
      * Get the object to be used to check the permission (for example, a Page instance).
      *
-     * @return object|null
+     * @return object
      */
     public function getPermissionObjectToCheck()
     {
-        return isset($this->pk) && is_object($this->pk) ? $this->pk->getPermissionObjectToCheck() : null;
+        return $this->pk->getPermissionObjectToCheck();
     }
 
     /**
@@ -271,6 +286,8 @@ class Access extends ConcreteObject
     {
         if (!$newPA) {
             $newPA = self::create($this->pk);
+            // create() records an empty baseline. This access is a copy, so compare against the source at save time.
+            $newPA->rememberPermissionAccessBaseline((int) $this->getPermissionAccessID());
         }
         $listItems = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
         foreach ($listItems as $li) {
@@ -289,25 +306,29 @@ class Access extends ConcreteObject
     {
         $app = Application::getFacadeApplication();
         $db = $app->make(Connection::class);
+        $wasInUse = (int) $this->paIsInUse === 1;
         $db->executeQuery('update PermissionAccess set paIsInUse = 1 where paID = ?', [$this->paID]);
         $this->paIsInUse = true;
 
-        $u = null;
-        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
-            $u = $app->make(User::class);
+        $u = $app->make(User::class);
+        if ($wasInUse) {
+            $this->pullPermissionAccessBaseline();
+        } else {
+            // List edits and duplicate() copies are not a permission change until this access is saved.
+            $this->dispatchPermissionAccessEntityChanges($u);
         }
 
         $event = new PermissionAssignmentEvent(
             isset($this->pk) ? $this->pk : null,
             $this,
-            $this->getPermissionObject(),
+            isset($this->pk) ? $this->getPermissionObject() : null,
             $u
         );
         Events::dispatch('on_permission_assignment_assign', $event);
 
         $logger = $app->make(Logger::class);
         $entry = $app->make(PermissionAssignmentLogEntry::class, [
-           'applier' => $u ?: $app->make(User::class),
+           'applier' => $u,
            'key' => $this->pk,
            'access' => $this,
         ]);
@@ -340,22 +361,6 @@ class Access extends ConcreteObject
             ['paID', 'peID'],
             false
         );
-
-        $u = null;
-        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
-            $u = $app->make(User::class);
-        }
-
-        $event = new PermissionAccessEntityEvent(
-            $this,
-            $pae,
-            $durationObject instanceof PermissionDuration ? $durationObject : null,
-            (int) $accessType,
-            $u,
-            isset($this->pk) ? $this->pk : null,
-            $this->getPermissionObject()
-        );
-        Events::dispatch('on_permission_access_entity_add', $event);
     }
 
     /**
@@ -369,22 +374,6 @@ class Access extends ConcreteObject
             'delete from PermissionAccessList where peID = ? and paID = ?',
             [$pe->getAccessEntityID(), $this->getPermissionAccessID()]
         );
-
-        $u = null;
-        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
-            $u = $app->make(User::class);
-        }
-
-        $event = new PermissionAccessEntityEvent(
-            $this,
-            $pe,
-            null,
-            PermissionKey::ACCESS_TYPE_INCLUDE,
-            $u,
-            isset($this->pk) ? $this->pk : null,
-            $this->getPermissionObject()
-        );
-        Events::dispatch('on_permission_access_entity_remove', $event);
     }
 
     /**
@@ -405,7 +394,12 @@ class Access extends ConcreteObject
         $db = $app->make(Connection::class);
         $db->executeQuery('insert into PermissionAccess (paIsInUse) values (0)');
 
-        return static::getByID($db->lastInsertId(), $pk);
+        $access = static::getByID($db->lastInsertId(), $pk);
+        if ($access !== null) {
+            $access->rememberPermissionAccessBaseline(0);
+        }
+
+        return $access;
     }
 
     /**
@@ -577,5 +571,167 @@ class Access extends ConcreteObject
         }
 
         return $peIDs . ' ' . $accessType . ' order by accessType desc'; // we order desc so that excludes come last (-1)
+    }
+
+    /**
+     * Remember which access list this one should be compared with when it is saved.
+     *
+     * @param int $sourcePermissionAccessID 0 when this access started empty
+     */
+    protected function rememberPermissionAccessBaseline($sourcePermissionAccessID)
+    {
+        $paID = (int) $this->getPermissionAccessID();
+        $sourcePermissionAccessID = (int) $sourcePermissionAccessID;
+        self::$permissionAccessBaselines[$paID] = $sourcePermissionAccessID;
+
+        $session = $this->getPermissionAccessBaselineSession();
+        if ($session) {
+            $baselines = $session->get(self::PERMISSION_ACCESS_BASELINE_SESSION_KEY, []);
+            if (!is_array($baselines)) {
+                $baselines = [];
+            }
+            $baselines[$paID] = $sourcePermissionAccessID;
+            $session->set(self::PERMISSION_ACCESS_BASELINE_SESSION_KEY, $baselines);
+        }
+    }
+
+    /**
+     * Take and clear the recorded baseline for this access.
+     *
+     * @return int|null null when this access has no recorded baseline
+     */
+    protected function pullPermissionAccessBaseline()
+    {
+        $paID = (int) $this->getPermissionAccessID();
+        $baseline = null;
+        if (array_key_exists($paID, self::$permissionAccessBaselines)) {
+            $baseline = (int) self::$permissionAccessBaselines[$paID];
+            unset(self::$permissionAccessBaselines[$paID]);
+        }
+
+        $session = $this->getPermissionAccessBaselineSession();
+        if ($session && $session->has(self::PERMISSION_ACCESS_BASELINE_SESSION_KEY)) {
+            $baselines = $session->get(self::PERMISSION_ACCESS_BASELINE_SESSION_KEY, []);
+            if (is_array($baselines) && array_key_exists($paID, $baselines)) {
+                if ($baseline === null) {
+                    $baseline = (int) $baselines[$paID];
+                }
+                unset($baselines[$paID]);
+                $session->set(self::PERMISSION_ACCESS_BASELINE_SESSION_KEY, $baselines);
+            }
+        }
+
+        return $baseline;
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Session\Session|null
+     */
+    protected function getPermissionAccessBaselineSession()
+    {
+        $app = Application::getFacadeApplication();
+        $validator = $app->make(SessionValidator::class);
+
+        return $validator->getActiveSession(false);
+    }
+
+    /**
+     * Dispatch add/remove events for entities that actually differ from the baseline.
+     *
+     * @param \Concrete\Core\User\User $user
+     */
+    protected function dispatchPermissionAccessEntityChanges(User $user)
+    {
+        $baseline = $this->pullPermissionAccessBaseline();
+        if ($baseline === null || !isset($this->pk)) {
+            return;
+        }
+
+        $previous = [];
+        if ($baseline > 0) {
+            $previousAccess = static::getByID($baseline, $this->pk);
+            if ($previousAccess) {
+                $previous = $this->indexPermissionAccessListItems(
+                    $previousAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL)
+                );
+            }
+        }
+
+        $current = $this->indexPermissionAccessListItems(
+            $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL)
+        );
+
+        foreach ($previous as $peID => $listItem) {
+            if (!isset($current[$peID]) || $this->permissionAccessListItemChanged($listItem, $current[$peID])) {
+                $this->dispatchPermissionAccessEntityEvent('on_permission_access_entity_remove', $listItem, $user);
+            }
+        }
+        foreach ($current as $peID => $listItem) {
+            if (!isset($previous[$peID]) || $this->permissionAccessListItemChanged($previous[$peID], $listItem)) {
+                $this->dispatchPermissionAccessEntityEvent('on_permission_access_entity_add', $listItem, $user);
+            }
+        }
+    }
+
+    /**
+     * @param \Concrete\Core\Permission\Access\ListItem\ListItem[] $listItems
+     *
+     * @return \Concrete\Core\Permission\Access\ListItem\ListItem[]
+     */
+    protected function indexPermissionAccessListItems(array $listItems)
+    {
+        $indexed = [];
+        foreach ($listItems as $listItem) {
+            $entity = $listItem->getAccessEntityObject();
+            if (is_object($entity)) {
+                $indexed[(int) $entity->getAccessEntityID()] = $listItem;
+            }
+        }
+
+        return $indexed;
+    }
+
+    /**
+     * @param \Concrete\Core\Permission\Access\ListItem\ListItem $left
+     * @param \Concrete\Core\Permission\Access\ListItem\ListItem $right
+     *
+     * @return bool
+     */
+    protected function permissionAccessListItemChanged($left, $right)
+    {
+        if ((int) $left->getAccessType() !== (int) $right->getAccessType()) {
+            return true;
+        }
+
+        $leftDuration = $left->getPermissionDurationObject();
+        $rightDuration = $right->getPermissionDurationObject();
+        $leftDurationID = is_object($leftDuration) ? (int) $leftDuration->getPermissionDurationID() : 0;
+        $rightDurationID = is_object($rightDuration) ? (int) $rightDuration->getPermissionDurationID() : 0;
+
+        return $leftDurationID !== $rightDurationID;
+    }
+
+    /**
+     * @param string $eventName
+     * @param \Concrete\Core\Permission\Access\ListItem\ListItem $listItem
+     * @param \Concrete\Core\User\User $user
+     */
+    protected function dispatchPermissionAccessEntityEvent($eventName, $listItem, User $user)
+    {
+        $entity = $listItem->getAccessEntityObject();
+        if (!is_object($entity)) {
+            return;
+        }
+        $duration = $listItem->getPermissionDurationObject();
+        $event = new PermissionAccessEntityEvent(
+            $this,
+            $entity,
+            is_object($duration) ? $duration : null,
+            (int) $listItem->getAccessType(),
+            $user,
+            $this->pk,
+            $this->getPermissionObject()
+        );
+        Events::dispatch($eventName, $event);
     }
 }

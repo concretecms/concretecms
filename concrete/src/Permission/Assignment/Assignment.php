@@ -78,10 +78,7 @@ class Assignment
     protected function dispatchClearEvent()
     {
         $app = Application::getFacadeApplication();
-        $u = null;
-        if (!$app->isRunThroughCommandLineInterface() && $app->isInstalled()) {
-            $u = $app->make(User::class);
-        }
+        $u = $app->make(User::class);
 
         $event = new PermissionAssignmentEvent(
             $this->pk,
