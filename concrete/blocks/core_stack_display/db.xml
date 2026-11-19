@@ -9,7 +9,7 @@
       <key/>
       <notnull/>
     </field>
-    <field name="stID" type="integer">
+    <field name="stID" type="integer" comment="The ID of the stack displayed by the block (0: none, which is what an import that fails to find the stack leaves behind)">
       <unsigned/>
       <notnull/>
     </field>

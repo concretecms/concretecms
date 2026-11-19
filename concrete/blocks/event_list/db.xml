@@ -10,51 +10,51 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="caID" type="text" size="65535">
+    <field name="caID" type="text" size="65535" comment="The ID of the calendar whose events are listed, or a JSON array of IDs to list the events of more than one (0: the calendar is the one held by the site attribute named by calendarAttributeKeyHandle)">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="calendarAttributeKeyHandle" type="string" size="255"/>
-    <field name="totalToRetrieve" type="smallint">
+    <field name="calendarAttributeKeyHandle" type="string" size="255" comment="The handle of the site attribute holding the calendar whose events are listed (used if caID is empty)"/>
+    <field name="totalToRetrieve" type="smallint" comment="How many events are listed at most">
       <unsigned/>
       <default value="10"/>
       <notnull/>
     </field>
-    <field name="totalPerPage" type="smallint">
+    <field name="totalPerPage" type="smallint" comment="How many events a page displays">
       <unsigned/>
       <default value="10"/>
       <notnull/>
     </field>
-    <field name="filterByTopicAttributeKeyID" type="integer" size="10">
+    <field name="filterByTopicAttributeKeyID" type="integer" size="10" comment="The ID of the topics attribute of the events used to filter them (0: they are not filtered by filterByTopicID)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="filterByTopicID" type="integer" size="10">
+    <field name="filterByTopicID" type="integer" size="10" comment="The ID of the topic the events must be assigned to (used if filterByTopicAttributeKeyID is not 0)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="filterByPageTopicAttributeKeyHandle" type="string" size="255"/>
-    <field name="filterByFeatured" type="boolean">
+    <field name="filterByPageTopicAttributeKeyHandle" type="string" size="255" comment="The handle of the topics attribute of the page holding the block: the events must be assigned to the topic it holds (used if filterByTopicAttributeKeyID is 0)"/>
+    <field name="filterByFeatured" type="boolean" comment="true: only the events whose is_featured attribute is set are listed, and that attribute must exist and be indexed; false: all of them are listed">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="eventListTitle" type="string" size="255"/>
-    <field name="linkToPage" type="integer" size="10">
+    <field name="eventListTitle" type="string" size="255" comment="The text displayed above the list"/>
+    <field name="linkToPage" type="integer" size="10" comment="The ID of the page holding the whole calendar, linked below the list (0: no link)">
       <unsigned/>
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="titleFormat" type="string" size="20">
+    <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the text displayed above the list: h1, h2, h3, h4, h5, h6 or p">
         <default value="h5" />
 		<notnull/>
     </field>
-    <field name="eventPeriod" type="string" size="255">
+    <field name="eventPeriod" type="string" size="255" comment="future_events: the events that have yet to end are listed; past_events: the ones that are over; all_events: every event">
         <default value="future_events" />
 		<notnull/>
     </field>
-    <field name="eventOrder" type="string" size="255">
+    <field name="eventOrder" type="string" size="255" comment="most_recent_first: the events are listed starting from the most recent one; oldest_first: starting from the oldest one">
         <default value="most_recent_first" />
 		<notnull/>
     </field>

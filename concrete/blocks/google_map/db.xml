@@ -5,22 +5,22 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="title" type="string" size="255" />
-        <field name="location" type="string" size="255" />
-        <field name="latitude" type="float" />
-        <field name="longitude" type="float" />
-        <field name="zoom" type="smallint" />
-        <field name="width" type="string" size="8">
+        <field name="title" type="string" size="255" comment="The text displayed above the map" />
+        <field name="location" type="string" size="255" comment="The address the map is centered on, as the visitors read it" />
+        <field name="latitude" type="float" comment="The latitude the map is centered on, which Google Maps resolved the location to" />
+        <field name="longitude" type="float" comment="The longitude the map is centered on, which Google Maps resolved the location to" />
+        <field name="zoom" type="smallint" comment="How close the map is zoomed in, from 0 (the whole world) to 21 (a single building)" />
+        <field name="width" type="string" size="8" comment="The width of the map, as a CSS length (for instance 100% or 400px)">
             <default value="100%" />
         </field>
-        <field name="height" type="string" size="8">
+        <field name="height" type="string" size="8" comment="The height of the map, as a CSS length (for instance 300px)">
             <default value="400px" />
         </field>
-        <field name="scrollwheel" type="boolean">
+        <field name="scrollwheel" type="boolean" comment="true: the visitors can zoom the map with the wheel of the mouse; false: the wheel scrolls the page">
             <default value="1" />
             <notnull/>
         </field>
-	    <field name="titleFormat" type="string" size="20">
+	    <field name="titleFormat" type="string" size="20" comment="The HTML element wrapping the text displayed above the map: h1, h2, h3, h4, h5, h6 or p">
 	      <default value="h3" />
 		  <notnull/>
 	    </field>
