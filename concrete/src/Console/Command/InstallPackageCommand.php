@@ -7,6 +7,7 @@ use Concrete\Core\Console\ConsoleAwareInterface;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Localization\Service\TranslationsInstaller;
 use Concrete\Core\Marketplace\PackageRepositoryInterface;
+use Concrete\Core\Package\PackageActionLogger;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Support\Facade\Application;
 use Exception;
@@ -126,6 +127,7 @@ EOT
         $output->write('Checking preconditions... ');
         $test = $pkg->testForInstall();
         if (is_object($test)) {
+            $app->make(PackageActionLogger::class)->logInstallFailed($pkg, $test);
             throw new Exception(implode("\n", $test->getList()));
         }
         $output->writeln('<info>passed.</info>');
