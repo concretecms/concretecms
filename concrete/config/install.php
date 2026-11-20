@@ -20,6 +20,7 @@ return [
         'memory_limit' => Concrete\Core\Install\Preconditions\MemoryLimit::class,
         'remote_file_importing' => Concrete\Core\Install\Preconditions\RemoteFileImporting::class,
         'zip_support' => Concrete\Core\Install\Preconditions\ZipSupport::class,
+        'pretty_urls' => Concrete\Core\Install\Preconditions\PrettyUrls::class,
         // OptionsPreconditionInterface
         'canonical_urls' => Concrete\Core\Install\Preconditions\CanonicalUrls::class,
         'database_timezone' => Concrete\Core\Install\Preconditions\DatabaseTimeZone::class,
