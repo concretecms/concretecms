@@ -103,23 +103,30 @@ class Compose extends Controller
                     $dateTime = new DateTime();
                     $publishDateTime = $dateTime->translate('cvPublishDate');
                     $publishEndDateTime = $dateTime->translate('cvPublishEndDate');
-                    $app = Application::getFacadeApplication();
-                    $appConfig = $app->make(Repository::class);
-                    $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
-                    $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
-                    $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
-                    if ($isUnapproved === !$isKeepOtherScheduling) {
-                        $keepOtherScheduling = true;
+                    if (!$publishDateTime && !$publishEndDateTime) {
+                        $e->add(t('Please specify at least a From or To date to schedule this version.'));
+                        $pr->setError($e);
+                    } else {
+                        $app = Application::getFacadeApplication();
+                        $appConfig = $app->make(Repository::class);
+                        $liveVersionStatusOnScheduledVersionApproval = (string)$appConfig->get('concrete.misc.live_version_status_on_scheduled_version_approval');
+                        $isUnapproved = $liveVersionStatusOnScheduledVersionApproval === 'unapproved';
+                        $isKeepOtherScheduling = (bool)$this->request->request->get('keepOtherScheduling');
+                        if ($isUnapproved === !$isKeepOtherScheduling) {
+                            $keepOtherScheduling = true;
+                        }
                     }
                 }
 
-                $pagetype->publish($d, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
+                if (!$e->has()) {
+                    $pagetype->publish($d, $publishDateTime, $publishEndDateTime, $keepOtherScheduling);
 
-                if ((int) $this->request->request->get('redirectAfterPublish')) {
-                    $pr->setRedirectURL($d->getCollectionLink(true));
+                    if ((int) $this->request->request->get('redirectAfterPublish')) {
+                        $pr->setRedirectURL($d->getCollectionLink(true));
+                    }
+                    $pr->setAdditionalDataAttribute('cParentID', $cParentID);
+                    $pr->setMessage(t('Page Added Successfully.'));
                 }
-                $pr->setAdditionalDataAttribute('cParentID', $cParentID);
-                $pr->setMessage(t('Page Added Successfully.'));
             } else {
                 $pr->setRedirectURL($d->getCollectionLink(true));
             }

@@ -89,6 +89,24 @@ $(document).ready(function() {
         }
     });
 
-    $('#cvPublishDate_dt_pub').attr('required', '');
+    $('.ccm-check-in-schedule').on('click', function(e) {
+        if (!$('#cvPublishDate_dt').val() && !$('#cvPublishEndDate_dt').val()) {
+            ConcreteAlert.error({
+                message: <?= json_encode(t('Please specify at least a From or To date to schedule this version.')) ?>
+            });
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return false;
+        }
+    });
+
+    $('#ccm-check-in').on('submit', function(e) {
+        if ($(document.activeElement).is('.ccm-check-in-schedule')
+            && !$('#cvPublishDate_dt').val()
+            && !$('#cvPublishEndDate_dt').val()
+        ) {
+            e.preventDefault();
+        }
+    });
 });
 </script>
