@@ -8,7 +8,7 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="types" type="json_array" />
+    <field name="types" type="json_array" comment="A JSON array of the kinds of activity displayed: form_submissions, survey_results, signups, conversation_messages, workflow" />
   </table>
 
 </schema>

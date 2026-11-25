@@ -9,12 +9,12 @@
       <key/>
       <notnull/>
     </field>
-    <field name="slotTemplateID" type="integer">
+    <field name="slotTemplateID" type="integer" comment="The ID of the template the slot of the board is rendered with">
       <unsigned/>
       <default value="0" />
       <notnull/>
     </field>
-    <field name="contentObjectCollection" type="json_array">
+    <field name="contentObjectCollection" type="json_array" comment="The contents of the slot, as the JSON serialization of the collection of objects the template is given">
     </field>
   </table>
 

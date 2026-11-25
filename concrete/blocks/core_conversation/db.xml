@@ -5,56 +5,56 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="cnvID" type="integer" />
-        <field name="enablePosting" type="boolean">
+        <field name="cnvID" type="integer" comment="The ID of the conversation holding the messages, which belongs to this block and is deleted with it" />
+        <field name="enablePosting" type="boolean" comment="true: the visitors can add messages; false or NULL: the conversation is read-only">
             <default value="1"/>
         </field>
-        <field name="paginate" type="boolean">
+        <field name="paginate" type="boolean" comment="true: the messages are split in pages of itemsPerPage messages; false: they are all displayed">
             <default value="1" />
             <notnull/>
         </field>
-        <field name="itemsPerPage" type="smallint">
+        <field name="itemsPerPage" type="smallint" comment="How many messages a page displays (used if paginate is true)">
             <unsigned/>
             <default value="50" />
             <notnull/>
         </field>
-        <field name="displayMode" type="string" size="255">
+        <field name="displayMode" type="string" size="255" comment="threaded: the replies are nested under the message they answer to; flat: every message is displayed at the same level">
             <default value="threaded" />
             <notnull/>
         </field>
-        <field name="orderBy" type="string" size="255">
+        <field name="orderBy" type="string" size="255" comment="date_asc: the messages are displayed oldest first; date_desc: most recent first; rating: highest rated first">
             <default value="date_desc" />
             <notnull/>
         </field>
-        <field name="enableOrdering" type="boolean">
+        <field name="enableOrdering" type="boolean" comment="true: the visitors can change the order of the messages; false: they are stuck with orderBy">
             <default value="1" />
             <notnull/>
         </field>
-        <field name="enableCommentRating" type="boolean">
+        <field name="enableCommentRating" type="boolean" comment="true: the visitors can rate the messages; false: they can't">
             <default value="1" />
             <notnull/>
         </field>
-        <field name="enableTopCommentReviews" type="boolean">
+        <field name="enableTopCommentReviews" type="boolean" comment="true: the highest and the lowest rated messages are displayed before the other ones; false: they are not singled out">
             <default value="0" />
             <notnull/>
         </field>
-        <field name="displaySocialLinks" type="boolean">
+        <field name="displaySocialLinks" type="boolean" comment="true: every message offers the links that share it on social networks; false: they are left out">
             <default value="1" />
             <notnull/>
         </field>
-        <field name="reviewAggregateAttributeKey" type="integer"></field>
-        <field name="displayPostingForm" type="string" size="255">
+        <field name="reviewAggregateAttributeKey" type="integer" comment="The ID of the rating attribute of the page that the ratings of the messages are aggregated into"></field>
+        <field name="displayPostingForm" type="string" size="255" comment="top: the form that adds a message is displayed above the messages; bottom: below them">
             <default value="top" />
             <notnull/>
         </field>
-        <field name="addMessageLabel" type="string" size="255">
+        <field name="addMessageLabel" type="string" size="255" comment="The text of the button that adds a message (empty: the default one)">
             <default value="" />
             <notnull/>
         </field>
-        <field name="dateFormat" type="string" size="255">
+        <field name="dateFormat" type="string" size="255" comment="default: the date of a message is displayed with the format of the site; elapsed: as the time since it was posted; custom: with customDateFormat">
             <default value="default" />
         </field>
-        <field name="customDateFormat" type="string" size="255" />
+        <field name="customDateFormat" type="string" size="255" comment="A format accepted by the date() PHP function (used if dateFormat is custom)" />
         <index name="cnvID">
             <col>cnvID</col>
         </index>

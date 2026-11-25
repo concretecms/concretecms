@@ -5,29 +5,29 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="webmfID" type="integer">
+        <field name="webmfID" type="integer" comment="The ID of the WebM file of the video (0 or NULL: none)">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="oggfID" type="integer">
+        <field name="oggfID" type="integer" comment="The ID of the Ogg file of the video (0 or NULL: none)">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="posterfID" type="integer">
+        <field name="posterfID" type="integer" comment="The ID of the image displayed until the video is played (0 or NULL: none)">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="mp4fID" type="integer">
+        <field name="mp4fID" type="integer" comment="The ID of the MP4 file of the video (0 or NULL: none)">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="videoSize" type="integer">
+        <field name="videoSize" type="integer" comment="0 or NULL: the video keeps its own size; 1: it fills the width available; 2: it's at most width pixels wide">
             <unsigned/>
             <default value="0" />
         </field>
-        <field name="width" type="integer">
+        <field name="width" type="integer" comment="The maximum width of the video, in pixels (used if videoSize is 2)">
             <unsigned/>
         </field>
-        <field name="title" type="string" size="255" />
+        <field name="title" type="string" size="255" comment="The text displayed above the video" />
     </table>
 </schema>

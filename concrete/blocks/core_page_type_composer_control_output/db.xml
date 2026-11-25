@@ -9,7 +9,7 @@
       <key/>
       <notnull/>
     </field>
-    <field name="ptComposerOutputControlID" type="integer">
+    <field name="ptComposerOutputControlID" type="integer" comment="The ID of the output control of the composer of the page type this block belongs to (0: the block displays nothing)">
       <unsigned/>
       <default value="0"/>
       <notnull/>

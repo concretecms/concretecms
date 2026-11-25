@@ -8,27 +8,27 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="questionSetId" type="integer">
+    <field name="questionSetId" type="integer" comment="The ID of the set of questions displayed by the block, which is the questionSetId of the rows of btFormQuestions">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="surveyName" type="string" size="255"/>
-    <field name="submitText" type="string" size="255">
+    <field name="surveyName" type="string" size="255" comment="The title displayed above the questions"/>
+    <field name="submitText" type="string" size="255" comment="The text of the button that submits the form">
       <default value="Submit"/>
     </field>
-    <field name="thankyouMsg" type="text" size="65535"/>
-    <field name="notifyMeOnSubmission" type="boolean">
+    <field name="thankyouMsg" type="text" size="65535" comment="The text displayed once the form has been submitted (used if redirectCID is 0)"/>
+    <field name="notifyMeOnSubmission" type="boolean" comment="true: an email is sent to the recipientEmail addresses when the form is submitted; false: no email is sent">
       <default value="0"/>
       <notnull/>
     </field>
-    <field name="recipientEmail" type="string" size="255"/>
-    <field name="displayCaptcha" type="boolean">
+    <field name="recipientEmail" type="string" size="255" comment="The email addresses notified when the form is submitted, separated by commas (used if notifyMeOnSubmission is true)"/>
+    <field name="displayCaptcha" type="boolean" comment="true: the visitors must solve a captcha before submitting the form; false: they don't">
       <default value="1"/>
     </field>
-    <field name="redirectCID" type="integer">
+    <field name="redirectCID" type="integer" comment="The ID of the page the visitors are sent to once the form has been submitted (0 or NULL: thankyouMsg is displayed instead)">
       <default value="0"/>
     </field>
-    <field name="addFilesToSet" type="integer">
+    <field name="addFilesToSet" type="integer" comment="The ID of the file set that the files uploaded with the form are added to (0 or NULL: none)">
       <default value="0"/>
     </field>
     <index name="questionSetIdForeign">
@@ -37,12 +37,12 @@
   </table>
 
   <table name="btFormQuestions">
-    <field name="qID" type="integer">
+    <field name="qID" type="integer" comment="The ID of this version of the question: editing a question adds a new row instead of changing the current one">
       <unsigned/>
       <autoincrement/>
       <key/>
     </field>
-    <field name="msqID" type="integer">
+    <field name="msqID" type="integer" comment="The ID shared by every version of the question, which is what the answers refer to">
       <unsigned/>
       <default value="0"/>
     </field>
@@ -50,29 +50,29 @@
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="questionSetId" type="integer">
+    <field name="questionSetId" type="integer" comment="The ID of the set of questions the question belongs to">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="question" type="string" size="255"/>
-    <field name="inputType" type="string" size="255"/>
-    <field name="options" type="text" size="65535"/>
-    <field name="position" type="integer">
+    <field name="question" type="string" size="255" comment="The text of the question, displayed above its input"/>
+    <field name="inputType" type="string" size="255" comment="What the visitors answer with: field, text, email, telephone, url, select, radios, checkboxlist, date, datetime or fileupload"/>
+    <field name="options" type="text" size="65535" comment="The choices of a select, radios or checkboxlist question, separated by %%; for an email question, the PHP serialization of its send_notification_from flag"/>
+    <field name="position" type="integer" comment="The position of the question in the set, starting from zero">
       <unsigned/>
       <default value="1000"/>
     </field>
-    <field name="width" type="integer">
+    <field name="width" type="integer" comment="How many columns wide the input of a text question is, between 20 and 500 (used if inputType is text)">
       <unsigned/>
       <default value="50"/>
     </field>
-    <field name="height" type="integer">
+    <field name="height" type="integer" comment="How many rows tall the input of a text question is, between 1 and 100 (used if inputType is text)">
       <unsigned/>
       <default value="3"/>
     </field>
-    <field name="defaultDate" type="string" size="255">
+    <field name="defaultDate" type="string" size="255" comment="The date offered by default (used if inputType is date or datetime)">
       <default value=""/>
     </field>
-    <field name="required" type="boolean">
+    <field name="required" type="boolean" comment="true: the visitors must answer the question; false: they can leave it empty">
       <default value="0"/>
     </field>
     <index name="questionSetId">
@@ -88,20 +88,20 @@
   </table>
 
   <table name="btFormAnswerSet">
-    <field name="asID" type="integer">
+    <field name="asID" type="integer" comment="The ID of the submitted form">
       <unsigned/>
       <autoincrement/>
       <key/>
     </field>
-    <field name="questionSetId" type="integer">
+    <field name="questionSetId" type="integer" comment="The ID of the set of questions that was answered">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="created" type="timestamp">
+    <field name="created" type="timestamp" comment="When the form was submitted">
       <deftimestamp/>
       <notnull/>
     </field>
-    <field name="uID" type="integer">
+    <field name="uID" type="integer" comment="The ID of the user that submitted the form (0 or NULL: nobody was logged in)">
       <unsigned/>
       <default value="0"/>
     </field>
@@ -114,21 +114,21 @@
   </table>
 
   <table name="btFormAnswers">
-    <field name="aID" type="integer">
+    <field name="aID" type="integer" comment="The ID of the answer">
       <unsigned/>
       <autoincrement/>
       <key/>
     </field>
-    <field name="asID" type="integer">
+    <field name="asID" type="integer" comment="The ID of the submitted form holding the answer">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="msqID" type="integer">
+    <field name="msqID" type="integer" comment="The ID shared by every version of the question that was answered">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="answer" type="string" size="255"/>
-    <field name="answerLong" type="text" size="65535"/>
+    <field name="answer" type="string" size="255" comment="The answer, as the visitor gave it, cut to 255 characters (a fileupload question stores the ID of the file here)"/>
+    <field name="answerLong" type="text" size="65535" comment="The whole answer of a text question, which is too long for the answer field"/>
     <index name="asID">
       <col>asID</col>
     </index>

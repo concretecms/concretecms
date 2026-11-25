@@ -9,7 +9,7 @@
       <key/>
       <notnull/>
     </field>
-    <field name="slot" type="string" size="1">
+    <field name="slot" type="string" size="1" comment="The key of the slot of the news published by concretecms.org that the block displays">
       <notnull/>
     </field>
   </table>

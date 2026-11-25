@@ -7,26 +7,26 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="useCustomTitle" type="boolean">
+        <field name="useCustomTitle" type="boolean" comment="true: the block displays titleText; false: it displays the name of the page">
             <default value="0"/>
         </field>
-        <field name="useFilterTitle" type="boolean">
+        <field name="useFilterTitle" type="boolean" comment="true: the title becomes what the page list blocks of the page are filtered by; false: it stays the same for everyone">
             <default value="0"/>
         </field>
-        <field name="useFilterTopic" type="boolean">
+        <field name="useFilterTopic" type="boolean" comment="true: the title becomes the topic the page lists are filtered by, cased as topicTextFormat says; false: the topic is ignored">
             <default value="0"/>
         </field>
-        <field name="useFilterTag" type="boolean">
+        <field name="useFilterTag" type="boolean" comment="true: the title becomes the tag the page lists are filtered by, cased as tagTextFormat says; false: the tag is ignored">
             <default value="0"/>
         </field>
-        <field name="useFilterDate" type="boolean">
+        <field name="useFilterDate" type="boolean" comment="true: the title becomes the date the page lists are filtered by, formatted with filterDateFormat; false: the date is ignored">
             <default value="0"/>
         </field>
-        <field name="topicTextFormat" type="string" size="255"/>
-        <field name="tagTextFormat" type="string" size="255"/>
-        <field name="dateTextFormat" type="string" size="255"/>
-        <field name="filterDateFormat" type="string" size="255"/>
-        <field name="titleText" type="string" size="255"/>
-        <field name="formatting" type="string" size="3"/>
+        <field name="topicTextFormat" type="string" size="255" comment="empty: the topic becomes the title as it is; upperWord: every word is capitalized; upperFirst: only the first one is; lowercase: it's lowercased; uppercase: it's uppercased"/>
+        <field name="tagTextFormat" type="string" size="255" comment="empty: the tag becomes the title as it is; upperWord: every word is capitalized; upperFirst: only the first one is; lowercase: it's lowercased; uppercase: it's uppercased"/>
+        <field name="dateTextFormat" type="string" size="255" comment="empty: the date becomes the title as it is; upperWord: every word is capitalized; upperFirst: only the first one is; lowercase: it's lowercased; uppercase: it's uppercased"/>
+        <field name="filterDateFormat" type="string" size="255" comment="A format accepted by the date() PHP function, used for the date that becomes the title (empty: F Y)"/>
+        <field name="titleText" type="string" size="255" comment="The text displayed instead of the name of the page (used if useCustomTitle is true)"/>
+        <field name="formatting" type="string" size="3" comment="The HTML element wrapping the title: h1, h2, h3, h4, h5, h6 or p (empty: h1)"/>
     </table>
 </schema>

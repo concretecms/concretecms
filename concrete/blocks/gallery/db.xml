@@ -8,13 +8,13 @@
             <unsigned/>
             <key/>
         </field>
-        <field name="includeDownloadLink" type="boolean">
+        <field name="includeDownloadLink" type="boolean" comment="true: every image is offered with a link that downloads it; false: it is not">
             <default value="0" />
             <notnull/>
         </field>
     </table>
     <table name="btGalleryEntries">
-        <field name="eID" type="integer">
+        <field name="eID" type="integer" comment="The ID of the image of the gallery">
             <unsigned/>
             <autoincrement/>
             <key/>
@@ -22,27 +22,27 @@
         <field name="bID" type="integer">
             <unsigned/>
         </field>
-        <field name="idx" type="integer">
+        <field name="idx" type="integer" comment="The position of the image in the gallery, starting from zero">
             <unsigned/>
         </field>
-        <field name="fID" type="integer">
+        <field name="fID" type="integer" comment="The ID of the file holding the image">
             <unsigned/>
         </field>
     </table>
     <table name="btGalleryEntryDisplayChoices">
-        <field name="dcID" type="integer">
+        <field name="dcID" type="integer" comment="The ID of the display choice">
             <unsigned/>
             <autoincrement/>
             <key/>
         </field>
-        <field name="entryID" type="integer">
+        <field name="entryID" type="integer" comment="The ID of the image of the gallery the display choice belongs to">
             <unsigned/>
         </field>
         <field name="bID" type="integer">
             <unsigned/>
         </field>
-        <field name="value" type="text" />
-        <field name="dcKey" type="text" />
+        <field name="value" type="text" comment="The text of the caption, or wide or standard for the size" />
+        <field name="dcKey" type="text" comment="caption: the row holds the caption of the image; hover_caption: the caption displayed while the pointer is over it; size: how wide the image is" />
     </table>
 
 </schema>

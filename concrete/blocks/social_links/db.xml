@@ -4,7 +4,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.concrete5.org/doctrine-xml/0.5 https://concretecms.github.io/doctrine-xml/doctrine-xml-0.5.xsd">
 
   <table name="btSocialLinks">
-    <field name="btSocialLinkID" type="integer">
+    <field name="btSocialLinkID" type="integer" comment="The ID of the row pairing the block with one of the social links of the site">
       <unsigned/>
       <autoincrement/>
       <key/>
@@ -13,11 +13,11 @@
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="slID" type="integer">
+    <field name="slID" type="integer" comment="The ID of the social link of the site to be displayed">
       <unsigned/>
       <default value="0"/>
     </field>
-    <field name="displayOrder" type="integer">
+    <field name="displayOrder" type="integer" comment="The position of the social link in the block, starting from zero">
       <unsigned/>
       <default value="0"/>
     </field>

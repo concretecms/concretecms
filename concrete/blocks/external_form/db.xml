@@ -8,7 +8,7 @@
       <unsigned/>
       <key/>
     </field>
-    <field name="filename" type="string" size="128"/>
+    <field name="filename" type="string" size="128" comment="The name of the PHP file that renders and handles the form, looked for in application/blocks/external_form/form and then in the same directory of the core"/>
   </table>
 
 </schema>
