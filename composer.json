@@ -47,7 +47,12 @@
         "PKSA-1tmc-rt7x-12w6": "twig/twig is affected by CVE-2026-48806: Concrete doesn't use the Twig sandbox",
         "PKSA-xx6c-6d96-db2w": "twig/twig is affected by CVE-2026-48807: Concrete doesn't use the Twig sandbox",
         "PKSA-fbvq-z33h-r2np": "twig/twig is affected by CVE-2026-48808: Concrete doesn't use the Twig sandbox",
-        "PKSA-w9tt-7782-78jx": "league/flysystem is affected by CVE-2026-102601, fixed by concretecms/dependency-patches"
+        "PKSA-w9tt-7782-78jx": "league/flysystem is affected by CVE-2026-102601, fixed by concretecms/dependency-patches",
+        "PKSA-hs2m-ms65-2zgg": "twig/twig is affected by CVE-2026-133771, fixed by concretecms/dependency-patches",
+        "PKSA-tfq6-ydd8-dhbf": "twig/twig is affected by CVE-2026-133764: Concrete doesn't use the Twig sandbox",
+        "PKSA-hjpc-r7p2-zyfx": "twig/twig is affected by CVE-2026-133767: Concrete doesn't use the Twig sandbox",
+        "PKSA-szz8-81wy-3x8z": "twig/twig is affected by CVE-2026-133768: Concrete doesn't use the Twig sandbox",
+        "PKSA-v6ry-d7gg-9dnc": "twig/twig is affected by CVE-2026-133770: Concrete doesn't use the Twig sandbox"
       }
     }
   },
