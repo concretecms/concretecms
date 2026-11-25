@@ -1,23 +1,33 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
 use Concrete\Core\Csv\Export\PageActivityExporter;
 use Concrete\Core\Csv\WriterFactory;
-use Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Form\Service\Widget\UserSelector;
 use Concrete\Core\Page\Collection\Version\GlobalVersionList;
+use Concrete\Core\Page\Controller\DashboardPageController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class PageChanges extends DashboardPageController
 {
     public function view()
     {
         $this->set('dt', $this->app->make('helper/form/date_time'));
+        $this->set('userSelector', $this->app->make(UserSelector::class));
     }
 
     public function csv_export()
     {
         if (!$this->token->validate('export_page_changes')) {
             $this->error->add($this->token->getErrorMessage());
+            $this->view();
+
+            return;
         }
 
         if ($this->error->has()) {
@@ -47,7 +57,8 @@ class PageChanges extends DashboardPageController
     private function getWriter()
     {
         return $this->app->make(
-            PageActivityExporter::class, [
+            PageActivityExporter::class,
+            [
                 'writer' => $this->app->make(WriterFactory::class)
                     ->createFromPath('php://output', 'w'),
             ]
@@ -61,7 +72,7 @@ class PageChanges extends DashboardPageController
      */
     private function getVersionList()
     {
-        /* @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
+        /** @var \Concrete\Core\Form\Service\Widget\DateTime $dt */
         $dt = $this->app->make('helper/form/date_time');
 
         $startDate = $dt->translate('startDate', null, true);
@@ -76,6 +87,11 @@ class PageChanges extends DashboardPageController
 
         if ($endDate !== null) {
             $versionList->filterByApprovedBefore($endDate);
+        }
+
+        $versionAuthorID = (int) $this->request->request->get('versionAuthorID', 0);
+        if ($versionAuthorID > 0) {
+            $versionList->filterByVersionAuthorUserID($versionAuthorID);
         }
 
         return $versionList;
