@@ -124,8 +124,8 @@
     "tubalmartin/cssmin": "^4.1",
     "korvin/htmldiff-gh-fork": "^1.0.6",
     "zircote/swagger-php": "4.9.2",
-    "concretecms/dependency-patches": "^1.9.0",
-    "twig/twig": "3.11.3|^3.26"
+    "concretecms/dependency-patches": "^1.11.0",
+    "twig/twig": "3.11.3|^3.31.1"
   },
   "provide": {
     "laminas/laminas-cache-storage-implementation": "1.0"

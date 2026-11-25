@@ -275,16 +275,16 @@
         },
         {
             "name": "concretecms/dependency-patches",
-            "version": "1.9.0",
+            "version": "1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/concretecms/dependency-patches.git",
-                "reference": "d55ad28395e63fd6bc17a18b48fa1539edd5afce"
+                "reference": "1483ad4df9e9f61983de7f8cea19e1e43afe6d92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/d55ad28395e63fd6bc17a18b48fa1539edd5afce",
-                "reference": "d55ad28395e63fd6bc17a18b48fa1539edd5afce",
+                "url": "https://api.github.com/repos/concretecms/dependency-patches/zipball/1483ad4df9e9f61983de7f8cea19e1e43afe6d92",
+                "reference": "1483ad4df9e9f61983de7f8cea19e1e43afe6d92",
                 "shasum": ""
             },
             "require": {
@@ -303,7 +303,8 @@
                         "Document sandbox resource exhaustion limits (CVE-2026-46627)": "twig/twig/cve-2026-46627-sandbox-resource-exhaustion-docs.patch",
                         "Fix sandbox includes with preloaded templates (CVE-2026-46638)": "twig/twig/cve-2026-46638-sandbox-include-preloaded-template.patch",
                         "Pre-escape HTML input on the spaceless filter (CVE-2026-46628)": "twig/twig/cve-2026-46628-spaceless-pre-escape.patch",
-                        "Document template_from_string() sandbox caveats (CVE-2026-46634)": "twig/twig/cve-2026-46634-template-from-string-sandbox-caveats.patch"
+                        "Document template_from_string() sandbox caveats (CVE-2026-46634)": "twig/twig/cve-2026-46634-template-from-string-sandbox-caveats.patch",
+                        "Escape variables named like a macro import alias of another scope (CVE-2026-133771)": "twig/twig/cve-2026-133771-import-alias-autoescape.patch"
                     },
                     "lcobucci/jwt:3.4.5": {
                         "Add PHP 8 compatibility": "lcobucci/jwt/php8-compatibility.patch"
@@ -363,6 +364,9 @@
                     "egulias/email-validator:1.2.15": {
                         "Fix access array offset on value of type null": "egulias/email-validator/access-array-offset-on-null.patch"
                     },
+                    "symfony/http-foundation:5.4.56": {
+                        "Add PHP 8.6 compatibility": "symfony/http-foundation/php8.6-compatibility.patch"
+                    },
                     "zendframework/zend-stdlib:2.7.7": {
                         "Fix ArrayObject::unserialize()": "zendframework/zend-stdlib/ArrayObject-unserialize-continue.patch"
                     },
@@ -392,9 +396,9 @@
             "homepage": "https://github.com/concretecms/dependency-patches",
             "support": {
                 "issues": "https://github.com/concretecms/dependency-patches/issues",
-                "source": "https://github.com/concretecms/dependency-patches/tree/1.9.0"
+                "source": "https://github.com/concretecms/dependency-patches/tree/1.11.0"
             },
-            "time": "2026-09-30T08:30:21+00:00"
+            "time": "2026-11-25T14:15:02+00:00"
         },
         {
             "name": "concretecms/doctrine-xml",

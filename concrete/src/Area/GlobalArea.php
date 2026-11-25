@@ -166,6 +166,10 @@ class GlobalArea extends Area
         $globalAreaStacks = $stackList->getResults();
 
         foreach ($globalAreaStacks as $stack) {
+            // StackList returns a plain Page when the page type of a global area isn't core_stack
+            if (!$stack instanceof Stack) {
+                continue;
+            }
             $stackAlternatives = [];
             if ($stack->isNeutralStack()) {
                 $stackAlternatives[] = $stack;
