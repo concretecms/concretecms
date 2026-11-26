@@ -6,6 +6,7 @@ use Concrete\Core\Cache\Command\ClearCacheCommand;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Entity\Site\Site;
+use Concrete\Core\Error\UserMessageException;
 use Concrete\Core\Foundation\ClassAutoloader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Foundation\Runtime\DefaultRuntime;
@@ -17,6 +18,7 @@ use Concrete\Core\Logging\Channels;
 use Concrete\Core\Logging\LoggerAwareInterface;
 use Concrete\Core\Messenger\MessageBusManager;
 use Concrete\Core\Package\BrokenPackage;
+use Concrete\Core\Package\PackageActionLogger;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Package\PackageService;
 use Concrete\Core\Routing\RedirectResponse;
@@ -262,9 +264,15 @@ class Application extends Container
                 $pkgFileVersion = $pkg->getPackageVersion();
                 if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
                     $loc->pushActiveContext(Localization::CONTEXT_SYSTEM);
-                    $dbPkg->upgradeCoreData();
-                    $dbPkg->upgrade();
+                    try {
+                        $dbPkg->upgradeCoreData();
+                        $dbPkg->upgrade();
+                    } catch (UserMessageException $e) {
+                        $this->make(PackageActionLogger::class)->logUpdateFailed($pkg, $e);
+                        throw $e;
+                    }
                     $loc->popActiveContext();
+                    $this->make(PackageActionLogger::class)->logUpdated($pkg, $pkgInstalledVersion);
                 }
             }
         }
