@@ -41,16 +41,17 @@ class RegistrationService implements RegistrationServiceInterface
     /**
      * @param string $uPasswordEncrypted
      * @param string $uEmail
+     * @param string $uName
      *
      * @return UserInfo|null
      */
-    public function createSuperUser($uPasswordEncrypted, $uEmail)
+    public function createSuperUser($uPasswordEncrypted, $uEmail, $uName)
     {
         $dh = $this->application->make('date');
 
         $entity = new UserEntity();
         $entity->setUserID(USER_SUPER_ID);
-        $entity->setUserName(USER_SUPER);
+        $entity->setUserName($uName);
         $entity->setUserEmail($uEmail);
         $entity->setUserPassword($uPasswordEncrypted);
         $entity->setUserIsActive(true);
