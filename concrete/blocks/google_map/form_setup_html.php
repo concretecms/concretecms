@@ -101,32 +101,102 @@
                 originalGMAuthFailure = window.gm_authFailure,
                 lastKey = null,
                 lastKeyError = null,
+                lastApiMode = null, // 'new' or 'legacy'
                 autocomplete = null;
 
-            function setAutocompletion(places) {
-                if (autocomplete) {
+            function cleanupAutocomplete() {
+                if (!autocomplete) {
+                    return;
+                }
+                if (autocomplete.mode === 'new') {
+                    if (autocomplete.element) {
+                        autocomplete.element.remove();
+                    }
+                    $location.show().removeClass('notfound');
+                } else {
                     $location.removeAttr('placeholder autocomplete disabled style').removeClass('gm-err-autocomplete notfound');
                     google.maps.event.removeListener(autocomplete.listener);
-                    google.maps.event.clearInstanceListeners(autocomplete.autocomplete);
+                    google.maps.event.clearInstanceListeners(autocomplete.instance);
                     clearInterval(autocomplete.pacTimer);
                     $('.pac-container').remove();
                     $location.off('change');
-                    autocomplete = null;
                 }
-                if (!places) {
+                autocomplete = null;
+            }
+
+            async function setAutocompletion(apiMode) {
+                cleanupAutocomplete();
+                if (!apiMode) {
                     return;
                 }
-                autocomplete = {
-                    autocomplete: new google.maps.places.Autocomplete($location[0])
+
+                // =========================================================
+                // MODE 1: Places API (New) via PlaceAutocompleteElement
+                // =========================================================
+                if (apiMode === 'new') {
+                    var placesLib = await google.maps.importLibrary('places');
+                    var placeAutocomplete = new placesLib.PlaceAutocompleteElement();
+
+                    // Pre-populate if the block already has a saved address
+                    if ($location.val()) {
+                        placeAutocomplete.value = $location.val();
+                    }
+
+                    // Keep the original input in the DOM (hidden) so form POST data still submits
+                    $location.hide().after(placeAutocomplete);
+
+                    placeAutocomplete.addEventListener('gmp-select', async function (event) {
+                        try {
+                            var place = event.placePrediction.toPlace();
+                            await place.fetchFields({
+                                fields: ['location', 'formattedAddress', 'displayName']
+                            });
+
+                            if (!place.location) {
+                                $location.addClass('notfound');
+                                $note.text(<?= json_encode(t('The place you entered could not be found.')) ?>)
+                                    .removeClass('alert-info alert-success alert-danger')
+                                    .css('visibility', '');
+                            } else {
+                                $('#ccm-google-map-block-location > input[id=latitude]').val(place.location.lat());
+                                $('#ccm-google-map-block-location > input[id=longitude]').val(place.location.lng());
+                                $location.val(place.formattedAddress || place.displayName || '').removeClass('notfound');
+                                $note.css('visibility', 'hidden');
+                            }
+                        } catch (err) {
+                            $location.addClass('notfound');
+                            $note.text(<?= json_encode(t('The place you entered could not be found.')) ?>)
+                                .removeClass('alert-info alert-success alert-danger')
+                                .css('visibility', '');
+                        }
+                    });
+
+                    // Handle user typing without selecting a dropdown prediction
+                    placeAutocomplete.addEventListener('input', function () {
+                        $location.val(placeAutocomplete.value).addClass('notfound');
+                    });
+
+                    autocomplete = {
+                        mode: 'new',
+                        element: placeAutocomplete
+                    };
+                    return;
                 }
-                autocomplete.listener = google.maps.event.addListener(autocomplete.autocomplete, 'place_changed', function () {
+
+                // =========================================================
+                // MODE 2: Places API (Legacy) Fallback
+                // =========================================================
+                var legacyInstance = new google.maps.places.Autocomplete($location[0]);
+                var legacyListener = google.maps.event.addListener(legacyInstance, 'place_changed', function () {
                     if (autocomplete === null) {
                         return;
                     }
-                    var place = autocomplete.autocomplete.getPlace();
-                    if (!place.geometry) {
+                    var place = legacyInstance.getPlace();
+                    if (!place || !place.geometry) {
                         $location.addClass('notfound');
-                        $note.text(<?= json_encode(t('The place you entered could not be found.')) ?>).removeClass('alert-info alert-success').removeClass('alert-danger').css('visibility', '');
+                        $note.text(<?= json_encode(t('The place you entered could not be found.')) ?>)
+                            .removeClass('alert-info alert-success alert-danger')
+                            .css('visibility', '');
                     } else {
                         $('#ccm-google-map-block-location > input[id=latitude]').val(place.geometry.location.lat());
                         $('#ccm-google-map-block-location > input[id=longitude]').val(place.geometry.location.lng());
@@ -134,15 +204,24 @@
                         $note.css('visibility', 'hidden');
                     }
                 });
+
                 $location.on('change', function () {
                     $location.addClass('notfound');
                 });
-                autocomplete.pacTimer = setInterval(function () {
+
+                var pacTimer = setInterval(function () {
                     $('.pac-container').css('z-index', '2000');
                     if ($('#ccm-google-map-block-location > input[id="location"]').length === 0) {
-                        setAutocompletion(null);
+                        cleanupAutocomplete();
                     }
                 }, 250);
+
+                autocomplete = {
+                    mode: 'legacy',
+                    instance: legacyInstance,
+                    listener: legacyListener,
+                    pacTimer: pacTimer
+                };
             }
 
             return function (onSuccess, onError, forceRecheck) {
@@ -150,14 +229,9 @@
                     onError(<?= json_encode(t('Please wait, operation in progress.')) ?>);
                     return;
                 }
-                if (!onSuccess) {
-                    onSuccess = function () {
-                    };
-                }
-                if (!onError) {
-                    onError = function () {
-                    };
-                }
+                onSuccess = onSuccess || function () {};
+                onError = onError || function () {};
+
                 var key = $.trim($key.val());
                 if (key === lastKey && !forceRecheck) {
                     if (lastKeyError === null) {
@@ -168,8 +242,8 @@
                     return;
                 }
 
-                function completed(places) {
-                    setAutocompletion(places);
+                function completed(apiMode) {
+                    setAutocompletion(apiMode);
                     if (lastKeyError === null) {
                         onSuccess();
                     } else {
@@ -177,12 +251,13 @@
                     }
                 }
 
-                setAutocompletion();
+                cleanupAutocomplete();
                 checking = true;
                 if ($script !== null) {
                     $script.remove();
                     $script = null;
                 }
+
                 var scriptLoadedFunctionName;
                 for (var i = 0; ; i++) {
                     scriptLoadedFunctionName = '_ccm_gmapblock_loaded_' + i;
@@ -191,10 +266,10 @@
                     }
                 }
 
-                function scriptLoaded(error) {
+                async function scriptLoaded(error) {
                     delete window[scriptLoadedFunctionName];
 
-                    function placesLoaded(error, places) {
+                    function finishValidation(err, apiMode) {
                         if (originalGMAuthFailure) {
                             window.gm_authFailure = originalGMAuthFailure;
                         } else {
@@ -202,33 +277,63 @@
                         }
                         $checkSpinner.removeClass('fa-refresh fa-spin').addClass('fa-play');
                         lastKey = key;
-                        lastKeyError = error;
+                        lastKeyError = err;
+                        lastApiMode = apiMode || null;
                         setTimeout(function () {
                             checking = false;
-                            completed(places)
+                            completed(apiMode);
                         }, 10);
                     }
 
                     if (error !== null) {
-                        placesLoaded(error);
+                        finishValidation(error, null);
                         return;
                     }
-                    var places = new google.maps.places.PlacesService(document.createElement('div'));
+
                     window.gm_authFailure = function () {
-                        placesLoaded(<?= json_encode(t('The API Key is NOT valid.')) ?>);
+                        finishValidation(<?= json_encode(t('The API Key is NOT valid.')) ?>, null);
                     };
-                    places.getDetails(
-                        {
-                            placeId: 'ChIJJ3SpfQsLlVQRkYXR9ua5Nhw'
-                        },
-                        function (place, status) {
-                            if (status === 'REQUEST_DENIED') {
-                                placesLoaded(<?= json_encode(t('The API Key is NOT valid for Google Places or not linked to billing account.')) ?>);
-                            } else {
-                                placesLoaded(null, places);
+
+                    // Step 1: Probe Places API (New) using Place.fetchFields()
+                    try {
+                        var placesLib = await google.maps.importLibrary('places');
+                        var testPlace = new placesLib.Place({
+                            id: 'ChIJJ3SpfQsLlVQRkYXR9ua5Nhw'
+                        });
+                        await testPlace.fetchFields({ fields: ['displayName'] });
+
+                        // Succeeded: Key supports Places API (New)
+                        finishValidation(null, 'new');
+                        return;
+                    } catch (newApiErr) {
+                        // If the key is invalid/unbilled globally, gm_authFailure or PERMISSION_DENIED may trigger.
+                        // Fall through to test if this is an existing project using Places API (Legacy).
+                    }
+
+                    // Step 2: Fallback Probe for Places API (Legacy) using PlacesService.getDetails()
+                    try {
+                        var legacyService = new google.maps.places.PlacesService(document.createElement('div'));
+                        legacyService.getDetails(
+                            { placeId: 'ChIJJ3SpfQsLlVQRkYXR9ua5Nhw', fields: ['name'] },
+                            function (place, status) {
+                                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                                    finishValidation(null, 'legacy');
+                                } else if (status === 'REQUEST_DENIED') {
+                                    finishValidation(
+                                            <?= json_encode(t('The API Key is NOT valid for Google Places or not linked to billing account.')) ?>,
+                                        null
+                                    );
+                                } else {
+                                    finishValidation(null, 'legacy');
+                                }
                             }
-                        }
-                    );
+                        );
+                    } catch (legacyErr) {
+                        finishValidation(
+                                <?= json_encode(t('The API Key is NOT valid for Google Places or not linked to billing account.')) ?>,
+                            null
+                        );
+                    }
                 }
 
                 window[scriptLoadedFunctionName] = function () {
@@ -237,36 +342,48 @@
                 window.gm_authFailure = function () {
                     scriptLoaded(<?= json_encode(t('The API Key is NOT valid.')) ?>);
                 };
+
                 $checkSpinner.removeClass('fa-play').addClass('fa-refresh fa-spin');
-                $(document.body).append($script = $('<' + 'script src="https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&libraries=places&callback=' + encodeURIComponent(scriptLoadedFunctionName) + '"></' + 'script>'));
+                $script = $('<' + 'script src="https://maps.googleapis.com/maps/api/js?key=' +
+                    encodeURIComponent(key) +
+                    '&libraries=places&loading=async&callback=' +
+                    encodeURIComponent(scriptLoadedFunctionName) +
+                    '"></' + 'script>');
+                $(document.body).append($script);
             };
         })();
 
         $key.on('change keydown keypress', function () {
             $note.html('&nbsp;').css('visibility', 'hidden');
         });
+
         $('#ccm-google-map-check-key')
             .on('click', function (e) {
                 e.preventDefault();
-                $note.text(<?= json_encode(t('Checking API Key...')) ?>).removeClass('alert-success alert-danger').addClass('alert-info').css('visibility', '');
+                $note.text(<?= json_encode(t('Checking API Key...')) ?>)
+                    .removeClass('alert-success alert-danger')
+                    .addClass('alert-info')
+                    .css('visibility', '');
                 setupApiKey(
                     function () {
-                        $note.text(<?= json_encode(t('The API Key is valid.')) ?>).removeClass('alert-info alert-danger').addClass('alert-success');
+                        $note.text(<?= json_encode(t('The API Key is valid.')) ?>)
+                            .removeClass('alert-info alert-danger')
+                            .addClass('alert-success');
                     },
                     function (err) {
-                        $note.text(err).removeClass('alert-success alert-info').addClass('alert-danger');
+                        $note.text(err)
+                            .removeClass('alert-success alert-info')
+                            .addClass('alert-danger');
                     },
                     true
                 );
             })
-            .trigger('click')
-        ;
+            .trigger('click');
 
         $location.on('keydown', function (e) {
             if (e.keyCode === 13) {
                 e.preventDefault();
             }
         });
-
-    }());
+    });
 </script>
